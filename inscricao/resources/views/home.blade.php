@@ -350,7 +350,7 @@
             @else
             <div class="alert alert-dismissible" style="background-color: #fbc8c8;">
                 <p>Você ainda não se Inscreveu na nova ediçao de @php echo DB::table('evento')->max('ano')@endphp</p>
-                <button class="btn btn-danger" id="changeEdition">Edição @php echo DB::table('evento')->max('ano')@endphp</button>
+                <a href="#"><button class="btn btn-danger" id="changeEdition">Edição @php echo DB::table('evento')->max('ano')@endphp</button></a>
             </div>
         @endif    
     </div>    
