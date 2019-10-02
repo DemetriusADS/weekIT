@@ -331,17 +331,17 @@
                                         ->where('participante.id','=',Auth::user()->id)->get()[0]->ano;
                         @endphp
                     </span>
-                   <!-- <i class="m-menu__hor-arrow la la-angle-down"></i>
+                    <i class="m-menu__hor-arrow la la-angle-down"></i>
                     <i class="m-menu__ver-arrow la la-angle-right"></i> -->
                 </a>
-       <!--         <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+              <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
                     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                     <ul class="m-menu__subnav">
-                        COLOCAR_ARROBAphp/*
+                        @php
                             $att = DB::table('evento')->get();
-                            foreach($att as $evento){
+                            foreach($att as $evento){   //arrumar
                                 echo '<li class="m-menu__item" aria-haspopup="true">
-                                        <a  href="/inscricao/eventochangeano/'.$evento->id.'" class="m-menu__link ">
+                                        <a  href="/weekIT/public_html/inscricao/home/'.$evento->id.'" class="m-menu__link ">
                                             <i class="m-menu__link-icon flaticon-list"></i>
                                             <span class="m-menu__link-title">
                                                 <span class="m-menu__link-wrap">
@@ -353,9 +353,9 @@
                                         </a>
                                     </li>';                        
                             }
-                        COLOCAR_ARROBAendphp
+                        @endphp
                     </ul>
-                </div>-->
+                </div>
             </li>            
         </ul>
     </div>
