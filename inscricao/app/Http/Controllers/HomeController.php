@@ -230,6 +230,7 @@ class HomeController extends Controller
         }
     }
 
+    //Area de "Ultimas inscrições" login coordenador
     public function listarInscricoesGerenciar()
     {
         $titulo = "Últimas inscrições";
