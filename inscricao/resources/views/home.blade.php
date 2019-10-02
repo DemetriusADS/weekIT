@@ -326,7 +326,7 @@
         @if(DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa == DB::table('evento')->max('id'))
             <div class="bs-component">
                 <div class="alert alert-dismissible" style="background-color: #ebfaeb;">
-                    <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2018 estão abertas de <b>12 a 30/11/2018</b>.</h4>
+                    <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2019 estão abertas de <b>12 a 30/11/2019</b>.</h4>
                     
 
                     <p style="text-align: justify;">A inscrição no evento é gratuita e dá acesso às palestras, mesa redonda e mostra de trabalhos. A inscrição em cada minicurso é <strong>R$ 10,00</strong> (dez reais).</p>
@@ -346,6 +346,11 @@
                     <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"> <b>Aviso</b> - Por favor, verifique seu cadastro e certifique-se de atualizar seu nome completo pois este será impresso em seu(s) certificado(s).
                     </p>                                         
                 </div>
+            </div>
+            @else
+            <div class="alert alert-dismissible" style="background-color: #fbc8c8;">
+                <p>Você ainda não se Inscreveu na nova ediçao de @php echo DB::table('evento')->max('ano')@endphp</p>
+                <button class="btn btn-danger" id="changeEdition">Edição @php echo DB::table('evento')->max('ano')@endphp</button>
             </div>
         @endif    
     </div>    
