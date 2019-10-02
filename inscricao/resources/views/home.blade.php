@@ -349,11 +349,11 @@
             </div>
             @else        
 
-            <div class="alert alert-dismissible" style="background-color: #fbc8c8;">
+        <!--    <div class="alert alert-dismissible" style="background-color: #fbc8c8;">
                 <p>Você ainda não se Inscreveu na nova ediçao de @php echo DB::table('evento')->max('ano')@endphp</p>
             <a href="{{route('eventoUpdate')}}"><button class="btn btn-danger" id="changeEdition">Edição @php echo DB::table('evento')->max('ano')@endphp</button></a>
             <p>A cada @php echo Auth::user()->edicao_ativa @endphp </p>
-            </div>
+            </div>-->
         @endif    
     </div>    
 @endsection
