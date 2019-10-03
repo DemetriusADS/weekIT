@@ -12,14 +12,14 @@ class EventoUpdateController extends Controller
     protected $model            = '\App\Participante';
     protected $base_name_route  = 'Participante';
 
-    public function update($request)
+    public function update(Request $request)
     {
+        $eventID = $request->id;
         $userID = Auth::user()->id;
         DB::table('participante')
             ->where('id', Auth::user()->id)
             ->update(['edicao_ativa' => $request]);
-        return redirect('/home');
-        DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id) VALUES ($request,$userID)");
+        DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id, created_at, updated_at) VALUES ($eventID,$userID, now(), now())");;
         // armazenaEvento($request, $userID);
         //$newEvent = DB::table('evento')->max('id');
         //Auth::user()->edicao_ativa = DB::table('evento')->max('id');
