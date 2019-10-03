@@ -49,6 +49,7 @@
                         @php
                             $att = DB::table('evento')->get();
                             foreach($att as $evento){
+                                if($evento->id != 0){
                                 echo '<li class="m-menu__item" aria-haspopup="true">
                                         <a  href="/weekIT/public_html/inscricao/home/'.$evento->id.'" class="m-menu__link ">
                                             <i class="m-menu__link-icon flaticon-list"></i>
@@ -60,7 +61,8 @@
                                                 </span>
                                             </span>
                                         </a>
-                                    </li>';                        
+                                    </li>';
+                                }                        
                             }
                         @endphp
                     </ul>
