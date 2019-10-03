@@ -48,7 +48,6 @@ class Participante extends AbstractModel implements DefaultModel
                 'participante.campus as campus',
                 'participante.curso as curso',
                 'participante.email as email',
-                'participante.edicao_ativa as edicao_ativa',
                 DB::raw('DATE_FORMAT(participante.nascimento,"%d/%m/%Y %H:%i:%s") as nascimento'),
                 DB::raw('DATE_FORMAT(participante.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(participante.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at'),

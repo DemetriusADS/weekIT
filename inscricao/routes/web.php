@@ -62,4 +62,4 @@ Route::get('/atividade/presenca/setar-presenca-code', 'AtividadeController@setar
 Route::get('/atividade/sorteio/realizar-sorteio', 'AtividadeController@realizarSorteio');
 Route::get('/atividade/presenca/gerenciar', 'AtividadeController@home')->name('gerenciar-presenca');
 Route::get('/atividade/sorteio', 'AtividadeController@sorteio')->name('gerenciar-sorteio');
-Route::post('/home', 'EventoUpdateController@update')->name('eventoUpdate');
+Route::post('/home/{id}', 'EventoUpdateController@update')->name('eventoUpdate');

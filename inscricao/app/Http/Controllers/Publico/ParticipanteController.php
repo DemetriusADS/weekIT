@@ -32,17 +32,16 @@ class ParticipanteController extends AbstractController
         $input['password'] = Hash::make($request->get('password'));
         $input['roles_id'] = Role::where('slug', 'aluno')->first()->id;
         $input['cadastrado_em'] = date_create(date('Y-m-d'));
-        $input['edicao_ativa'] = DB::table('evento')->max('id');
+        $input['edicao_ativa'] = [0]; //DB::table('evento')->max('id');
 
         $entity = $this->model::insert($input);
 
         $route = redirect()->route('publico.participante.create');
 
-        if(!is_null($entity)){
-            return $route->with('success','Seu cadastro foi efetuado com sucesso');
+        if (!is_null($entity)) {
+            return $route->with('success', 'Seu cadastro foi efetuado com sucesso');
         }
 
         return $route->with('error', 'Ops algo deu errado');
     }
-
 }
