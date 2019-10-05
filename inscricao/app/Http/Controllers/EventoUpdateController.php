@@ -18,8 +18,9 @@ class EventoUpdateController extends Controller
         $userID = Auth::user()->id;
         DB::table('participante')
             ->where('id', Auth::user()->id)
-            ->update(['edicao_ativa' => $request]);
-        DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id, created_at, updated_at) VALUES ($eventID,$userID, now(), now())");;
+            ->update(['edicao_ativa' => $eventID]);
+        DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id, created_at, updated_at) 
+        VALUES ($eventID,$userID, now(), now())");;
         // armazenaEvento($request, $userID);
         //$newEvent = DB::table('evento')->max('id');
         //Auth::user()->edicao_ativa = DB::table('evento')->max('id');
