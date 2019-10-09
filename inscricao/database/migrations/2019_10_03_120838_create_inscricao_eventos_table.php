@@ -14,9 +14,9 @@ class CreateInscricaoEventosTable extends Migration
     public function up()
     {
         Schema::create('inscricao_eventos', function (Blueprint $table) {
-            $table->increments('id');
             $table->bigInteger('participante_id');
             $table->bigInteger('evento_id');
+            $table->string('qrcode');
             $table->timestamps();
         });
     }

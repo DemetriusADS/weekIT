@@ -24,9 +24,9 @@ Route::get('/exibir-inscricoes', function () {
     return view('layouts.participante');
 });
 
-Route::get('/fazer-inscricao', function () {
+Route::get('/inscricao/fazer-inscricao', function () {
     return view('layouts.inscricao');
-});
+})->name('minhasinscricoes');
 
 Auth::routes();
 
@@ -42,7 +42,7 @@ foreach (\App\Resource::all() as $resource) {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/home/{id}', 'HomeController@alteraAnoSistema')->name('eventochangeano');
+Route::get('/eventochangeano/{id}', 'HomeController@alteraAnoSistema')->name('eventochangeano');
 Route::get('/cadastrar', 'Publico\ParticipanteController@create')->name('cadastrar');
 Route::get('/inscricao/atividades-inscricao', 'HomeController@listarAtividadesParaInscricao');
 Route::get('/inscricao/minhas-inscricoes', 'HomeController@listarInscricoesParticipante');
@@ -62,4 +62,4 @@ Route::get('/atividade/presenca/setar-presenca-code', 'AtividadeController@setar
 Route::get('/atividade/sorteio/realizar-sorteio', 'AtividadeController@realizarSorteio');
 Route::get('/atividade/presenca/gerenciar', 'AtividadeController@home')->name('gerenciar-presenca');
 Route::get('/atividade/sorteio', 'AtividadeController@sorteio')->name('gerenciar-sorteio');
-Route::post('/home/{id}', 'EventoUpdateController@update')->name('eventoUpdate');
+Route::post('/cadastrarevento/{id}', 'EventoUpdateController@update')->name('eventoUpdate');

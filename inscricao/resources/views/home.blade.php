@@ -139,7 +139,7 @@
        </div>             
     </div>    
 @endsection
-    @section('scripts')
+@section('scripts')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js" type="text/javascript"></script>
         <script type="text/javascript">       
             $('#cpf').mask('999.999.999-99');          
@@ -321,41 +321,41 @@
     @endsection
 <!-- Sessão de aluno conectado -->
 @elseif(Auth::user()->tipo == 'aluno')
-@section('content')
-    <div class="m-content">
-        @if(DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa == DB::table('evento')->max('id'))
-            <div class="bs-component">
-                <div class="alert alert-dismissible" style="background-color: #ebfaeb;">
-                    <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2019 estão abertas de <b>12 a 30/11/2019</b>.</h4>
-                    
+    @section('content')
+        <div class="m-content">
+            @if(DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa == DB::table('evento')->max('id'))
+                <div class="bs-component">
+                    <div class="alert alert-dismissible" style="background-color: #ebfaeb;">
+                        <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2019 estão abertas de <b>12 a 30/11/2019</b>.</h4>
+                        
 
-                    <p style="text-align: justify;">A inscrição no evento é gratuita e dá acesso às palestras, mesa redonda e mostra de trabalhos. A inscrição em cada minicurso é <strong>R$ 10,00</strong> (dez reais).</p>
-                    <p style="text-align: justify;">O pagamento das inscrições em minicurso deverá ser feito no IFBA (<strong>ao lado da cantina</strong>), nos seguintes dias e horários:</p>
-                    <ul>
-                    <li><strong>Manhã</strong>: toda quarta e sexta das 10:00 às 11:00 horas</li>
-                    <li><strong>À tarde</strong>: segunda, quinta e sexta das 15:30 às 17 horas</li>
-                    <li><strong>À noite</strong>: todos os dias das 19:00 às 21:00 horas</li>
-                    </ul>
-                    <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"><ystrong>As inscrições não pagas até a data limite serão canceladas e as vagas correspondentes serão liberadas para novas inscrições:</strong></p>
-                    <ul>
-                    <li><del>Inscrições de 12 a 18/11/2018, o pagamento deverá ser efetuado até 21/11 (quarta-feira)</del></li>
-                    <li><del>Inscrições de 19 a 25/11/2018, o pagamento deverá ser efetuado até 28/11 (quarta-feira)</del></li>
-                    <li><del>Inscrições de 26/11/2018 a 30/11/2018, o pagamento deverá ser efetuado até 30/11 (sexta-feira)<del></li>
-                    <li>Inscrições após 30/11 devem ser pagas no credenciamento do evento</li>
-                    </ul>
-                    <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"> <b>Aviso</b> - Por favor, verifique seu cadastro e certifique-se de atualizar seu nome completo pois este será impresso em seu(s) certificado(s).
-                    </p>                                         
-                </div>
-            </div>
-            @else  
-                <form action="{{route('eventoUpdate', DB::table('evento')->max('id'))}}" method="post">
-                    <div class="alert alert-dismissible" style="background-color: #fbc8c8;">
-                    <p>Você ainda não se Inscreveu na nova ediçao de @php echo DB::table('evento')->max('ano')@endphp</p>
-                    <button type="submit" class="btn btn-danger" id="changeEdition">Edição @php echo DB::table('evento')->max('ano')@endphp</button>
-                    <p>A cada @php echo Auth::user()->edicao_ativa @endphp </p> 
+                        <p style="text-align: justify;">A inscrição no evento é gratuita e dá acesso às palestras, mesa redonda e mostra de trabalhos. A inscrição em cada minicurso é <strong>R$ 10,00</strong> (dez reais).</p>
+                        <p style="text-align: justify;">O pagamento das inscrições em minicurso deverá ser feito no IFBA (<strong>ao lado da cantina</strong>), nos seguintes dias e horários:</p>
+                        <ul>
+                        <li><strong>Manhã</strong>: toda quarta e sexta das 10:00 às 11:00 horas</li>
+                        <li><strong>À tarde</strong>: segunda, quinta e sexta das 15:30 às 17 horas</li>
+                        <li><strong>À noite</strong>: todos os dias das 19:00 às 21:00 horas</li>
+                        </ul>
+                        <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"><ystrong>As inscrições não pagas até a data limite serão canceladas e as vagas correspondentes serão liberadas para novas inscrições:</strong></p>
+                        <ul>
+                        <li><del>Inscrições de 12 a 18/11/2018, o pagamento deverá ser efetuado até 21/11 (quarta-feira)</del></li>
+                        <li><del>Inscrições de 19 a 25/11/2018, o pagamento deverá ser efetuado até 28/11 (quarta-feira)</del></li>
+                        <li><del>Inscrições de 26/11/2018 a 30/11/2018, o pagamento deverá ser efetuado até 30/11 (sexta-feira)<del></li>
+                        <li>Inscrições após 30/11 devem ser pagas no credenciamento do evento</li>
+                        </ul>
+                        <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"> <b>Aviso</b> - Por favor, verifique seu cadastro e certifique-se de atualizar seu nome completo pois este será impresso em seu(s) certificado(s).
+                        </p>                                         
                     </div>
-                </form>
-        @endif    
+                </div>
+                @else  
+                    <form action="{{route('eventoUpdate', DB::table('evento')->max('id'))}}" method="post">
+                        <div class="alert alert-dismissible" style="background-color: #fbc8c8;">
+                        <p>Você ainda não se Inscreveu na nova ediçao de @php echo DB::table('evento')->max('ano')@endphp</p>
+                        <button type="submit" class="btn btn-danger" id="changeEdition">Edição @php echo DB::table('evento')->max('ano')@endphp</button>
+                        <p>A cada @php echo Auth::user()->edicao_ativa @endphp </p> 
+                        </div>
+                    </form>
+             @endif    
     </div>    
 @endsection
 

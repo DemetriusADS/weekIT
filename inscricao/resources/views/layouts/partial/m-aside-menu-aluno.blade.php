@@ -22,7 +22,7 @@
                 </a>
             </li>            
             <li class="m-menu__item {{ request()->is('minhas-inscricoes') ? ' m-menu__item--active' : '' }}" aria-haspopup="true">
-                <a href="/inscricao/exibir-inscricoes" class="m-menu__link">
+                <a href="/exibir-inscricoes" class="m-menu__link">
                     <span class="m-menu__item-here"></span>
                     <span class="m-menu__link-text">
                         Minhas Inscrições
@@ -48,22 +48,26 @@
                     <ul class="m-menu__subnav">
                         @php
                             $att = DB::table('evento')->get();
-                            foreach($att as $evento){
-                                if($evento->id != 0){
-                                echo '<li class="m-menu__item" aria-haspopup="true">
-                                        <a  href="/weekIT/public_html/inscricao/home/'.$evento->id.'" class="m-menu__link ">
-                                            <i class="m-menu__link-icon flaticon-list"></i>
-                                            <span class="m-menu__link-title">
-                                                <span class="m-menu__link-wrap">
-                                                    <span class="m-menu__link-text">
-                                                        '.$evento->ano.'
-                                                     </span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </li>';
-                                }                        
-                            }
+                            $insc = DB::table('inscricao_eventos')->get();
+                            foreach($att as $evento){                              
+                                    foreach($insc as $inscrito){
+                                        if($evento->id != 0 && $evento->id == $inscrito->evento_id && Auth::user()->id == $inscrito->participante_id){
+                                            echo '<li class="m-menu__item" aria-haspopup="true">
+                                                        <a  href="/eventochangeano/'.$evento->id.'" class="m-menu__link ">
+                                                            <i class="m-menu__link-icon flaticon-list"></i>
+                                                            <span class="m-menu__link-title">
+                                                                <span class="m-menu__link-wrap">
+                                                                    <span class="m-menu__link-text">
+                                                                        '.$evento->ano.'
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                        </a>
+                                                    </li>';
+                                            break;
+                                        }                               
+                                    }                        
+                                }
                         @endphp
                     </ul>
                 </div>

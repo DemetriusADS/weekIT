@@ -16,11 +16,12 @@ class EventoUpdateController extends Controller
     {
         $eventID = $request->id;
         $userID = Auth::user()->id;
+        $qrcode = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=http://localhost/inscricao/participanteinfo/".$userID."/".$eventID;
         DB::table('participante')
             ->where('id', Auth::user()->id)
             ->update(['edicao_ativa' => $eventID]);
-        DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id, created_at, updated_at) 
-        VALUES ($eventID,$userID, now(), now())");;
+        DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id,qrcode, created_at, updated_at) 
+        VALUES ($eventID,$userID,'$qrcode', now(), now())");;
         // armazenaEvento($request, $userID);
         //$newEvent = DB::table('evento')->max('id');
         //Auth::user()->edicao_ativa = DB::table('evento')->max('id');
