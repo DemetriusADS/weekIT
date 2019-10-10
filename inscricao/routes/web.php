@@ -63,3 +63,4 @@ Route::get('/atividade/sorteio/realizar-sorteio', 'AtividadeController@realizarS
 Route::get('/atividade/presenca/gerenciar', 'AtividadeController@home')->name('gerenciar-presenca');
 Route::get('/atividade/sorteio', 'AtividadeController@sorteio')->name('gerenciar-sorteio');
 Route::post('/cadastrarevento/{id}', 'EventoUpdateController@update')->name('eventoUpdate');
+Route::get('/participanteinfo/{participanteId}/{eventoId}', 'ParticipanteInfoController@show');
