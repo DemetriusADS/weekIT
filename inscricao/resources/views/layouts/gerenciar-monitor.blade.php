@@ -7,8 +7,7 @@
                 <h2 id="titulo">Gerenciar monitor</h2>
                   <div class="form-group col-8">
                       <label for="monitor_select">Monitor </label>
-                      <select class="form-control" id="monitor_select" name="monitor_select">
-                        <option></option>
+                      <select class="form-control" id="monitor_select" name="monitor_select">                        
                         @foreach($monitores as $monitor)
                             <option value="{{ $monitor->participante_id }}">{{strtoupper($monitor->nome)}}</option>
                         
@@ -19,8 +18,10 @@
                       <label for="atividade_select">Atividade </label>
                       <div id="aviso_atividade"></div> 
                       <div id="content-select-atividade">
-                          <select class="form-control" id="atividade_select" name="atividade_select">
-                            <option></option>
+                          <select class="form-control" id="atividade_select" name="atividade_select">                            
+                            @foreach ($atividades as $atividade)
+                            <option value="{{ $atividade->id }}">{{strtoupper($atividade->titulo)}}</option>
+                            @endforeach
                           </select>
                       </div>
                   </div> 
@@ -67,7 +68,7 @@
             function carregarMonitorias(){
                 $.ajax({
                     type: "GET",
-                    url: "/inscricao/atividade/monitor/carregar-monitorias",
+                    url: "/atividade/monitor/carregar-monitorias",
                     data: null,
                     success: function(data) { 
                         if (data.monitorias.length > 0){
@@ -105,7 +106,7 @@
 
             function vincularMonitor(){
                 $.ajax({
-                    url: '/inscricao/atividade/monitor/vincular-monitor',
+                    url: '/atividade/monitor/vincular-monitor',
                     type: 'GET',
                     data: "monitor_id="+ $("#monitor_select").val() +"&atividade_id="+$("#atividade_select").val(),
                     success: function(data) {

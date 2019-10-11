@@ -37,7 +37,7 @@
             function carregaAtividades(){
                 $.ajax({
                     type: "GET",
-                    url: "/inscricao/atividade/presenca/gerenciar-presenca",
+                    url: "/atividade/presenca/gerenciar-presenca",
                     data: null,
                     success: function(data) {
                         if (data.atividades.length > 0) {
@@ -62,7 +62,7 @@
             function realizarSorteio(){
                 $.ajax({
                     type: "GET",
-                    url: "/inscricao/atividade/sorteio/realizar-sorteio",
+                    url: "/atividade/sorteio/realizar-sorteio",
                     data: "atividade_id="+ $('#atividade_select').val() + "&lista="+ganhadores.substring(1, ganhadores.length),
                     success: function(data) {
                         qtGanhadores++;

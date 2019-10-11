@@ -33,47 +33,53 @@
                                           <tbody>
                                                 <tr>
                                                       <td><b>Tipo</b></td>
-                                                      <td>{{$data->tipo}}</td>
+                                                      <td>{{$dadosPessoais[0]->tipo}}</td>
                                                 </tr>
                                                 <tr>
                                                       <td><b>ID</b></td>
-                                                       <td>{{$data->id}}</td>
+                                                       <td>{{$dadosPessoais[0]->id}}</td>
                                                 </tr>
                                                 <tr>
                                                       <td><b>Nome</b></td>
-                                                      <td>{{$data->Nome}}</td>
+                                                      <td>{{$dadosPessoais[0]->Nome}}</td>
                                                 </tr>
                                                 <tr>
                                                 <td><b>Curso</b></td>
-                                                      <td>{{$data->Curso}}</td>
+                                                      <td>{{$dadosPessoais[0]->Curso}}</td>
                                                 </tr>
                                                 <tr>
                                                       <td><b>Instituição</b></td>
-                                                      <td>{{$data->Instituição}}</td>
+                                                      <td>{{$dadosPessoais[0]->Instituição}}</td>
                                                 </tr>
                                                 <tr>
                                                             <td><b>Evento</b></td>
-                                                            <td>{{$data->Evento}}</td>
+                                                            <td>{{$dadosPessoais[0]->Evento}}</td>
                                                 </tr>                                         
                                                 <tr>
                                                       <td><b>EventoAno</b></td>
-                                                      <td>{{$data->EventoAno}}</td>
+                                                      <td>{{$dadosPessoais[0]->EventoAno}}</td>
                                                 </tr>
                                                 
-                                          
-                                          @foreach($data as $atividade => $value)
                                           @php
-                                                if($atividade != 'Nome' && $atividade != 'tipo'&& $atividade != 'id'
-                                                && $atividade !='Evento' && $atividade !='Curso' && $atividade !='Instituição' && 
-                                                $atividade !='EventoID' && $atividade !='EventoAno' ){
+                                          foreach($data as $atividade => $value){
+                                               // if($atividade != 'Nome' && $atividade != 'tipo'&& $atividade != 'id'
+                                               // && $atividade !='Evento' && $atividade !='Curso' && $atividade !='Instituição' && 
+                                               // $atividade !='EventoID' && $atividade !='EventoAno' ){
                                                      echo('<tr>
-                                                            <td><b>'.$atividade.'</b></td>
-                                                            <td>'.$value.'</td>
+                                                            <td><b>AtividadeID ['.$atividade.']</b></td>
+                                                            <td>'.$value->AtividadeID.'</td>
+                                                      </tr>
+                                                      <tr>
+                                                            <td><b>Atividade</b></td>
+                                                            <td>'.$value->Atividade.'</td>
+                                                      </tr>
+                                                      <tr>
+                                                            <td><b>Data da Inscricao</b></td>
+                                                            <td>'.$value->data.'</td>
                                                       </tr>'); 
-                                                }
-                                                
-                                          @endphp         
-                                          @endforeach
+                                               // }
+                                          } 
+                                          @endphp 
                                      </tbody>
                                     </table>
                         

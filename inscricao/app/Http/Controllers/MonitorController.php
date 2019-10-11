@@ -125,8 +125,8 @@ class MonitorController extends AbstractController
 
     public function vincularMonitor(Request $request)
     {
-        $atividade_id = $request->input('atividade_id');
-        $monitor_id = $request->input('monitor_id');
+        $atividade_id = $request->input('atividade.id');
+        $monitor_id = $request->input('monitor.id');
         $input = DB::insert("INSERT INTO atividade_has_monitor(atividade_id, monitor_id) VALUES ($atividade_id,$monitor_id)");
         if (!is_null($input)) {
             return response()
