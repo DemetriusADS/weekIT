@@ -15,9 +15,9 @@
                             <div class="m-portlet__head">
                                 <div class="m-portlet__head-caption">
                                     <div class="m-portlet__head-title">
-                                        <h3 class="m-portlet__head-text">
+                                        <h1 class="m-portlet__head-text">
                                             Detalhes do Participante                                            
-                                        </h3> 
+                                        </h1> 
                                     </div>
                               </div> 
                         </div>                                  
@@ -54,11 +54,7 @@
                                                 <tr>
                                                             <td><b>Evento</b></td>
                                                             <td>{{$data->Evento}}</td>
-                                                </tr>
-                                                <tr>
-                                                      <td><b>EventoID</b></td>
-                                                      <td>{{$data->EventoID}}</td>
-                                                </tr>                                          
+                                                </tr>                                         
                                                 <tr>
                                                       <td><b>EventoAno</b></td>
                                                       <td>{{$data->EventoAno}}</td>
@@ -68,7 +64,7 @@
                                           @foreach($data as $atividade => $value)
                                           @php
                                                 if($atividade != 'Nome' && $atividade != 'tipo'&& $atividade != 'id'
-                                                && $atividade !='EventoID' && $atividade !='Curso' && $atividade !='Instituição' && 
+                                                && $atividade !='Evento' && $atividade !='Curso' && $atividade !='Instituição' && 
                                                 $atividade !='EventoID' && $atividade !='EventoAno' ){
                                                      echo('<tr>
                                                             <td><b>'.$atividade.'</b></td>
@@ -78,8 +74,8 @@
                                                 
                                           @endphp         
                                           @endforeach
-                                          </tbody>
-                                          </table>
+                                     </tbody>
+                                    </table>
                         
                                     </div>
                    </div>

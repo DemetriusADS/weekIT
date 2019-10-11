@@ -23,7 +23,6 @@ class ParticipanteInfoController extends Controller
                 'participante.curso as Curso',
                 'participante.instituicao as Instituição',
                 'evento.nome as Evento',
-                'evento.id as EventoID',
                 'evento.ano as EventoAno',
                 'atividade.identificador as AtividadeID',
                 'atividade.titulo as Atividade',
@@ -35,13 +34,12 @@ class ParticipanteInfoController extends Controller
                 ['atividade.evento_id', '=', $eventoId],
             ])
             ->orderBy('inscricao.data', 'DESC')
-            ->paginate($this->totalPage);
-            $oi = 'ola';
-        if (!is_null($data)) {
+            ->paginate($this->totalPage);            
+        if (!is_null($data[0])) {
             return view('participante.participanteInfo')
             ->with('data', $data[0]);
         } else {
-            return response()->json(['data' => 'vazio']);
+            return 'Participante não existe ou nâo cadastrado';
         }
     }
 }
