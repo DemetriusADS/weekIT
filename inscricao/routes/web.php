@@ -16,25 +16,25 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/recuperar-senha', function(){
-    return view('auth.passwords.email');   
+Route::get('/recuperar-senha', function () {
+    return view('auth.passwords.email');
 });
 
-Route::get('/exibir-inscricoes', function(){
-    return view('layouts.participante');   
+Route::get('/exibir-inscricoes', function () {
+    return view('layouts.participante');
 });
 
-Route::get('/fazer-inscricao', function(){
-    return view('layouts.inscricao');   
-});
+Route::get('/inscricao/fazer-inscricao', function () {
+    return view('layouts.inscricao');
+})->name('minhasinscricoes');
 
 Auth::routes();
 
-foreach (\App\Resource::all() as $resource){
-    $route = Route::match($resource->method, $resource->uri, $resource->controller.'@'.$resource->action)->name($resource->nome);
+foreach (\App\Resource::all() as $resource) {
+    $route = Route::match($resource->method, $resource->uri, $resource->controller . '@' . $resource->action)->name($resource->nome);
 
-    if(!empty($resource->middleware)){
-        foreach (explode(',', $resource->middleware) as $middleware){
+    if (!empty($resource->middleware)) {
+        foreach (explode(',', $resource->middleware) as $middleware) {
             $route->middleware($middleware);
         }
     }
@@ -62,3 +62,6 @@ Route::get('/atividade/presenca/setar-presenca-code', 'AtividadeController@setar
 Route::get('/atividade/sorteio/realizar-sorteio', 'AtividadeController@realizarSorteio');
 Route::get('/atividade/presenca/gerenciar', 'AtividadeController@home')->name('gerenciar-presenca');
 Route::get('/atividade/sorteio', 'AtividadeController@sorteio')->name('gerenciar-sorteio');
+Route::post('/cadastrarevento/{id}', 'EventoUpdateController@update')->name('eventoUpdate');
+Route::get('/participanteinfo/{participanteId}/{eventoId}', 'ParticipanteInfoController@show');
+Route::POST('/participanteinfo/coordenadoraccess', 'ParticipanteInfoController@presencaCoordernador')->name('coordernador-setpresenca');

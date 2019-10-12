@@ -38,7 +38,7 @@
             function carregaAtividades(){
                 $.ajax({
                     type: "GET",
-                    url: "/inscricao/atividade/presenca/gerenciar-presenca",
+                    url: "/atividade/presenca/gerenciar-presenca",
                     data: null,
                     success: function(data) {
                         if (data.atividades.length > 0) {
@@ -66,7 +66,7 @@
             function preparaGerenciamentoPresenca(){
                 $.ajax({
                     type: "GET",
-                    url: "/inscricao/atividade/presenca/carregar-participantes",
+                    url: "/atividade/presenca/carregar-participantes",
                     data: "atividade_id="+ $('#atividade_select').val(),
                     success: function(data) {  
                         if (data.participantes.length > 0 || data.participantes == 1){
@@ -108,7 +108,7 @@
             function carregarParticipantes(){
                 $.ajax({
                     type: "GET",
-                    url: "/inscricao/atividade/presenca/carregar-participantes",
+                    url: "/atividade/presenca/carregar-participantes",
                     data: "atividade_id="+ $('#atividade_select').val(),
                     success: function(data) {  
                         if (data.participantes.length > 0){
@@ -179,7 +179,7 @@
             function setarPresenca(inscricao_id, participante_id){
                 var presente = +$('#acao-'+participante_id).is( ':checked' );
                 $.ajax({
-                    url: '/inscricao/atividade/presenca/setar-presenca',
+                    url: '/atividade/presenca/setar-presenca',
                     type: 'GET',
                     data: "inscricao_id="+ inscricao_id +"&presente="+ presente,
                     success: function(data) {
@@ -242,7 +242,7 @@
 
             function buscaParticipante(cpf){
                 $.ajax({
-                    url: '/inscricao/atividade/presenca/busca-participante',
+                    url: '/atividade/presenca/busca-participante',
                     type: 'GET',
                     data: "cpf="+ cpf +"&atividade_id="+ $('#atividade_select').val(),
                     success: function(data) {
@@ -295,7 +295,7 @@
 
             function confirmarPresenca(){                
                 $.ajax({
-                    url: '/inscricao/atividade/presenca/setar-presenca-code',
+                    url: '/atividade/presenca/setar-presenca-code',
                     type: 'GET',
                     data: "participante_id="+ $('#participante_id').val() +"&atividade_id="+ $('#atividade_select').val(),
                     success: function(data) {

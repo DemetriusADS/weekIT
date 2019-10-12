@@ -39,19 +39,25 @@
                     <ul class="m-menu__subnav">
                         @php
                             $att = DB::table('evento')->get();
-                            foreach($att as $evento){
-                                echo '<li class="m-menu__item" aria-haspopup="true">
-                                        <a  href="/inscricao/eventochangeano/'.$evento->id.'" class="m-menu__link ">
-                                            <i class="m-menu__link-icon flaticon-list"></i>
-                                            <span class="m-menu__link-title">
-                                                <span class="m-menu__link-wrap">
-                                                    <span class="m-menu__link-text">
-                                                        '.$evento->ano.'
-                                                     </span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </li>';                        
+                            $insc = DB::table('inscricao_eventos')->get();
+                            foreach($att as $evento){                              
+                                    foreach($insc as $inscrito){
+                                        if($evento->id != 0 && $evento->id == $inscrito->evento_id && Auth::user()->id == $inscrito->participante_id){
+                                            echo '<li class="m-menu__item" aria-haspopup="true">
+                                                        <a  href="/eventochangeano/'.$evento->id.'" class="m-menu__link ">
+                                                            <i class="m-menu__link-icon flaticon-list"></i>
+                                                            <span class="m-menu__link-title">
+                                                                <span class="m-menu__link-wrap">
+                                                                    <span class="m-menu__link-text">
+                                                                        '.$evento->ano.'
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                        </a>
+                                                    </li>';
+                                            break;
+                                        }                               
+                                    }                        
                             }
                         @endphp
                     </ul>

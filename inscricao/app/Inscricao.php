@@ -17,13 +17,14 @@ class Inscricao extends AbstractModel implements DefaultModel
     public static $verbose_plural   = 'Inscrições';
     public static $verbose_genre    = 'F';
     public static $controller       = 'InscricaoController';
-    
+
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function search(Request $request){
+    public static function search(Request $request)
+    {
 
         $request_query      = $request->input('query');
         $page               = $request->input('pagination.page', 1);
@@ -33,63 +34,63 @@ class Inscricao extends AbstractModel implements DefaultModel
         $excluded           = $request->input('excluded',  NULL);
 
         $query =  DB::table('inscricao')
-           ->select([
+            ->select([
                 'inscricao.id as id',
                 DB::raw('DATE_FORMAT(inscricao.data,"%d/%m às %H:%i") as data'),
                 DB::raw('CONCAT(atividade.identificador," - ",atividade.titulo) AS atividade_titulo'),
                 'inscricao.status as status',
                 'inscricao.presente as presente',
                 'inscricao.participante_id as participante_id',
-                'inscricao.atividade_id as atividade_id',                
+                'inscricao.atividade_id as atividade_id',
                 'participante.nome as participante_nome',
                 'participante.cpf as cpf',
                 DB::raw('DATE_FORMAT(inscricao.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(inscricao.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at'),
-            ])->orderBy('inscricao.data','DESC');
+            ])->orderBy('inscricao.data', 'DESC');
 
-        $query->join('atividade', 'atividade.id','=', 'inscricao.atividade_id');
-        $query->join('participante', 'participante.id','=', 'inscricao.participante_id');
-        $query->where('evento_id','=',DB::table('participante')
-                      ->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa);
+        $query->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id');
+        $query->join('participante', 'participante.id', '=', 'inscricao.participante_id');
+        $query->where('evento_id', '=', DB::table('participante')
+            ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa);
 
-        if(isset($request_query['descricao'])){
-            if(!empty($request_query['descricao'])){
-                $query->where('inscricao.descricao', 'like', '%'.$request_query['descricao'].'%');
+        if (isset($request_query['descricao'])) {
+            if (!empty($request_query['descricao'])) {
+                $query->where('inscricao.descricao', 'like', '%' . $request_query['descricao'] . '%');
             }
         }
 
-        if(isset($request_query['cpf'])){
-            if(!empty($request_query['cpf'])){
-                $query->where('participante.cpf', 'like', '%'.$request_query['cpf'].'%');
-            }
-        }          
-        
-        if(isset($request_query['participante_nome'])){
-            if(!empty($request_query['participante_nome'])){
-                $query->where('participante.nome', 'like', '%'.$request_query['participante_nome'].'%');
+        if (isset($request_query['cpf'])) {
+            if (!empty($request_query['cpf'])) {
+                $query->where('participante.cpf', 'like', '%' . $request_query['cpf'] . '%');
             }
         }
 
-        if(isset($request_query['atividade_id'])){
-            if(!empty($request_query['atividade_id'])){
+        if (isset($request_query['participante_nome'])) {
+            if (!empty($request_query['participante_nome'])) {
+                $query->where('participante.nome', 'like', '%' . $request_query['participante_nome'] . '%');
+            }
+        }
+
+        if (isset($request_query['atividade_id'])) {
+            if (!empty($request_query['atividade_id'])) {
                 $query->where('inscricao.atividade_id', '=', $request_query['atividade_id']);
             }
         }
 
-        if(isset($request_query['participante_id'])){
-            if(!empty($request_query['participante_id'])){
+        if (isset($request_query['participante_id'])) {
+            if (!empty($request_query['participante_id'])) {
                 $query->where('inscricao.participante_id', '=', $request_query['participante_id']);
             }
         }
 
-        if(isset($request_query['status'])){
-            if(!empty($request_query['status'])){
+        if (isset($request_query['status'])) {
+            if (!empty($request_query['status'])) {
                 $query->where('inscricao.status', '=', $request_query['status']);
             }
         }
 
-        if(isset($sort)){
-            $query->orderBy($sort['field'],$sort['sort']);
+        if (isset($sort)) {
+            $query->orderBy($sort['field'], $sort['sort']);
         }
 
         $paginator  = $query->paginate($perpage, $columns, 'page', $page);
@@ -110,7 +111,8 @@ class Inscricao extends AbstractModel implements DefaultModel
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function dataTablesColumns(){
+    public static function dataTablesColumns()
+    {
 
         $columns = [
 
@@ -135,15 +137,16 @@ class Inscricao extends AbstractModel implements DefaultModel
         return response()->json($columns);
     }
 
-    public static function dataTablesSearchForm(){
+    public static function dataTablesSearchForm()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 'cpf' => [
                     'type'          => 'text',
                     'placeholder'   => 'CPF',
                     'class'   => 'input-cpf',
-                ],               
+                ],
                 'participante_nome' => [
                     'type'          => 'text',
                     'placeholder'   => 'Participante',
@@ -157,24 +160,25 @@ class Inscricao extends AbstractModel implements DefaultModel
                         'andamento' => 'andamento',
                         'isento'    => 'isento',
                     ]
-                ],                
+                ],
                 'atividade_id' => [
                     'type'          => 'select',
                     'placeholder'   => 'Atividade',
-                    'options' => Atividade::select(DB::raw('CONCAT(identificador, " - ", titulo) AS titulo'), 'id')->where('evento_id','=',DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('identificador')->pluck('titulo', 'id')
+                    'options' => Atividade::select(DB::raw('CONCAT(identificador, " - ", titulo) AS titulo'), 'id')->where('evento_id', '=', DB::table('participante')->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('identificador')->pluck('titulo', 'id')
                 ],
             ]
         ];
     }
 
-    public static function fieldsFormCreate(){
+    public static function fieldsFormCreate()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 [
                     'participante_id' => [
                         'type'        => 'select',
-                        'options'     => DB::table('participante')->select(['nome','id'])->orderBy('nome')->get()->pluck('nome', 'id'),
+                        'options'     => DB::table('participante')->select(['nome', 'id'])->orderBy('nome')->get()->pluck('nome', 'id'),
                         'label'       => 'Participante',
                         'placeholder' => 'Participante',
                         'required'    => 'required',
@@ -183,7 +187,7 @@ class Inscricao extends AbstractModel implements DefaultModel
                 [
                     'atividade_id' => [
                         'type'          => 'select',
-                        'options'       => Atividade::select(DB::raw('CONCAT(identificador, " - ", titulo) AS titulo'), 'id')->where('evento_id','=',DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('identificador')->pluck('titulo', 'id'),
+                        'options'       => Atividade::select(DB::raw('CONCAT(identificador, " - ", titulo) AS titulo'), 'id')->where('evento_id', '=', DB::table('participante')->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('identificador')->pluck('titulo', 'id'),
                         'label'         => 'Atividade',
                         'placeholder'   => 'Atividade',
                         'required'      => 'required',
@@ -211,13 +215,13 @@ class Inscricao extends AbstractModel implements DefaultModel
         ];
     }
 
-    public static function fieldsFormEdit(){
+    public static function fieldsFormEdit()
+    {
         return  self::fieldsFormCreate();
     }
 
     public function __toString()
     {
-        return "Inscrição código: ".$this->id;
+        return "Inscrição código: " . $this->id;
     }
-
 }

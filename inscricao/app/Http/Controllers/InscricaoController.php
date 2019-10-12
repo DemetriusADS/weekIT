@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Http\Requests\InscricaoRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

@@ -325,22 +325,23 @@
                     <span class="m-menu__item-here"></span>
                     <span class="m-menu__link-text">
                         @php 
-                            echo "Edição: ". DB::table('participante')
+                            echo "Edição: ". DB::table('participante') //ERRO DA EDIÇÃO DO EVENTO
                                         ->join('evento','evento.id','=','participante.edicao_ativa')
-                                        ->select('evento.ano')->where('participante.id','=',Auth::user()->id)->get()[0]->ano;
+                                        ->select('evento.ano')
+                                        ->where('participante.id','=',Auth::user()->id)->get()[0]->ano;
                         @endphp
                     </span>
                     <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i> -->
                 </a>
-                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+              <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
                     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                     <ul class="m-menu__subnav">
                         @php
                             $att = DB::table('evento')->get();
-                            foreach($att as $evento){
+                            foreach($att as $evento){   //arrumar
                                 echo '<li class="m-menu__item" aria-haspopup="true">
-                                        <a  href="/inscricao/eventochangeano/'.$evento->id.'" class="m-menu__link ">
+                                        <a  href="/eventochangeano/'.$evento->id.'" class="m-menu__link ">
                                             <i class="m-menu__link-icon flaticon-list"></i>
                                             <span class="m-menu__link-title">
                                                 <span class="m-menu__link-wrap">
