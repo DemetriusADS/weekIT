@@ -7,10 +7,11 @@
       <title>Informações do Participante</title>
       <link href="{{ asset('assets/vendors/base/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
       <link href="{{ asset('assets/demo/demo5/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-      <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />
+      <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />     
 </head>
 <body>
-            <div class="m-content">
+      <h2>OI</h2>
+                 <div class="m-content">
                         <div class="m-portlet m-portlet--mobile">
                             <div class="m-portlet__head">
                                 <div class="m-portlet__head-caption">
@@ -67,7 +68,7 @@
                                                // $atividade !='EventoID' && $atividade !='EventoAno' ){
                                                      echo('<tr>
                                                             <td><b>AtividadeID ['.$atividade.']</b></td>
-                                                            <td>'.$value->AtividadeID.'</td>
+                                                            <td>'.$value->AtividadeCod.'</td>
                                                       </tr>
                                                       <tr>
                                                             <td><b>Atividade</b></td>
@@ -85,8 +86,7 @@
                         
                                     </div>
                    </div>
-            </div>                        
-                        
+            </div>    
 </body>
 </html>
 

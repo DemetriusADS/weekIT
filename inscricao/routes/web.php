@@ -64,3 +64,4 @@ Route::get('/atividade/presenca/gerenciar', 'AtividadeController@home')->name('g
 Route::get('/atividade/sorteio', 'AtividadeController@sorteio')->name('gerenciar-sorteio');
 Route::post('/cadastrarevento/{id}', 'EventoUpdateController@update')->name('eventoUpdate');
 Route::get('/participanteinfo/{participanteId}/{eventoId}', 'ParticipanteInfoController@show');
+Route::POST('/participanteinfo/coordenadoraccess', 'ParticipanteInfoController@presencaCoordernador')->name('coordernador-setpresenca');
