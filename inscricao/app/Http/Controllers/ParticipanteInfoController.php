@@ -19,19 +19,19 @@ class ParticipanteInfoController extends Controller
     public function presencaCoordernador(Request $request)
     {
         $eventoID = Auth::user()->edicao_ativa;
-        $participanteID = $request->input('participante_id');        
+        $participanteID = $request->input('participante_id');
         $atividadeID = $request->get('atividadeID');
-        dd($participanteID, $atividadeID);
-        $this->getViewParticipante($participanteID, $eventoID);
+        //dd($participanteID, $atividadeID);
         $this->setPresenca($participanteID, $atividadeID, $eventoID);
+        return $this->getViewParticipante($participanteID, $eventoID);
     }
     public function show(Request $request, $participanteId, $eventoId)
     {
-        
-        $this->getViewParticipante($participanteId, $eventoId);
+
+        //$this->getViewParticipante($participanteId, $eventoId);
         $data = $this->getDados($participanteId, $eventoId);
         $dadosPessoais = $this->getDadosPessoais($participanteId, $eventoId);
-        
+        //return view('participante.participanteInfo', compact('data', 'dadosPessoais'));
         //dd($dadosPessoais, $data);
         date_default_timezone_set('America/Sao_Paulo');
         $date = date('d/m/Y');
@@ -77,12 +77,13 @@ class ParticipanteInfoController extends Controller
                         }
                     }
                 } else {
-                    return 'Permissão Negada.';
+                    return $this->getViewParticipante($participanteId, $eventoId);
                 }
             } else {
-                return 'Monitor não logado';
+                echo 'Monitor não logado';
+                return $this->getViewParticipante($participanteId, $eventoId);
             }
-            $this->getViewParticipante($participanteId, $eventoId);
+            return $this->getViewParticipante($participanteId, $eventoId);
         } else {
             return 'Participante não existe ou não cadastrado';
         }
@@ -117,7 +118,7 @@ class ParticipanteInfoController extends Controller
                 ['participante.id', 'like',  $participanteID],
                 ['evento.id', '=', $eventoID],
             ])
-            ->paginate($totalPage);
+            ->get();
     }
 
     function getDados($participanteID, $eventoID)
@@ -127,7 +128,6 @@ class ParticipanteInfoController extends Controller
         return DB::table('inscricao')
             ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
             ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
-            ->join('inscricao_eventos', 'inscricao_eventos.participante_id', '=', 'inscricao.participante_id')
             ->join('evento', 'evento.id', '=', 'atividade.evento_id')
             ->select(
                 'atividade.id as AtividadeID',
@@ -148,7 +148,7 @@ class ParticipanteInfoController extends Controller
                 ['atividade.evento_id', '=', $eventoID],
             ])
             ->orderBy('inscricao.data', 'DESC')
-            ->paginate($totalPage);
+            ->get();
     }
 
     function setPresenca($participanteID, $atividadeID, $eventoID)
@@ -164,22 +164,21 @@ class ParticipanteInfoController extends Controller
                     WHERE participante_id = $participanteID and atividade_id = $atividadeID");
                             if (!is_null($input)) {
                                 echo ("<br><h3>Presença Confirmada</h3><br>");
-                                $this->getViewParticipante($participanteID, $eventoID);
-                                
+                                header("refresh: 3;" . route('home'));
                             }
                         } else {
                             echo ("<br><h3>O Partificante já possui presença nesta atividade");
-                            $this->getViewParticipante($participanteID, $eventoID);
+                            header("refresh: 3;" . route('home'));
                         }
                     } else {
                         echo ("<br><h3>Pagamento não Identificado");
-                         $this->getViewParticipante($participanteID, $eventoID);
+                        return $this->getViewParticipante($participanteID, $eventoID);
                     }
                 }
             }
         } else {
             echo ("<br><h3>Verifique se você está no evento mais recente");
+            header("refresh: 3;" . route('home'));
         }
-        header("refresh: 3;".route('home'));
     }
 }

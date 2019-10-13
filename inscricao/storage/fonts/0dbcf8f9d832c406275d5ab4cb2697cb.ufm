@@ -1,0 +1,28 @@
+StartFontMetrics 4.1
+Notice Converted by PHP-font-lib
+Comment https://github.com/PhenX/php-font-lib
+EncodingScheme FontSpecific
+Copyright 
+FontName Metronic
+FontSubfamily Medium
+UniqueID FontForge 2.0 : Metronic : 20-3-2017
+FullName Metronic
+Version Version 001.000 
+PostScriptName Metronic
+Weight Bold
+ItalicAngle 0
+IsFixedPitch false
+UnderlineThickness 49
+UnderlinePosition -125
+FontHeightOffset 90
+Ascender 875
+Descender -125
+FontBBox 0 -125 1000 875
+StartCharMetrics 8
+U 32 ; WX 391 ; N space ; G 3
+U 61873 ; WX 1000 ; N arrows-01 ; G 4
+U 61874 ; WX 1000 ; N arrows-02 ; G 5
+U 61875 ; WX 1000 ; N arrows-03 ; G 6
+U 61876 ; WX 1000 ; N arrows-04 ; G 7
+EndCharMetrics
+EndFontMetrics
