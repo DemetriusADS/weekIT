@@ -68,7 +68,7 @@ class ParticipanteInfoController extends Controller
                                         $this->setPresenca($participanteId, $atividadeID->AtividadeID, $eventoId);
                                         $occour++;
                                     } else {
-                                        return 'Esta atividade já encerrou. Por favor, procure um coordenador';
+                                        return 'Esta atividade. já encerrou. Por favor, procure um coordenador';
                                         $occour++;
                                     }
                                 } else {
