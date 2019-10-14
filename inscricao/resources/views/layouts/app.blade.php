@@ -24,6 +24,7 @@
     <link href="{{ asset('assets/vendors/base/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/demo/demo5/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />
+    
     <!--end::Base Styles -->
     <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}" />
 
@@ -52,7 +53,7 @@
                     <div class="m-stack__item m-brand">
                         <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                             <div class="m-stack__item m-stack__item--middle m-brand__logo">
-                                <a href="/" class="m-brand__logo-wrapper">
+                            <a href="{{route('home')}}" class="m-brand__logo-wrapper">
                                     <img alt="" src="{{ asset('img/logo-sys.png')}}" style="max-width: 210px;"/>
                                 </a>
                             </div>
@@ -82,45 +83,6 @@
                                                 </div>                                                
                                             </div>
                                         </div>
-                                        <div class="m-dropdown__wrapper">
-                                            <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-                                            <div class="m-dropdown__inner">
-                                                <div class="m-dropdown__header m--align-center" style="background: #064524; background-size: cover;">
-                                                    <div class="m-card-user m-card-user--skin-dark">
-                                                        <!--<div class="m-card-user__pic">
-                                                            <img src="{{asset('assets/app/media/img/users/user4.jpg')}}" class="m--img-rounded m--marginless" alt=""/>
-                                                        </div>-->
-                                                        <div class="m-card-user__details">
-																	<span class="m-card-user__name m--font-weight-500">
-																		{{ Auth::user()->email }}
-																	</span>
-                                                            <a href="" class="m-card-user__email m--font-weight-300 m-link">
-                                                                {{ Auth::user()->email }}
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="m-dropdown__body">
-                                                    <div class="m-dropdown__content">
-                                                        <ul class="m-nav m-nav--skin-light">
-                                                            <li class="m-nav__section m--hide">
-																		<span class="m-nav__section-text">
-																			Section
-																		</span>
-                                                            </li>
-                                                           
-                                                           
-                                                            <li class="m-nav__separator m-nav__separator--fit"></li>
-                                                            <li class="m-nav__item">
-                                                                <a href="{{route('logout')}}" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
-                                                                    Sair
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </li>
 
                                 </ul>
@@ -131,15 +93,21 @@
                 </div>
             </div>
         </div>
+
         <div class="m-header__bottom">
+
             <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
                 <div class="m-stack m-stack--ver m-stack--desktop">
+                       
                     <!-- begin::Horizontal Menu -->
                     @include('layouts.partial.m-aside-menu-'. Auth::user()->tipo)
                     <!-- end::Horizontal Menu -->
+               
                 </div>
             </div>
+
         </div>
+
     </header>
     <!-- end::Header -->
     <!-- begin::Body -->

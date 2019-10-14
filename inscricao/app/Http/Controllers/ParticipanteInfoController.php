@@ -31,11 +31,17 @@ class ParticipanteInfoController extends Controller
         //$this->getViewParticipante($participanteId, $eventoId);
         $data = $this->getDados($participanteId, $eventoId);
         $dadosPessoais = $this->getDadosPessoais($participanteId, $eventoId);
+
+
+        // dd($dataE);
         //return view('participante.participanteInfo', compact('data', 'dadosPessoais'));
         //dd($dadosPessoais, $data);
         date_default_timezone_set('America/Sao_Paulo');
-        $date = date('d/m/Y');
+        $date = date('d/m/Y H:i');
         $time = date('H:i');
+        //$date += $time;
+        // dd($date);
+        //dd(Auth::check());
         if (!is_null($data[0])) {
             if (Auth::check()) {
                 $occour = 0;
@@ -53,35 +59,40 @@ class ParticipanteInfoController extends Controller
                     //dd($data[0]);
                     foreach ($data as $arrayIndex => $atividadeID) {
                         foreach ($atividadeHasMonitor as $arrayIndex2 => $atividadeID2) {
+                            $dataInicio = $atividadeID->DataInicio . " " . $atividadeID->HoraInicio;
+                            $dataFim = $atividadeID->DataFim . " " . $atividadeID->HoraFim;
                             //dd($date, $atividadeID->DataFim);
                             if ($atividadeID->AtividadeID == $atividadeID2->AtividadesIn) {
-                                if ($date >= $atividadeID->DataInicio /*&& $time >= $atividadeID->HoraInicio*/) {
-                                    if ($date <= $atividadeID->DataFim && $time <= $atividadeID->HoraFim) {
+                                if ($date >= $dataInicio) {
+                                    if ($date <= $dataFim) {
                                         $this->setPresenca($participanteId, $atividadeID->AtividadeID, $eventoId);
                                         $occour++;
-                                        // break; 
+                                    } else {
+                                        return 'Esta atividade já encerrou. Por favor, procure um coordenador';
+                                        $occour++;
                                     }
+                                } else {
+                                    return 'O Evento ainda não Iniciou';
+                                    $occour++;
                                 }
                             }
                         }
                     }
                     if ($occour == 0) {
-                        echo ('<br>Verifique com o coordenador a situação do participante');
+                        echo ('<br>Você não é monitor de nenhuma das atividades desse participante');
                     } // dd($occour);
                     //dd($teste);
                 } elseif ($userLoggedID->tipo == 'coordenador') {
                     foreach ($data as $arrayIndex => $atividadeID) {
-                        if ($date >= $atividadeID->DataInicio) {
-                            return view('participante.coordenadorAccess', compact('data', 'userLoggedID', 'participanteId'));
+                        $dataInicio = $atividadeID->DataInicio . " " . $atividadeID->HoraInicio;
+                        if ($date >= $dataInicio) {
+                            return view('participante.coordenadorAccess', compact('data', 'userLoggedID', 'dadosPessoais'));
                             $occour++;
                         }
                     }
-                } else {
-                    return $this->getViewParticipante($participanteId, $eventoId);
                 }
             } else {
                 echo 'Monitor não logado';
-                return $this->getViewParticipante($participanteId, $eventoId);
             }
             return $this->getViewParticipante($participanteId, $eventoId);
         } else {

@@ -58,7 +58,7 @@ class PdfGeneratorController extends Controller
         */
         //dd($participantesData);
         //return view('pdf_view.crachas', compact('participantesData'));
-        $pdf = PDF::loadView('pdf_view.crachas', compact('participantesData'));
+        $pdf = PDF::loadView('pdf_view.crachas', compact('participantesData'))->setOption('margin-bottom', 20);
         return $pdf->stream('teste.pdf');
         //return PDF::loadFile('http://www.github.com')->inline('github.pdf');
     }

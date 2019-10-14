@@ -30,12 +30,14 @@
 <body>
       @if($userLoggedID->tipo == 'coordenador')
             <h1>Painel do Coordenador</h1>
+            <br>
+            <h3>Nome: {{$dadosPessoais[0]->Nome}}</h3>
             <div class="m-portlet__body">                          
                         <div id="content-select-tppresenca">
                                     <br>
                         <form action="{{route('coordernador-setpresenca', ['participanteID' =>csrf_field(), 'atividadeID' => csrf_field()])}}" method="POST">
-                                    <input type="hidden" name="participante_id" value='{{$participanteId}}'/>
-                                    <select class="form-control col-2" name="atividadeID">
+                                    <input type="hidden" name="participante_id" value='{{$dadosPessoais[0]->id}}'/>
+                                    <select class="form-control col-5" name="atividadeID">
                                                 @foreach ($data as $atividade => $atividadeID)
                                                 <option value={{$atividadeID->AtividadeID}}>{{$atividadeID->Atividade}}</option>
                                                 @endforeach
