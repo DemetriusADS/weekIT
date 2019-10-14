@@ -30,8 +30,7 @@
 <body>
       @if($userLoggedID->tipo == 'coordenador')
             <h1>Painel do Coordenador</h1>
-            <div class="m-portlet__body">   
-                        
+            <div class="m-portlet__body">                          
                         <div id="content-select-tppresenca">
                                     <br>
                         <form action="{{route('coordernador-setpresenca', ['participanteID' =>csrf_field(), 'atividadeID' => csrf_field()])}}" method="POST">

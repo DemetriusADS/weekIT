@@ -155,7 +155,10 @@ class AtividadeController extends AbstractController
     {
         $participante = DB::table('participante')
             ->select('participante.id', 'participante.cpf', 'participante.nome')
-            ->where('participante.cpf', '=', self::Mask("###.###.###-##", $request->input('cpf')))
+            ->where(
+                ['participante.cpf', '=', self::Mask("###.###.###-##", $request->input('cpf'))],
+                ['participante.cpf', '=', $request->input('cpf')]
+            )
             ->get();
 
         if (!is_null($participante)) {

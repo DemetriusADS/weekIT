@@ -19,7 +19,8 @@
                         Minhas Inscrições
                     </span>
                 </a>
-            </li>            
+            </li>    
+                    
             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('evento/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
                 <a  href="{{route('evento.index')}}" class="m-menu__link m-menu__toggle">
                     <span class="m-menu__item-here"></span>
@@ -131,6 +132,18 @@
                                     <span class="m-menu__link-wrap">
                                         <span class="m-menu__link-text">
                                             Listar participantes
+                                        </span>
+                                    </span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="m-menu__item "  aria-haspopup="true">
+                            <a  href="{{route('gerarpdf')}}" class="m-menu__link ">
+                                <i class="m-menu__link-icon flaticon-add"></i>
+                                <span class="m-menu__link-title">
+                                    <span class="m-menu__link-wrap">
+                                        <span class="m-menu__link-text">
+                                            Gerar Crachás
                                         </span>
                                     </span>
                                 </span>
@@ -339,7 +352,8 @@
                     <ul class="m-menu__subnav">
                         @php
                             $att = DB::table('evento')->get();
-                            foreach($att as $evento){   //arrumar
+                            foreach($att as $evento){  
+                                if($evento->id != 0){
                                 echo '<li class="m-menu__item" aria-haspopup="true">
                                         <a  href="/eventochangeano/'.$evento->id.'" class="m-menu__link ">
                                             <i class="m-menu__link-icon flaticon-list"></i>
@@ -351,7 +365,8 @@
                                                 </span>
                                             </span>
                                         </a>
-                                    </li>';                        
+                                    </li>';
+                                }                        
                             }
                         @endphp
                     </ul>

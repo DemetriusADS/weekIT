@@ -39,22 +39,6 @@ class EventoUpdateController extends Controller
         if ($check == 0) {
             return "Error 500";
         }
-        // armazenaEvento($request, $userID);
-        //$newEvent = DB::table('evento')->max('id');
-        //Auth::user()->edicao_ativa = DB::table('evento')->max('id');
-        //if (Auth::user()->edicao_ativa == DB::table('evento')->max('id'))
-        //echo ('success cadastrado com sucesso');
-
-        //echo ('error Ops algo deu errado');
-        // DB::table('participante')->where('id', '=', Auth::user()->id)
-        //     ->update(['edicao_ativa' => DB::table('evento')->max('id')]);
-        // DB::table('participante')
-        // ->where('id', Auth::user()->id)
-        //  ->update(['edicao_ativa' => $id]);
         return redirect('/home');
-    }
-    public function armazenaEvento($eventoRequest, $userID)
-    {
-        DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id) VALUES ($eventoRequest,$userID)");
     }
 }
