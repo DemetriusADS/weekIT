@@ -9,8 +9,7 @@
       <link href="{{ asset('assets/demo/demo5/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
       <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />     
 </head>
-<body>
-      <h2>OI</h2>
+<body>      
                  <div class="m-content">
                         <div class="m-portlet m-portlet--mobile">
                             <div class="m-portlet__head">
@@ -63,10 +62,7 @@
                                                 
                                           @php
                                           foreach($data as $atividade => $value){
-                                               // if($atividade != 'Nome' && $atividade != 'tipo'&& $atividade != 'id'
-                                               // && $atividade !='Evento' && $atividade !='Curso' && $atividade !='Instituição' && 
-                                               // $atividade !='EventoID' && $atividade !='EventoAno' ){
-                                                     echo('<tr>
+                                                echo('<tr>
                                                             <td><b>AtividadeID ['.$atividade.']</b></td>
                                                             <td>'.$value->AtividadeCod.'</td>
                                                       </tr>
@@ -78,7 +74,7 @@
                                                             <td><b>Data da Inscricao</b></td>
                                                             <td>'.$value->data.'</td>
                                                       </tr>'); 
-                                               // }
+                                               
                                           } 
                                           @endphp 
                                      </tbody>

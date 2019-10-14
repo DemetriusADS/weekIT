@@ -57,6 +57,7 @@
                                 ->count() 
                       }}
                     </b>
+                    <br>
                     <span style="font-size: 16px; margin-left: -20px !important;">Inscrições isentas:</span>
                     <b>
                       {{ 
