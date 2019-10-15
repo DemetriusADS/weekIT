@@ -84,7 +84,6 @@
                                             </div>
                                         </div>
                                     </li>
-
                                 </ul>
                             </div>
                         </div>
@@ -93,21 +92,15 @@
                 </div>
             </div>
         </div>
-
         <div class="m-header__bottom">
-
             <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
                 <div class="m-stack m-stack--ver m-stack--desktop">
-                       
                     <!-- begin::Horizontal Menu -->
                     @include('layouts.partial.m-aside-menu-'. Auth::user()->tipo)
                     <!-- end::Horizontal Menu -->
-               
                 </div>
             </div>
-
         </div>
-
     </header>
     <!-- end::Header -->
     <!-- begin::Body -->
