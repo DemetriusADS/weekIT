@@ -23,12 +23,12 @@ class EventoUpdateController extends Controller
                 if ($eventID == $value->id) {
                     //dd($eventID);
                     $userID = Auth::user()->id;
-                    $qrcode = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=http://localhost/participanteinfo/" . $userID . "/" . $eventID;
+                    $qrcode = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=http://localhost/participanteinfo/" . $userID . "/" . $eventID;
                     DB::table('participante')
                         ->where('id', Auth::user()->id)
                         ->update(['edicao_ativa' => $eventID]);
                     DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id,qrcode, created_at, updated_at) 
-                    VALUES ($eventID,$userID,'$qrcode', now(), now())");;
+                    VALUES ($eventID,$userID,'$qrcode', now(), now())");
                     $check++;
                 }
             }

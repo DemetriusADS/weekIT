@@ -164,7 +164,7 @@ class Participante extends AbstractModel implements DefaultModel
                             'masculino' => 'masculino',
                             'feminino' => 'feminino'
                         ],
-                        'label'         => 'Tipo',
+                        'label'         => 'Sexo',
                         'placeholder'   => 'Tipo',
                         'required'      => 'required',
                     ],
@@ -207,7 +207,7 @@ class Participante extends AbstractModel implements DefaultModel
                     'nome_cracha' => [
                         'type'          => 'text',
                         'label'         => 'Nome para crachá',
-                        'placeholder'   => 'Nome para crachá',
+                        'placeholder'   => 'Nome e sobrenome apenas',
                         'required'      => 'required',
                     ],
                 ],
@@ -332,7 +332,7 @@ class Participante extends AbstractModel implements DefaultModel
                     'nome_cracha' => [
                         'type'          => 'text',
                         'label'         => 'Nome para crachá',
-                        'placeholder'   => 'Nome para crachá',
+                        'placeholder'   => 'Nome e sobrenome apenas',
                         'required'      => 'required',
                     ],
                 ],

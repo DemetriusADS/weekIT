@@ -31,8 +31,8 @@ class ParticipanteController extends AbstractController
         $input = $request->all();
         $input['password'] = Hash::make($request->get('password'));
         $input['roles_id'] = Role::where('slug', 'aluno')->first()->id;
-        $input['cadastrado_em'] = date_create(date('Y-m-d'));
-        $input['edicao_ativa'] = [0]; //DB::table('evento')->max('id');
+        $input['cadastrado_em'] = date('Y-m-d');
+        $input['edicao_ativa'] = '0'; //DB::table('evento')->max('id');
 
         $entity = $this->model::insert($input);
 
