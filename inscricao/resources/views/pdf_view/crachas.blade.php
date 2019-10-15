@@ -10,13 +10,13 @@
             <div class="container">
             <div class="row">
       @foreach ($participantesData as $participante)
-      <div class="border" style="float: left; padding: 8px; margin: 2px">
+      <div class="border" style="float: left; padding: 8px; margin: 2px; height: 200px; width: 230px">
       <div class="text-center">
                   
                         @php
                         echo("<img  src='".$participante->QRCODE."'>");
                         echo('<h4 style="align-content: center; margin-left:7%">'.$participante->Nome_Cracha.'</h4>');
-                        echo ("<div>".DNS1D::getBarcodeHTML($participante->CPF, "C128")."</div>");
+                        echo ("<div style='align-content: center;margin-left:6%'>".DNS1D::getBarcodeHTML($participante->CPF, "UPCA")."</div>");
                         echo('<h6 style="margin-left:8%">'.$participante->CPF.'</h6>')                      
                   @endphp
                   
