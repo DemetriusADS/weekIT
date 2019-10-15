@@ -133,9 +133,7 @@ class ParticipanteInfoController extends Controller
     }
 
     function getDados($participanteID, $eventoID)
-    {
-        $totalPage = 10;
-
+    {        
         return DB::table('inscricao')
             ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
             ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
