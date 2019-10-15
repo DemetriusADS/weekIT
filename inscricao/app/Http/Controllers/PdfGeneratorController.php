@@ -25,6 +25,7 @@ class PdfGeneratorController extends Controller
                     ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
                     ->join('evento', 'evento.id', '=', 'inscricao_eventos.evento_id')
                     ->select(
+                        'participante.nome as nome',
                         'participante.nome_cracha as Nome_Cracha',
                         'participante.cpf as CPF',
                         'inscricao_eventos.qrcode as QRCODE'

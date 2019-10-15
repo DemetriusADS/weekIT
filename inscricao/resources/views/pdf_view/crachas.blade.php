@@ -10,13 +10,19 @@
             <div class="container">
             <div class="row">
       @foreach ($participantesData as $participante)
-      <div class="border" style="float: left; padding: 8px; margin: 2px; height: 200px; width: 230px">
+      @php      //Retornar o primeiro e ultimo nomes do participante para o crachá
+            $partes = explode(' ', $participante->Nome_Cracha);
+            $primeiroNome = array_shift($partes);
+            $ultimoNome = array_pop($partes);
+            $participante->Nome_Cracha = $primeiroNome." ".$ultimoNome;
+      @endphp
+      <div class="border" style="float: left; padding: 8px; margin: 2px; height: 200px; width: 220px">
       <div class="text-center">
                   
                         @php
-                        echo("<img  src='".$participante->QRCODE."'>");
-                        echo('<h4 style="align-content: center; margin-left:7%">'.$participante->Nome_Cracha.'</h4>');
-                        echo ("<div style='align-content: center;margin-left:6%'>".DNS1D::getBarcodeHTML($participante->CPF, "UPCA")."</div>");
+                        echo("<img style='align-content: center; margin-left:5px;'  src='".$participante->QRCODE."'>");
+                        echo('<h5 class="font-weight-bold" style=" margin-left:7%; padding:0">'.$participante->Nome_Cracha.'</h5>');
+                        echo ("<div style='align-content: center;margin-left:3%'>".DNS1D::getBarcodeHTML($participante->CPF, "UPCA")."</div>");
                         echo('<h6 style="margin-left:8%">'.$participante->CPF.'</h6>')                      
                   @endphp
                   

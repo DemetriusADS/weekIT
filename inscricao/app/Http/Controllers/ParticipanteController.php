@@ -33,8 +33,19 @@ class ParticipanteController extends AbstractController
                 $input['edicao_ativa'] = Auth::user()->edicao_ativa; //DB::table('evento')->max('id');
                 $ip = $request->ip();
                 $user_agent = $request->server('HTTP_USER_AGENT');
-
+                //dd($input['roles_id']);
                 $entity = $this->model::insert($input, $ip, $user_agent);
+                $participanteCriado = DB::table('participante')
+                    ->select(
+                        'participante.id as id',
+                        'participante.edicao_ativa as evento'
+                    )->where('id', \DB::raw("(select max(`id`) from participante)"))->get();
+                // dd($participanteCriado[0]->id);
+                $eventoID = $participanteCriado[0]->evento;
+                $participanteID = $participanteCriado[0]->id;
+                $qrcode = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=http://localhost/participanteinfo/" . $participanteCriado[0]->id . "/" . $participanteCriado[0]->evento;
+                DB::insert("INSERT INTO inscricao_eventos(evento_id, participante_id,qrcode, created_at, updated_at) 
+                VALUES ($eventoID,$participanteID,'$qrcode', now(), now())");;
             }
         } else {
 
