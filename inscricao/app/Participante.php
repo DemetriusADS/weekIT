@@ -203,13 +203,13 @@ class Participante extends AbstractModel implements DefaultModel
                         'type'          => 'text',
                         'label'         => 'Curso',
                         'placeholder'   => 'Curso',
-                    ],/*
+                    ],
                     'nome_cracha' => [
                         'type'          => 'text',
                         'label'         => 'Nome para crachá',
                         'placeholder'   => 'Nome e sobrenome apenas',
                         'required'      => 'required',
-                    ],*/
+                    ],
                 ],
 
                 [
@@ -329,12 +329,12 @@ class Participante extends AbstractModel implements DefaultModel
                         'label'         => 'Curso',
                         'placeholder'   => 'Curso',
                     ],
-                    /* 'nome_cracha' => [
+                    'nome_cracha' => [
                         'type'          => 'text',
                         'label'         => 'Nome para crachá',
                         'placeholder'   => 'Nome e sobrenome apenas',
                         'required'      => 'required',
-                    ],*/
+                    ],
                 ],
 
                 [
