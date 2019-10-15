@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ParticipanteRequest;
 use Carbon\Carbon;
+use Auth;
+use App\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,18 +24,31 @@ class ParticipanteController extends AbstractController
      */
     public function store(ParticipanteRequest $request)
     {
-        
-        $input = $request->all();
-        $ip = $request->ip();
-        $user_agent = $request->server('HTTP_USER_AGENT');
+        if (Auth::check()) {
+            if (Auth::user()->tipo == "coordenador") {
+                $input = $request->all();
+                $input['password'] = Hash::make($request->get('password'));
+                $input['roles_id'] = Role::where('slug', 'aluno')->first()->id;
+                $input['cadastrado_em'] = date('Y-m-d');
+                $input['edicao_ativa'] = Auth::user()->edicao_ativa; //DB::table('evento')->max('id');
+                $ip = $request->ip();
+                $user_agent = $request->server('HTTP_USER_AGENT');
 
-        $entity = $this->model::insert($input, $ip, $user_agent);
+                $entity = $this->model::insert($input, $ip, $user_agent);
+            }
+        } else {
 
+            $input = $request->all();
+            $ip = $request->ip();
+            $user_agent = $request->server('HTTP_USER_AGENT');
 
-        $route = redirect()->route($this->base_name_route.'.show', ['id' => $entity->id]);
+            $entity = $this->model::insert($input, $ip, $user_agent);
+        }
 
-        if(!is_null($entity)){
-            return $route->with('success', $entity. ' cadastrado com sucesso');
+        $route = redirect()->route($this->base_name_route . '.show', ['id' => $entity->id]);
+
+        if (!is_null($entity)) {
+            return $route->with('success', $entity . ' cadastrado com sucesso');
         }
 
         return $route->with('error', 'Ops algo deu errado');
@@ -42,20 +57,20 @@ class ParticipanteController extends AbstractController
     /**
      * @param ParticipanteRequest $request
      * @return \Illuminate\Http\RedirectResponse
-    */
+     */
     public function update(ParticipanteRequest $request)
     {
         $entity = $this->model::find($request->input('id'));
-        $route  = redirect()->route($this->model::$base_name_route.'.edit', ['id' => $request->input('id')] );
+        $route  = redirect()->route($this->model::$base_name_route . '.edit', ['id' => $request->input('id')]);
         $input = $request->all();
-        if ($request->input('password') == null){
-            $input = $request->except('password');   
+        if ($request->input('password') == null) {
+            $input = $request->except('password');
         } else {
-            $input['password'] = Hash::make($request->get('password'));               
-        } 
-                
-        if($entity->update($input))
-            return $route->with('success', $entity.'  atualizado com sucesso');
+            $input['password'] = Hash::make($request->get('password'));
+        }
+
+        if ($entity->update($input))
+            return $route->with('success', $entity . '  atualizado com sucesso');
 
         return $route->with('warning', 'Ops, algo deu errado');
     }
