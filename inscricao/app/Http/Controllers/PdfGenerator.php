@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use PDF;
 use DB;
 use Auth;
+use Illuminate\Support\Arr;
 
 class PdfGenerator extends Controller
 {
@@ -111,32 +112,41 @@ class PdfGenerator extends Controller
             if ($userID->edicao_ativa == $eventoRecente) {
                 if (!is_null($idVerificador)) {
                     $getList = session()->get('getList');
-                    $ids = array_column($getList, 'id');
-                    dd($getList);
-                    foreach ($getList as $key => $index) {
+                    $ids = data_get($getList, '*.id');
+                    //dd($ids);
 
-                        //dd($index);
-                        $participantesData = DB::table('inscricao_eventos')
-                            ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
-                            ->join('evento', 'evento.id', '=', 'inscricao_eventos.evento_id')
-                            ->select(
-                                'participante_id as id',
-                                'participante.nome as nome',
-                                'participante.nome_cracha as Nome_Cracha',
-                                'participante.cpf as CPF',
-                                'inscricao_eventos.qrcode as QRCODE'
-                            )
-                            ->where(
-                                [
-                                    ['participante_id', 'like', $index['id']],
-                                    ['inscricao_eventos.evento_id', '=',  $eventoRecente]
-                                ]
-                            )
-                            ->get();
-                        $getList = null;
-                        session(['getList' => $getList]);
-                        //dd($getList);
-                    }
+                    //$getList = (object) $getList;
+
+                    //dd($getList->values()->all());
+                    //dd($object);
+
+
+                    //foreach ($ids as $index) {
+
+                    //dd($index);
+                    $participantesData = DB::table('inscricao_eventos')
+                        ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
+                        ->join('evento', 'evento.id', '=', 'inscricao_eventos.evento_id')
+                        ->select(
+                            'participante_id as id',
+                            'participante.nome as nome',
+                            'participante.nome_cracha as Nome_Cracha',
+                            'participante.cpf as CPF',
+                            'inscricao_eventos.qrcode as QRCODE'
+                        )
+                        ->whereIn(
+                            'participante_id',
+                            data_get($getList, '*.id')
+                        )
+                        ->where('inscricao_eventos.evento_id', '=', $eventoRecente)
+                        ->get();
+                    //}                           
+
+                    //dd($participantesData);
+                    $getList = null;
+                    session(['getList' => $getList]);
+                    //dd($getList);
+
                 } else {
                     //dd($userID->tipo);
                     //pegar as variaveis do banco de participantes que estão cadastrados no evento
@@ -154,7 +164,7 @@ class PdfGenerator extends Controller
                         ])
                         ->get();
 
-                    //dd($participantesData);
+                    dd($participantesData);
                     //$participantesData[0]->CPF = preg_replace("/\D/", "", $participantesData[0]->CPF);
                     //echo DNS1D::getBarcodeHTML($participantesData[0]->CPF, "CODABAR");
 
