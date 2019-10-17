@@ -46,8 +46,17 @@ class PdfGenerator extends Controller
     public function store(Request $request)
     {
         $getList = session('getList');
-        $id['id'] =  $request->get('id');
-        $getList[] = $id;
+        $id['id'] = $request->input('id');
+        if(is_array($request->input('id'))){
+            foreach ($id['id'] as $key => $value) {
+                $getList[] = $value;
+             }
+             //dd($getList);
+        }else{
+        $getList[] = $id['id'];
+        //dd($getList);
+        //dd(is_array($getList));
+        }
         session(['getList' => $getList]);
         return redirect()->back();
     }
@@ -58,6 +67,33 @@ class PdfGenerator extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function mostrar(Request $request)
+    {
+        // dd($id);
+        $nome = $request->nome;
+        //dd($nome);
+        $participantes = DB::table('inscricao_eventos')
+            ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
+            ->join('evento', 'evento.id', '=', 'inscricao_eventos.evento_id')
+            ->select(
+                'participante_id as id',
+                'participante.nome as nome',
+            )
+            ->where([
+                ['inscricao_eventos.evento_id', '=', Auth::user()->edicao_ativa],
+                ['participante.nome', 'like', "{$nome}%"]
+            ])
+            ->get();
+        //dd($participantes);
+        if(!is_null($participantes)){
+            return redirect()->back()->with('list', json_encode($participantes));
+        }
+        else{
+            return redirect()->back()->with('list', []);
+        }
+        
+        // return view('pdf_view.getnames', compact('participantes'));
+    }
     public function show($id)
     {
         //
@@ -95,7 +131,7 @@ class PdfGenerator extends Controller
     public function deleta($id)
     {
         //dd($id);
-        $getList = session()->get('getList');
+        $getList = session('getList');
         //dd($getList);
         $ids = array_column($getList, 'id');
         $index = array_search($id, $ids);
@@ -106,13 +142,15 @@ class PdfGenerator extends Controller
     }
     public function getInformations($idVerificador = null)
     {
+        
         $eventoRecente = DB::table('evento')->get()->max('id');
         $userID = Auth::user();
         if ($userID->tipo == 'coordenador') {
             if ($userID->edicao_ativa == $eventoRecente) {
                 if (!is_null($idVerificador)) {
                     $getList = session()->get('getList');
-                    $ids = data_get($getList, '*.id');
+                    //dd($getList);
+                    $ids = data_get($getList, []);
                     //dd($ids);
 
                     //$getList = (object) $getList;
@@ -136,7 +174,7 @@ class PdfGenerator extends Controller
                         )
                         ->whereIn(
                             'participante_id',
-                            data_get($getList, '*.id')
+                            data_get($getList, [])
                         )
                         ->where('inscricao_eventos.evento_id', '=', $eventoRecente)
                         ->get();
@@ -164,7 +202,7 @@ class PdfGenerator extends Controller
                         ])
                         ->get();
 
-                    dd($participantesData);
+                    //bnkbnnnndd($participantesData);
                     //$participantesData[0]->CPF = preg_replace("/\D/", "", $participantesData[0]->CPF);
                     //echo DNS1D::getBarcodeHTML($participantesData[0]->CPF, "CODABAR");
 

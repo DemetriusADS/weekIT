@@ -68,3 +68,4 @@ Route::POST('/participanteinfo/coordenadoraccess', 'ParticipanteInfoController@p
 Route::get('/gerarpdf/{id?}', 'PdfGenerator@getInformations')->name('gerarpdf');
 Route::resource('pdf', 'PdfGenerator');
 Route::get('/pdfdelete/{id?}', 'PdfGenerator@deleta')->name('deletar-da-lista-pdf');
+Route::post('/pdfshow', 'PdfGenerator@mostrar')->name('shownomestopdf');
