@@ -220,6 +220,33 @@ class PdfGenerator extends Controller
             return 'Você não possui permissao para esta operação. Procure um coordenador.';
         }
     }
+   public function crachaAtividade($id){
+    //dd($id);
+    $participantesData = DB::table('inscricao_eventos')
+                            ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
+                            ->join('inscricao', 'inscricao.participante_id', '=', 'participante.id')
+                            ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
+                            
+                            ->select(
+                                'participante.nome as nome',
+                                'participante.nome_cracha as Nome_Cracha',
+                                'participante.cpf as CPF',
+                                'inscricao_eventos.qrcode as QRCODE'
+                            )
+                        ->where([
+                            ['atividade.id', '=', $id],
+                        ])
+                        ->get();
+                       // dd($participantesData);
+                        if(!is_null($participantesData)){
+                            foreach ($participantesData as $key => $value) {
+                                $value->CPF = preg_replace("/\D/", "", $value->CPF);
+                            }
+                            //dd($participantesData);
+                            return $this->pdfGenerator($participantesData);
+                        }
+   }
+
 
     function pdfGenerator($participantesData)
     {

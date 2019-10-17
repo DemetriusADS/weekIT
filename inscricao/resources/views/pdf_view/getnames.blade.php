@@ -5,6 +5,15 @@
               <div class="info">
                         <h4>Gerar Crachás</h4>
               </div>
+              @php     
+              $getAtividades = DB::table('atividade')
+              ->select(
+                    'atividade.id as id',
+                    'atividade.titulo as nome',
+              )->where('atividade.evento_id','=',Auth::user()->edicao_ativa)
+              ->get();
+             // dd($getParticipantes);
+          @endphp
               
              <!-- <div class='list-group float-md-right width = 50px'>-->
              <button class="btn btn-outline-danger float-md-right m-1"> <a href="{{route('gerarpdf')}}" class="text-dark">Gerar Todos</a></button>
@@ -14,9 +23,10 @@
                           Atividades
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="#">Alguma ação</a>
-                          <a class="dropdown-item" href="#">Outra ação</a>
-                          <a class="dropdown-item" href="#">Alguma coisa aqui</a>
+                              @foreach($getAtividades as $atividades)
+                                    <a class="dropdown-item" href="{{route('cracha_atividade', $atividades->id)}}">{{$atividades->nome}}</a>
+                              @endforeach
+                                                    
                         </div>
                       </div>
      @php     
@@ -102,7 +112,7 @@
                 'participante.edicao_ativa as evento'
           )->where('inscricao_eventos.evento_id','=',Auth::user()->edicao_ativa)
           ->get();
-                  if(isset($getList)){
+                  if(session('getList')){
                         echo('<table class="table table-borderless ">');
                                     //dd($getList);
                         foreach ($getList as $key => $idSelecionado) {  
