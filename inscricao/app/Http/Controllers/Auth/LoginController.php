@@ -43,6 +43,7 @@ class LoginController extends Controller
         $this->guard()->logout();
 
         $request->session()->invalidate();
+        $request->session()->flush();
 
         return redirect('/login');
     }
