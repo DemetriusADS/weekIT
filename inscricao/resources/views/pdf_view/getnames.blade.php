@@ -4,8 +4,22 @@
       <hr>                     
               <div class="info">
                         <h4>Gerar Crachás</h4>
-              <button class="btn btn-outline-danger float-right ml-5"  type="buttin"><a style="text-decoration: none; color: black" class='danger' href="{{route('gerarpdf')}}">Gerar Todos</button>
-      @php     
+              </div>
+              
+             <!-- <div class='list-group float-md-right width = 50px'>-->
+             <button class="btn btn-outline-danger float-md-right m-1"> <a href="{{route('gerarpdf')}}" class="text-dark">Gerar Todos</a></button>
+              <!--</div>-->
+              <div class="dropdown float-right">
+                        <button class="btn btn-outline-warning dropdown-toggle m-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Atividades
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#">Alguma ação</a>
+                          <a class="dropdown-item" href="#">Outra ação</a>
+                          <a class="dropdown-item" href="#">Alguma coisa aqui</a>
+                        </div>
+                      </div>
+     @php     
           $getParticipantes = DB::table('participante')
           ->join('inscricao_eventos','inscricao_eventos.participante_id','=','participante.id')
           ->select(
@@ -18,10 +32,10 @@
        <form class="form-inline" action="{{route('shownomestopdf', ['nome'=>csrf_field()])}}" method="POST">
                   <div class="input-group mb-3">
                               <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Pesquisar</span>
-                              </div>
-                    <input class="form-control search-field" type="text" name="nome" placeholder="Nome">
-                    <div class="input-group-append">
+                                <label for="pesquisar" class="input-group-text" id="basic-addon1">Pesquisar</label>
+                              </div>  
+                    <input class="form-control search-field" type="text" id='pesquisar' name="nome" placeholder="Nome">
+                   <div class="input-group-append"> 
                               <button class="btn btn-outline-success" type="submit" id="button-addon2">Buscar</button>
                             </div>
                            
@@ -51,7 +65,7 @@
                               echo (Form::checkbox('id[]', $item->id));
                               echo('      </div>
                                                 </div>
-                                       <label class="form-control" for="id[]">'.$item->nome.'</label>
+                                       <label class="form-control" for="#id[]">'.$item->nome.'</label>
                                     </div>');
                         }
                         echo(Form::submit('Adicionar', ['class' => 'btn btn-outline-success']));

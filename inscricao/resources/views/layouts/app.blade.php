@@ -37,6 +37,11 @@
 
       gtag('config', 'UA-118415870-2');
     </script>
+    <style>
+        body{
+            min-width: 350px;
+        }
+    </style>
 
 </head>
 <!-- end::Head -->
