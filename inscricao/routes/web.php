@@ -70,3 +70,4 @@ Route::get('/crachaatividades/{id}', 'PdfGenerator@crachaAtividade')->name('crac
 Route::resource('pdf', 'PdfGenerator');
 Route::get('/pdfdelete/{id?}', 'PdfGenerator@deleta')->name('deletar-da-lista-pdf');
 Route::post('/pdfshow', 'PdfGenerator@mostrar')->name('shownomestopdf');
+Route::get('/atividades/gerarlista/{id}', 'AtividadeController@gerarRelatorio')->name('gerarRelatorio');

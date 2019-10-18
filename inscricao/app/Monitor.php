@@ -17,13 +17,14 @@ class Monitor extends AbstractModel implements DefaultModel
     public static $verbose_plural   = 'monitores';
     public static $verbose_genre    = 'M';
     public static $controller       = 'MonitorController';
-    
+
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function search(Request $request){
+    public static function search(Request $request)
+    {
 
         $request_query      = $request->input('query');
         $page               = $request->input('pagination.page', 1);
@@ -33,7 +34,7 @@ class Monitor extends AbstractModel implements DefaultModel
         $excluded           = $request->input('excluded',  NULL);
 
         $query =  DB::table('monitor')
-           ->select([
+            ->select([
                 'monitor.id as id',
                 'monitor.participante_id as participante_id',
                 'participante.nome as nome',
@@ -43,14 +44,14 @@ class Monitor extends AbstractModel implements DefaultModel
 
         $query->join('participante', 'participante.id', '=', 'monitor.participante_id');
 
-        if(isset($request_query['nome'])){
-            if(!empty($request_query['descricao'])){
-                $query->where('participante.nome', 'like', '%'.$request_query['nome'].'%');
+        if (isset($request_query['nome'])) {
+            if (!empty($request_query['descricao'])) {
+                $query->where('participante.nome', 'like', '%' . $request_query['nome'] . '%');
             }
         }
 
-        if(isset($sort)){
-            $query->orderBy($sort['field'],$sort['sort']);
+        if (isset($sort)) {
+            $query->orderBy($sort['field'], $sort['sort']);
         }
 
 
@@ -73,26 +74,28 @@ class Monitor extends AbstractModel implements DefaultModel
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function dataTablesColumns(){
+    public static function dataTablesColumns()
+    {
 
         $columns = [
-           [
+            [
                 'field' => 'id',
                 'title' => 'ID',
             ],
-           [
+            [
                 'field' => 'nome',
                 'title' => 'Nome',
-            ],            
+            ],
         ];
 
         return response()->json($columns);
     }
 
-    public static function dataTablesSearchForm(){
+    public static function dataTablesSearchForm()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 'data' => [
                     'type'          => 'text',
                     'placeholder'   => 'Nome',
@@ -101,19 +104,20 @@ class Monitor extends AbstractModel implements DefaultModel
         ];
     }
 
-    public static function fieldsFormCreate(){
+    public static function fieldsFormCreate()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 [
                     'participante_id' => [
                         'type'        => 'select',
-                        'options'     => DB::table('participante')->select(['nome','id'])->orderBy('nome')->get()->pluck('nome', 'id'),
+                        'options'     => DB::table('participante')->select(['nome', 'id'])->orderBy('nome')->get()->pluck('nome', 'id'),
                         'label'       => 'Participante',
                         'placeholder' => 'Participante',
                         'required'    => 'required',
                     ],
-                ],                            
+                ],
                 [
                     'id' => [
                         'type'          => 'hidden',
@@ -124,13 +128,18 @@ class Monitor extends AbstractModel implements DefaultModel
         ];
     }
 
-    public static function fieldsFormEdit(){
+    public static function fieldsFormEdit()
+    {
         return  self::fieldsFormCreate();
     }
 
     public function __toString()
     {
-        return "Monitor: ". DB::table('participante')->select('nome')->where('id','=',$this->participante_id)->get()[0]->nome;
+        return "Monitor: " . DB::table('participante')->select('nome')->where('id', '=', $this->participante_id)->get()[0]->nome;
     }
-
+    public static function verbose_name()
+    {
+        $verbose_name = 'monitor';
+        return response()->json($verbose_name);
+    }
 }

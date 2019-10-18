@@ -24,6 +24,11 @@ class Participante extends AbstractModel implements DefaultModel
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public static function verbose_name()
+    {
+        $verbose_name = 'participante';
+        return response()->json($verbose_name);
+    }
     public static function search(Request $request)
     {
 

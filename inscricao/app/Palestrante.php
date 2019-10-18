@@ -17,13 +17,14 @@ class Palestrante extends AbstractModel implements DefaultModel
     public static $verbose_plural   = 'palestrantes';
     public static $verbose_genre    = 'M';
     public static $controller       = 'PalestranteController';
-    
+
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function search(Request $request){
+    public static function search(Request $request)
+    {
 
         $request_query      = $request->input('query');
         $page               = $request->input('pagination.page', 1);
@@ -33,23 +34,23 @@ class Palestrante extends AbstractModel implements DefaultModel
         $excluded           = $request->input('excluded',  NULL);
 
         $query =  DB::table('palestrante')
-           ->select([
+            ->select([
                 'palestrante.id as id',
                 'palestrante.descricao as descricao',
                 'palestrante.evento_id as evento_id',
                 DB::raw('DATE_FORMAT(palestrante.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(palestrante.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at'),
-            ])->where('palestrante.evento_id','=',DB::table('participante')
-                      ->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('descricao');
+            ])->where('palestrante.evento_id', '=', DB::table('participante')
+                ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('descricao');
 
-        if(isset($request_query['descricao'])){
-            if(!empty($request_query['descricao'])){
-                $query->where('palestrante.descricao', 'like', '%'.$request_query['descricao'].'%');
+        if (isset($request_query['descricao'])) {
+            if (!empty($request_query['descricao'])) {
+                $query->where('palestrante.descricao', 'like', '%' . $request_query['descricao'] . '%');
             }
         }
 
-        if(isset($sort)){
-            $query->orderBy($sort['field'],$sort['sort']);
+        if (isset($sort)) {
+            $query->orderBy($sort['field'], $sort['sort']);
         }
 
 
@@ -65,6 +66,11 @@ class Palestrante extends AbstractModel implements DefaultModel
             'data' => $paginator->items()
         ]);
     }
+    public static function verbose_name()
+    {
+        $verbose_name = 'palestrante';
+        return response()->json($verbose_name);
+    }
 
 
     /**
@@ -72,10 +78,11 @@ class Palestrante extends AbstractModel implements DefaultModel
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function dataTablesColumns(){
+    public static function dataTablesColumns()
+    {
 
         $columns = [
-           [
+            [
                 'field' => 'id',
                 'title' => 'ID',
             ], [
@@ -87,10 +94,11 @@ class Palestrante extends AbstractModel implements DefaultModel
         return response()->json($columns);
     }
 
-    public static function dataTablesSearchForm(){
+    public static function dataTablesSearchForm()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 'data' => [
                     'type'          => 'text',
                     'placeholder'   => 'Descrição',
@@ -99,18 +107,34 @@ class Palestrante extends AbstractModel implements DefaultModel
         ];
     }
 
-    public static function fieldsFormCreate(){
-
+    public static function fieldsFormCreate()
+    {
+        $atividades = DB::table('atividade')
+            ->select(
+                'atividade.id as atividadeID',
+                'atividade.titulo as titulo'
+            )->where('atividade.evento_id', '=', Auth::user()->edicao_ativa)->get();
+        //dd($atividades);
+        $lista[] = null;
+        foreach ($atividades as $value) {
+            array_push($lista, [$value->atividadeID => $value->titulo]);
+        };
         return  [
-            'fields' =>[
+            'fields' => [
                 [
                     'descricao' => [
                         'type'          => 'text',
                         'label'         => 'Descrição',
                         'placeholder'   => 'Descrição',
                         'required'      => 'required',
-                    ],                  
-                ],   
+                    ],
+                    'atividade' => [
+                        'type' => 'select',
+                        'options' => $lista,
+                        'label' => 'Atividade',
+                        'required' => 'required',
+                    ],
+                ],
 
                 [
                     'id' => [
@@ -122,7 +146,8 @@ class Palestrante extends AbstractModel implements DefaultModel
         ];
     }
 
-    public static function fieldsFormEdit(){
+    public static function fieldsFormEdit()
+    {
         return  self::fieldsFormCreate();
     }
 
@@ -130,5 +155,4 @@ class Palestrante extends AbstractModel implements DefaultModel
     {
         return $this->descricao;
     }
-
 }

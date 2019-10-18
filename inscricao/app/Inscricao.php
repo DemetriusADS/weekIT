@@ -23,6 +23,7 @@ class Inscricao extends AbstractModel implements DefaultModel
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+
     public static function search(Request $request)
     {
 
@@ -51,7 +52,7 @@ class Inscricao extends AbstractModel implements DefaultModel
         $query->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id');
         $query->join('participante', 'participante.id', '=', 'inscricao.participante_id');
         $query->where('evento_id', '=', DB::table('participante')
-            ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa);
+            ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.edicao_ativa', '=', Auth::user()->id)->get()[0]->edicao_ativa);
 
         if (isset($request_query['descricao'])) {
             if (!empty($request_query['descricao'])) {
@@ -169,7 +170,11 @@ class Inscricao extends AbstractModel implements DefaultModel
             ]
         ];
     }
-
+    public static function verbose_name()
+    {
+        $verbose_name = 'inscricao';
+        return response()->json($verbose_name);
+    }
     public static function fieldsFormCreate()
     {
 

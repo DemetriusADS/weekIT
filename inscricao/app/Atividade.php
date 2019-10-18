@@ -16,14 +16,15 @@ class Atividade extends AbstractModel implements DefaultModel
     public static $verbose_name     = 'atividade';
     public static $verbose_plural   = 'atividades';
     public static $verbose_genre    = 'F';
-    public static $controller       = 'AtividadeController';    
-    
+    public static $controller       = 'AtividadeController';
+
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function search(Request $request){
+    public static function search(Request $request)
+    {
 
         $request_query      = $request->input('query');
         $page               = $request->input('pagination.page', 1);
@@ -33,12 +34,12 @@ class Atividade extends AbstractModel implements DefaultModel
         $excluded           = $request->input('excluded',  NULL);
 
         $query =  DB::table('atividade')
-           ->select([
+            ->select([
                 'atividade.id as id',
                 'atividade.identificador as identificador',
                 'atividade.titulo as titulo',
-                 DB::raw('CONCAT(DATE_FORMAT(atividade.hora_inicio,"%H:%i"), " - ", DATE_FORMAT(atividade.hora_fim,"%H:%i")) AS horario'),
-                 DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as  data_do_curso'),
+                DB::raw('CONCAT(DATE_FORMAT(atividade.hora_inicio,"%H:%i"), " - ", DATE_FORMAT(atividade.hora_fim,"%H:%i")) AS horario'),
+                DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as  data_do_curso'),
                 'atividade.data_inicio as data_inicio',
                 'atividade.hora_inicio as hora_inicio',
                 'atividade.data_fim as data_fim',
@@ -52,44 +53,44 @@ class Atividade extends AbstractModel implements DefaultModel
 
                 DB::raw('DATE_FORMAT(atividade.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(atividade.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at'),
-            ])->where('atividade.evento_id','=',DB::table('participante')
-                      ->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('titulo');
+            ])->where('atividade.evento_id', '=', DB::table('participante')
+                ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('titulo');
 
         $query->join('local', 'local.id', '=', 'atividade.local_id');
         $query->join('evento', 'evento.id', '=', 'atividade.evento_id');
 
-        if(isset($request_query['descricao'])){
-            if(!empty($request_query['descricao'])){
-                $query->where('atividade.descricao', 'like', '%'.$request_query['descricao'].'%');
+        if (isset($request_query['descricao'])) {
+            if (!empty($request_query['descricao'])) {
+                $query->where('atividade.descricao', 'like', '%' . $request_query['descricao'] . '%');
             }
         }
 
-        if(isset($request_query['titulo'])){
-            if(!empty($request_query['titulo'])){
-                $query->where('atividade.titulo', 'like', '%'.$request_query['titulo'].'%');
+        if (isset($request_query['titulo'])) {
+            if (!empty($request_query['titulo'])) {
+                $query->where('atividade.titulo', 'like', '%' . $request_query['titulo'] . '%');
             }
         }
 
-        if(isset($request_query['identificador'])){
-            if(!empty($request_query['identificador'])){
-                $query->where('atividade.identificador', 'like', '%'.$request_query['identificador'].'%');
+        if (isset($request_query['identificador'])) {
+            if (!empty($request_query['identificador'])) {
+                $query->where('atividade.identificador', 'like', '%' . $request_query['identificador'] . '%');
             }
         }
 
-        if(isset($request_query['local_id'])){
-            if(!empty($request_query['local_id'])){
+        if (isset($request_query['local_id'])) {
+            if (!empty($request_query['local_id'])) {
                 $query->where('atividade.local_id', '=', $request_query['local_id']);
             }
         }
 
-        if(isset($request_query['evento_id'])){
-            if(!empty($request_query['evento_id'])){
+        if (isset($request_query['evento_id'])) {
+            if (!empty($request_query['evento_id'])) {
                 $query->where('atividade.evento_id', '=', $request_query['evento_id']);
             }
-        }        
-        
-        if(isset($sort)){
-            $query->orderBy($sort['field'],$sort['sort']);
+        }
+
+        if (isset($sort)) {
+            $query->orderBy($sort['field'], $sort['sort']);
         }
 
 
@@ -112,19 +113,25 @@ class Atividade extends AbstractModel implements DefaultModel
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function dataTablesColumns(){
+    public static function verbose_name()
+    {
+        $verbose_name = 'atividade';
+        return response()->json($verbose_name);
+    }
+    public static function dataTablesColumns()
+    {
 
         $columns = [
             [
                 'field' => 'identificador',
                 'title' => 'Identificador',
-            ],[
+            ], [
                 'field' => 'titulo',
                 'title' => 'Título',
-            ],[
+            ], [
                 'field' => 'data_do_curso',
                 'title' => 'Data',
-            ],[
+            ], [
                 'field' => 'horario',
                 'title' => 'Horário',
             ],
@@ -140,37 +147,39 @@ class Atividade extends AbstractModel implements DefaultModel
         return response()->json($columns);
     }
 
-    public static function dataTablesSearchForm(){
+    public static function dataTablesSearchForm()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 'titulo' => [
                     'type'          => 'text',
                     'placeholder'   => 'Título',
                 ],
                 'local_id' => [
                     'type'          => 'select',
-                   'options'        => Local::select('descricao', 'id')->where('evento_id','=',DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa)->pluck('descricao', 'id'),  
+                    'options'        => Local::select('descricao', 'id')->where('evento_id', '=', DB::table('participante')->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa)->pluck('descricao', 'id'),
                     'label'         => 'Local',
                     'placeholder'   => 'Local',
                     'required'      => 'required',
-                ],                
+                ],
             ]
         ];
     }
 
-    public static function fieldsFormCreate(){
+    public static function fieldsFormCreate()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 [
                     'local_id' => [
                         'type'          =>  'select',
-                        'options'       => Local::select('descricao', 'id')->where('evento_id','=',DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa)->pluck('descricao', 'id'),                        
+                        'options'       => Local::select('descricao', 'id')->where('evento_id', '=', DB::table('participante')->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa)->pluck('descricao', 'id'),
                         'label'         => 'Local',
                         'placeholder'   => 'Local',
                         'required'      => 'required',
-                    ],                    
+                    ],
                 ],
                 [
                     'identificador' => [
@@ -186,7 +195,7 @@ class Atividade extends AbstractModel implements DefaultModel
                         'placeholder'   => 'Título',
                         'required'      => 'required',
                     ],
-                ],   
+                ],
                 [
                     'data_inicio' => [
                         'type'          => 'date',
@@ -264,7 +273,8 @@ class Atividade extends AbstractModel implements DefaultModel
         ];
     }
 
-    public static function fieldsFormEdit(){
+    public static function fieldsFormEdit()
+    {
         return  self::fieldsFormCreate();
     }
 
@@ -272,5 +282,4 @@ class Atividade extends AbstractModel implements DefaultModel
     {
         return $this->titulo;
     }
-
 }
