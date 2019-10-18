@@ -47,15 +47,15 @@ class PdfGenerator extends Controller
     {
         $getList = session('getList');
         $id['id'] = $request->input('id');
-        if(is_array($request->input('id'))){
+        if (is_array($request->input('id'))) {
             foreach ($id['id'] as $key => $value) {
                 $getList[] = $value;
-             }
-             //dd($getList);
-        }else{
-        $getList[] = $id['id'];
-        //dd($getList);
-        //dd(is_array($getList));
+            }
+            //dd($getList);
+        } else {
+            $getList[] = $id['id'];
+            //dd($getList);
+            //dd(is_array($getList));
         }
         session(['getList' => $getList]);
         return redirect()->back();
@@ -85,13 +85,12 @@ class PdfGenerator extends Controller
             ])
             ->get();
         //dd($participantes);
-        if(!is_null($participantes)){
+        if (!is_null($participantes)) {
             return redirect()->back()->with('list', json_encode($participantes));
-        }
-        else{
+        } else {
             return redirect()->back()->with('list', []);
         }
-        
+
         // return view('pdf_view.getnames', compact('participantes'));
     }
     public function show($id)
@@ -142,7 +141,7 @@ class PdfGenerator extends Controller
     }
     public function getInformations($idVerificador = null)
     {
-        
+
         $eventoRecente = DB::table('evento')->get()->max('id');
         $userID = Auth::user();
         if ($userID->tipo == 'coordenador') {
@@ -186,7 +185,7 @@ class PdfGenerator extends Controller
                     //dd($getList);
 
                 } else {
-                    //dd($userID->tipo);
+                    // dd($userID->tipo);
                     //pegar as variaveis do banco de participantes que estão cadastrados no evento
                     $participantesData = DB::table('inscricao_eventos')
                         ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
@@ -220,32 +219,33 @@ class PdfGenerator extends Controller
             return 'Você não possui permissao para esta operação. Procure um coordenador.';
         }
     }
-   public function crachaAtividade($id){
-    //dd($id);
-    $participantesData = DB::table('inscricao_eventos')
-                            ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
-                            ->join('inscricao', 'inscricao.participante_id', '=', 'participante.id')
-                            ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
-                            
-                            ->select(
-                                'participante.nome as nome',
-                                'participante.nome_cracha as Nome_Cracha',
-                                'participante.cpf as CPF',
-                                'inscricao_eventos.qrcode as QRCODE'
-                            )
-                        ->where([
-                            ['atividade.id', '=', $id],
-                        ])
-                        ->get();
-                       // dd($participantesData);
-                        if(!is_null($participantesData)){
-                            foreach ($participantesData as $key => $value) {
-                                $value->CPF = preg_replace("/\D/", "", $value->CPF);
-                            }
-                            //dd($participantesData);
-                            return $this->pdfGenerator($participantesData);
-                        }
-   }
+    public function crachaAtividade($id)
+    {
+        //dd($id);
+        $participantesData = DB::table('inscricao_eventos')
+            ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
+            ->join('inscricao', 'inscricao.participante_id', '=', 'participante.id')
+            ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
+
+            ->select(
+                'participante.nome as nome',
+                'participante.nome_cracha as Nome_Cracha',
+                'participante.cpf as CPF',
+                'inscricao_eventos.qrcode as QRCODE'
+            )
+            ->where([
+                ['atividade.id', '=', $id],
+            ])
+            ->get();
+        // dd($participantesData);
+        if (!is_null($participantesData)) {
+            foreach ($participantesData as $key => $value) {
+                $value->CPF = preg_replace("/\D/", "", $value->CPF);
+            }
+            //dd($participantesData);
+            return $this->pdfGenerator($participantesData);
+        }
+    }
 
 
     function pdfGenerator($participantesData)

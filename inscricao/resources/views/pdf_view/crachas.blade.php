@@ -15,6 +15,7 @@
             $primeiroNome = array_shift($partes);
             $ultimoNome = array_pop($partes);
             $participante->Nome_Cracha = $primeiroNome." ".$ultimoNome;
+            $participante->Nome_Cracha = mb_convert_case($participante->Nome_Cracha, MB_CASE_TITLE, 'UTF-8');
       @endphp
       <div class="border" style="float: left; padding: 8px; margin: 2px; height: 200px; width: 220px">
       <div class="text-center">
