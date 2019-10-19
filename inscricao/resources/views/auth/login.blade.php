@@ -26,6 +26,9 @@
     <!--end::Base Styles -->
      <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}" />
      <style>
+         body{
+             min-width: 400px;
+         }
          #m_login_signin_submit:hover{
              background-color: #f25a29 !important;
              border: 1px solid #f25a29 !important;
@@ -42,7 +45,7 @@
             <div class="m-login__container">
                 <div class="m-login__logo mb-0">
                     <a href="/">
-                        <img src="{{ asset('img/logoWeek.png') }}" class="img-auto" style="max-width: 350px;">
+                        <img src="{{ asset('img/logoWeek.png') }}" class="w-auto" style="max-width: 350px;">
                     </a>
                 </div>
                 <div class="m-login__signin">

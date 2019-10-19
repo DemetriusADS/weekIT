@@ -59,8 +59,8 @@
                     <div class="m-stack__item m-brand">
                         <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                             <div class="m-stack__item m-stack__item--middle m-brand__logo">
-                            <a href="{{route('home')}}" class="m-brand__logo-wrapper">
-                                    <img alt="" src="{{ asset('img/logoWeek.png')}}" style="max-width: 210px;"/>
+                            <a href="{{route('home')}}" class="m-brand__logo-wrapper w-auto">
+                                    <img alt="" class="w-auto" src="{{ asset('img/logoWeek.png')}}" style="max-width: 210px;"/>
                                 </a>
                             </div>
                         </div>

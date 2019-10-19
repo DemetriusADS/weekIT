@@ -43,7 +43,7 @@ class HomeController extends Controller
             )
             ->where([
                 ['atividade.evento_id', '=', $this->getEdicaoAtiva()],
-                ['atividade.tipo', '=', 'minicurso'],
+                //['atividade.tipo', '=', 'minicurso'],
             ])
             ->orderBy('inscricao.data', 'DESC')
             ->paginate($this->totalPage);
@@ -63,7 +63,7 @@ class HomeController extends Controller
 
     public function listarAtividadesParaInscricao()
     {
-        $titulo = "Minicursos para inscrição";
+        $titulo = "Atividades para inscrição";
         $data = DB::table('atividade')
             ->select([
                 'atividade.id', 'atividade.identificador', 'atividade.titulo',
@@ -71,24 +71,22 @@ class HomeController extends Controller
                 DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as data_inicio'),
                 'atividade.data_fim', 'atividade.carga_horaria',
                 'atividade.hora_inicio', 'atividade.hora_fim', 'maximo_participantes',
-                'evento.data_inicio_insc', 'evento.data_fim_insc'
+                'evento.data_inicio_insc', 'evento.data_fim_insc',
+                'atividade.preco as preco'
             ])
             ->join('local', 'atividade.local_id', '=', 'local.id')
             ->join('evento', 'atividade.evento_id', '=', 'evento.id')
             ->where([
                 ['atividade.evento_id', '=', $this->getEdicaoAtiva()],
-                ['atividade.tipo', '=', 'minicurso'],
+                // ['atividade.tipo', '=', 'minicurso'],
             ])
             ->orderBy('atividade.data_inicio', 'asc')
             ->orderBy('atividade.hora_inicio')
             ->paginate(20);
 
-        $atividadeList = array();
+        //$atividadeList = array();
         foreach ($data as $entry) {
-            if (!isset($atividadeList[$entry->data_inicio])) {
-                $atividadeList[$entry->data_inicio]['data'] = $entry->data_inicio;
-                $atividadeList[$entry->data_inicio]['atividades'] = array();
-            }
+
 
             $inscritos = DB::table('inscricao')
                 ->select('id')
@@ -148,7 +146,7 @@ class HomeController extends Controller
                 }
             }
 
-            $atividadeList[$entry->data_inicio]['atividades'][] = array(
+            $atividades[] = array(
                 'id' => $entry->id,
                 'identificador' => $entry->identificador,
                 'titulo' => $entry->titulo,
@@ -158,9 +156,10 @@ class HomeController extends Controller
                 'hora_fim' => $entry->hora_fim,
                 'maximo_participantes' => $entry->maximo_participantes,
                 'carga_horaria' => $entry->carga_horaria,
-                'data_inicio_insc' => $entry->data_inicio_insc,
-                'data_fim_insc' => $entry->data_fim_insc,
+                //'data_inicio_insc' => $entry->data_inicio_insc,
+                //'data_fim_insc' => $entry->data_fim_insc,
                 'inscritos' => $inscritos,
+                'preco' => $entry->preco,
                 'liberar_inscricao' => $liberarInscricao,
                 'liberar_breve' => $liberarBreve,
                 'liberar_encerrado' => $liberarEncerrado,
@@ -168,11 +167,12 @@ class HomeController extends Controller
                 'ja_inscrito' => $ja_inscrito
             );
         }
+        //dd($atividades);
 
 
         if (!is_null($data)) {
             return response()
-                ->json(['atividades' => $atividadeList, 'titulo' => $titulo]);
+                ->json(['atividades' => $atividades, 'titulo' => $titulo]);
         }
     }
 

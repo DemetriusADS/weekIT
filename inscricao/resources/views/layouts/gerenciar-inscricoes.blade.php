@@ -55,9 +55,9 @@
                                 ->where([['atividade.evento_id','=',DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa],['inscricao.status','=','pago'],])
                                 ->count() 
                       }}
-                    </b>
+                    </b><br>
                     <span style="font-size: 16px; margin-left: -20px !important;">Inscrições isentas:</span>
-                    <b>
+                <b>
                       {{ 
                             DB::table('inscricao')
                                 ->leftjoin('atividade', 'atividade.id','=','inscricao.atividade_id')

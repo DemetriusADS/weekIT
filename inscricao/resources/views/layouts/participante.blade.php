@@ -2,7 +2,7 @@
 
 @section('content')
        <div class="m-content">
-       <div id="aviso"></div>
+       
        <div id="content-incricoes"></div> 
         
         <div class="m-portlet m-portlet--mobile">
@@ -14,6 +14,13 @@
         </div> 
 
     </div>
+    <div class='content'>
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <div id="atividades-abertas"></div>
+        </div>
+    </div>
+    </div>
     @section('scripts')
         <script type="text/javascript">       
 
@@ -21,8 +28,9 @@
                 $.ajax({
                     url: 'inscricao/minhas-inscricoes',
                     type: 'GET',
-                    data: null,
+                    data: null,                    
                     success: function(data) {
+                        console.table(data.inscricoes);
                         var html =
                             '<h2>'+data.titulo +'</h2>'
                                 +'<br>'
@@ -79,7 +87,98 @@
                 });                
             }
             listarInscricoesParticipante();              
-            
+            function inscricoesAbertas(){
+                //ARRUMAR!!!!
+                $.ajax({
+                    url: '/inscricao/atividades-inscricao',
+                    type: 'GET',
+                    data: null,
+                    success:function(data){
+                        //inserir tabela de atividades abertas
+                        //vai fazer o contrario do listar participante
+                        //console.table(data.atividades);
+                        var html =
+                            '<h2>'+data.titulo +'</h2>'
+                                +'<br>'
+                            +'<div class="table-responsive-md"><table class="table table-striped">'
+                                +'<tr>'
+                                   
+                                    +'<th>Titulo</th>'
+                                    +'<th>Data</th>'
+                                    +'<th>Descrição</th>'
+                                    +'<th>Max</th>'
+                                    +'<th>Inscritos</th>'
+                                   +'<th>CH</th>'
+                                   +'<th>Preço</th>'
+                                    +'<th>Ação</th>'
+                            +'</tr>';
+                        $.each(data.atividades, function(x, item){
+                          //  'id' => $entry->id,
+                               // 'identificador' => $entry->identificador,
+                              //  'titulo' => $entry->titulo,
+                               /* 'descricao' => $entry->descricao,
+                                'data_inicio' => $entry->data_inicio,
+                                'hora_inicio' => $entry->hora_inicio,
+                                'hora_fim' => $entry->hora_fim,
+                                'maximo_participantes' => $entry->maximo_participantes,
+                                'carga_horaria' => $entry->carga_horaria,
+                                'data_inicio_insc' => $entry->data_inicio_insc,
+                                'data_fim_insc' => $entry->data_fim_insc,
+                                'inscritos' => $inscritos,
+                                'liberar_inscricao' => $liberarInscricao,
+                                'liberar_breve' => $liberarBreve,
+                                'liberar_encerrado' => $liberarEncerrado,
+                                'liberar_esgotado' => $liberarEsgotato,
+                                'ja_inscrito' => $ja_inscrito*/
+                                //console.table(data.atividades);
+                           
+                                if(!data.atividades[x].ja_inscrito){
+                                    html +='<tr>'
+                                +'<td>'+data.atividades[x].identificador +' - '+ data.atividades[x].titulo +'</td>'              
+                                +'<td>'+data.atividades[x].data_inicio+' de '+data.atividades[x].hora_inicio +' até '+ data.atividades[x].hora_fim +'</td>'               
+                                +'<td>'+data.atividades[x].descricao +'</td>'
+                                +'<td>'+data.atividades[x].maximo_participantes +'</td>' 
+                                +'<td>'+data.atividades[x].inscritos +'</td>'
+                                +'<td>R$ '+data.atividades[x].preco +'</td>'              
+                                +'<td>'+data.atividades[x].carga_horaria + 'hrs'+'</td>'
+                                +'<td><button class="btn btn-info" onclick="removerInscricao('+data.atividades[x].id +')">Inscrever</button></td>'}
+
+                               /* if (!data.inscricoes[x].encerrada) {
+                                    if(data.inscricoes[x].status == 'cancelado')
+                                       html += '<td id="status-'+data.inscricoes[x].id +'"><span class="m-badge m-badge--danger m-badge--wide" id="status-'+data.inscricoes[x].id+'" >cancelado</span></td>';
+
+                                    if(data.inscricoes[x].status == 'andamento')
+                                        html += '<td id="status-'+data.inscricoes[x].id +'"><span class="m-badge m-badge--warning m-badge--wide" id="status-'+data.inscricoes[x].id +'" >em andamento</span></td>';
+
+                                    if(data.inscricoes[x].status == 'pago')
+                                       html += '<td id="status-'+data.inscricoes[x].id +'"><span class="m-badge m-badge--success m-badge--wide" id="status-'+data.inscricoes[x].id +'" >pago</span></td>';
+
+                                    if(data.inscricoes[x].status == 'isento')
+                                       html += '<td id="status-'+data.inscricoes[x].id +'"><span class="m-badge m-badge--info m-badge--wide" id="status-'+data.inscricoes[x].id +'" >isento</span></td>';
+                                } else {
+                                    /*if (data.inscricoes[x].presente == 1) {
+                                        html += '<td id="status-'+data.inscricoes[x].id +'"><span class="m-badge m-badge--success m-badge--wide" id="status-'+data.inscricoes[x].id +'" >presente</span></td>';
+                                    } else if (data.inscricoes[x].presente == 0) {
+                                       html += '<td id="status-'+data.inscricoes[x].id +'"><span class="m-badge m-badge--danger m-badge--wide" id="status-'+data.inscricoes[x].id+'" >ausente</span></td>';
+                                    }                                    
+                                }
+
+                                if(!data.atividadeList[x].encerrada && ((data.atividadeList[x].status == 'isento') || (data.atividadeList[x].status == 'andamento'))) {
+                                    html += '<td id="acao-'+data.atividadeList[x].id +'"><div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="...">'
+                                    +'<button type="button" class="btn btn-sm  btn-danger" onclick="removerInscricao('+data.atividadeList[x].id +')">Remover</button>'
+                                    +'</div></td>';
+                                } else {
+                                    html += '<td></td>';
+                                }*/
+                            html += '</tr>';
+                        });
+                        
+                        html += '</table></div>';
+                        $('#atividades-abertas').html(html);
+                    }
+                })
+            }
+            inscricoesAbertas();
             function removerInscricao(id){
                 $.ajax({
                     url: 'inscricao/remover-inscricao',

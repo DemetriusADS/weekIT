@@ -5,6 +5,7 @@
             <div class="m-portlet m-portlet--mobile">
                 <div class="m-portlet__body">
                 <h2 id="titulo">Gerenciar monitor</h2>
+                <form action="{{route('vincular-monitor',['monitor_select' =>csrf_field(), 'atividade_select' => csrf_field()])}}" method="get">
                   <div class="form-group col-8">
                       <label for="monitor_select">Monitor </label>
                       <select class="form-control" id="monitor_select" name="monitor_select">                        
@@ -25,7 +26,9 @@
                           </select>
                       </div>
                   </div> 
-                    <button id="bt_vincular" class="btn btn-info" onclick="vincularMonitor()" type="button">Vincular Monitor</button>                
+                    <button id="bt_vincular" class="btn btn-info" onclick="vincularMonitor()" type="submit">Vincular Monitor</button>                
+                </form>
+                </div>
                     <br><br>
                 <h3 id="titulo">Monitorias</h3>
                 <div id="aviso"></div>    
@@ -107,8 +110,8 @@
             function vincularMonitor(){
                 $.ajax({
                     url: '/atividade/monitor/vincular-monitor',
-                    type: 'GET',
-                    data: "monitor_id="+ $("#monitor_select").val() +"&atividade_id="+$("#atividade_select").val(),
+                    type: 'get',
+                    data: "monitor_id="+$("#monitor_select").val()+"&atividade_id="+$("#atividade_select").val(),
                     success: function(data) {
                         if (data.resposta == 1){
                             carregarMonitorias();
@@ -121,7 +124,7 @@
             function removerMonitoria(monitor_id, atividade_id){
                 $('#bt_vincular').prop('disabled', true);
                 $.ajax({
-                    url: '/inscricao/atividade/monitor/remover-monitoria',
+                    url: '/atividade/monitor/remover-monitoria',
                     type: 'GET',
                     data: "monitor_id="+ monitor_id +"&atividade_id="+ atividade_id,
                     success: function(data) {

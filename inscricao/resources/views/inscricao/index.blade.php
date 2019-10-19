@@ -52,8 +52,100 @@
         var DatatableRemoteAjax = function() {
 
             var demo = function() {
+                var columns = <?php echo json_encode($model::dataTablesColumns()->getData()); ?>;
+                var datatable = $('.m_datatable').mDatatable({
+                // datasource
+                data: {
+                    type: 'remote',
+                    source: {
+                        read: {
+                            // sample GET method
+                            method: 'GET',
+                            url: '{{ url(route($model::$base_name_route.'.search')) }}',
+                            map: function(raw) {
+                                // sample data mapping
+                                var dataSet = raw;
+                                if (typeof raw.data !== 'undefined') {
+                                    dataSet = raw.data;
+                                }                                
+                                return dataSet;
+                            }
+                        }
+                    },
+                    pageSize: 10,
+                    saveState: {
+                        cookie: false,
+                        webstorage: false
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true,
+                },
 
-                var columns = [                    
+                // column sorting
+                sortable: true,
+                pagination: true,
+                toolbar: {
+                    // toolbar items
+                    items: {
+                        info: true,
+                        // pagination
+                        pagination: {
+                            navigation: {
+                                prev: true,
+                                next: true,
+                                first: true,
+                                last: true
+                            },
+                            // page size select
+                            pageSizeSelect: [10, 20, 30, 50, 100, 200, 300],
+                        }
+                    }
+                },
+
+                rows: {
+                    // auto hide columns, if rows overflow
+                    autoHide: false,
+                },
+
+                // columns definition
+                columns: columns
+            });
+
+            var query = datatable.getDataSourceQuery();
+            var $_search_field = $(".search_field");
+
+            $_search_field.each(function( index ) {
+                $('#'+$(this).attr('id')).on('change', function (){
+                    datatable.setDataSourceParam('query['+$(this).attr('name')+']', $(this).val());
+                    datatable.load();
+                });
+            });
+
+            $('.btn-buscar').on('click', function () {
+                $_search_field.each(function( index ) {
+
+                    if($(this).val().length < 0 ){
+                        datatable.setDataSourceParam('query['+$(this).attr('name')+']', $(this).val());
+                    }
+                });
+                datatable.load();
+            });
+        };
+
+        return {
+            // public functions
+            init: function() {
+                demo();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function() {
+        DatatableRemoteAjax.init();
+    });
+    
+               /* var columns = [                    
                     {"field":"cpf", width: 110, "title":"CPF"},
                     {"field":"participante_nome",  width: 100, "title":"Participante"},
                     {"field":"atividade_titulo", width: 200, "title":"Atividade"},
@@ -217,7 +309,7 @@
 
         jQuery(document).ready(function() {
             DatatableRemoteAjax.init();
-        });
+        });*/
 
         function alterarStatus(id, status){
             $.ajax({
