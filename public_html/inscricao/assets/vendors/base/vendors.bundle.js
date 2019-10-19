@@ -18073,7 +18073,7 @@ $.fn.timepicker.defaults = $.extend(true, {}, $.fn.timepicker.defaults, {
             var selected = side == 'left' ? this.startDate : this.endDate;
             var arrow = this.locale.direction == 'ltr' ? {left: 'chevron-left', right: 'chevron-right'} : {left: 'chevron-right', right: 'chevron-left'};
 
-            var html = '<table class="table-condensed">';
+            var html = '<div class="table-responsive-md"><table class="table-condensed">';
             html += '<thead>';
             html += '<tr>';
 
@@ -18227,7 +18227,7 @@ $.fn.timepicker.defaults = $.extend(true, {}, $.fn.timepicker.defaults, {
             }
 
             html += '</tbody>';
-            html += '</table>';
+            html += '</table></div>';
 
             this.container.find('.calendar.' + side + ' .calendar-table').html(html);
 

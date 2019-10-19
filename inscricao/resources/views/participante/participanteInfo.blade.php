@@ -22,7 +22,7 @@
                               </div> 
                         </div>                                  
                                     <div class="m-portlet__body">                                        
-                        
+                                          <div class="table-responsive-md">
                                           <table class="table m-table m-table--head-bg-success table-striped">
                                           <thead>
                                                       <tr>
@@ -79,7 +79,7 @@
                                           @endphp 
                                      </tbody>
                                     </table>
-                        
+                              </div>
                                     </div>
                    </div>
             </div>    

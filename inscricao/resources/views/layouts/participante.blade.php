@@ -26,7 +26,7 @@
                         var html =
                             '<h2>'+data.titulo +'</h2>'
                                 +'<br>'
-                            +'<table class="table table-striped">'
+                            +'<div class="table-responsive-md"><table class="table table-striped">'
                                 +'<tr>'
                                     +'<th>Titulo</th>'
                                     +'<th>Data</th>'
@@ -73,7 +73,7 @@
                             html += '</tr>';
                         });
                         
-                        html += '</table>';
+                        html += '</table></div>';
                         $('#content-minhas-incricoes').html(html);
                     }
                 });                

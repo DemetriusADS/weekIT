@@ -38,7 +38,7 @@
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container pt-3">
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
             <div  class="m-brand__logo-wrapper" style="display:block; text-align: center; margin:auto;">
-                <img alt="" src="{{ asset('img/logo-sys.png')}}" class="p-3 img-fluid" />
+                <img alt="" src="{{asset('img/logoWeek.png')}}" class="p-3 img-fluid" />
             </div>
             @yield('content')
         </div>

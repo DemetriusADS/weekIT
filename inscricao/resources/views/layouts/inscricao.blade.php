@@ -51,7 +51,7 @@
                         var html =
                             '<h2>'+data.titulo +'</h2>'
                                 +'<br>'
-                            +'<table class="table table-striped">'
+                            +'<div class="table-responsive-md"><table class="table table-striped">'
                                 +'<tr>'
                                     +'<th>Titulo</th>'
                                     +'<th>Data</th>'
@@ -98,7 +98,7 @@
                             html += '</tr>';
                         });
                         
-                        html += '</table>';
+                        html += '</table></div>';
                         $('#content-minhas-incricoes').html(html);
                     }
                 });                
@@ -117,7 +117,7 @@
                                 '<div class="m-portlet m-portlet--mobile">'
                                         +'<div class="m-portlet__body"><h2>Minicursos do dia '+ atividade.data +'</h2>'
                                     +'<br>'
-                                    +'<table class="table table-striped">'
+                                    +'<div class="table-responsive-md"><table class="table table-striped">'
                                 +'<tr>'
                                     +'<th>Titulo</th>'
                                     +'<th>Local</th>'
@@ -173,7 +173,7 @@
                                  html += '</tr>';                                  
                                 
                             });
-                            html += '</table></div></div>';
+                            html += '</table></div></div></div>';
                         });
                         $('#content-incricoes').html(html);
                     }

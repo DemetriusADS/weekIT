@@ -25,6 +25,12 @@
     <link href="{{ asset('assets/demo/default/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <!--end::Base Styles -->
      <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}" />
+     <style>
+         #m_login_signin_submit:hover{
+             background-color: #f25a29 !important;
+             border: 1px solid #f25a29 !important;
+         }
+     </style>
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
@@ -36,7 +42,7 @@
             <div class="m-login__container">
                 <div class="m-login__logo mb-0">
                     <a href="/">
-                        <img src="{{ asset('img/logo.png') }}" class="img-auto" style="max-width: 350px;">
+                        <img src="{{ asset('img/logoWeek.png') }}" class="img-auto" style="max-width: 350px;">
                     </a>
                 </div>
                 <div class="m-login__signin">
@@ -77,7 +83,7 @@
                         </div>
                         <div class="m-login__form-action">
                             <button id="m_login_signin_submit" type="submit" class="btn btn-primary m-btn  m-btn--custom m-btn--air m-login__btn m-login__btn--primary btn-block" style="background: #00710a;
-                               border: 1px solid #005307; ">
+                               border: 1px solid #005307;">
                                 Entrar
                             </button>
                         </div>

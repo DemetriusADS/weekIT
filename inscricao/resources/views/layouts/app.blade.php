@@ -24,6 +24,7 @@
     <link href="{{ asset('assets/vendors/base/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/demo/demo5/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     
     <!--end::Base Styles -->
     <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}" />
@@ -59,7 +60,7 @@
                         <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                             <a href="{{route('home')}}" class="m-brand__logo-wrapper">
-                                    <img alt="" src="{{ asset('img/logo-sys.png')}}" style="max-width: 210px;"/>
+                                    <img alt="" src="{{ asset('img/logoWeek.png')}}" style="max-width: 210px;"/>
                                 </a>
                             </div>
                         </div>
