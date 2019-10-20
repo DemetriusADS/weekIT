@@ -55,9 +55,9 @@
                                 ->where([['atividade.evento_id','=',DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa],['inscricao.status','=','pago'],])
                                 ->count() 
                       }}
-                    </b>
+                    </b><br>
                     <span style="font-size: 16px; margin-left: -20px !important;">Inscrições isentas:</span>
-                    <b>
+                <b>
                       {{ 
                             DB::table('inscricao')
                                 ->leftjoin('atividade', 'atividade.id','=','inscricao.atividade_id')
@@ -117,9 +117,12 @@
 
                             @if($inscricao->status == 'isento')
                                <td id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide" id="status-{{$inscricao->id}}" >isento</span></td>
+                            @endif
+                            @if($inscricao->status == 'gratuito')
+                               <td id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide" id="status-{{$inscricao->id}}" >gratuito</span></td>
                             @endif                
 
-
+                            @if($inscricao->status != 'gratuito')
                         <td>
                             <div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="..."> 
                                 <button type="button" class="btn btn-sm  btn-success" onclick="alterarStatus({{$inscricao->id}}, 'pago')">Pago</button>
@@ -128,6 +131,7 @@
                                 <button type="button" class="btn btn-sm btn-info" onclick="alterarStatus({{$inscricao->id}}, 'isento')">Isento</button>
                             </div>                             
                         </td>
+                        @endif
                     </tr>
                     @endforeach
                 </table>                    
@@ -160,8 +164,11 @@
 
                             if(item.status == 'isento')
                                 html += '<td id="status-'+item.id+'"><span class="m-badge m-badge--info m-badge--wide" id="status-'+item.id+'" >isento</span></td>';
+                            
+                            if(item.status == 'gratuito')
+                                html += '<td id="status-'+item.id+'"><span class="m-badge m-badge--info m-badge--wide" id="status-'+item.id+'" >gratuito</span></td>';
 
-
+                    if(item.status != 'gratuito'){
                     html += '<td>'
                             +'<div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="...">' 
                                 +'<button type="button" class="btn btn-sm  btn-success" onclick="alterarStatus('+item.id+', \'pago\')">Pago</button>'
@@ -169,8 +176,8 @@
                                 +'<button type="button" class="btn btn-sm btn-warning" onclick="alterarStatus('+item.id+', \'andamento\')">Em andamento</button>'
                                 +'<button type="button" class="btn btn-sm btn-info" onclick="alterarStatus('+item.id+', \'isento\')">Isento</button>'
                             +'</div>'                             
-                        +'</td>'
-                    +'</tr>';
+                        +'</td>'}
+                   html+='</tr>';
                 return html;
             }
             

@@ -23,6 +23,7 @@ class Inscricao extends AbstractModel implements DefaultModel
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+
     public static function search(Request $request)
     {
 
@@ -34,6 +35,9 @@ class Inscricao extends AbstractModel implements DefaultModel
         $excluded           = $request->input('excluded',  NULL);
 
         $query =  DB::table('inscricao')
+            ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
+            ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
+            ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')
             ->select([
                 'inscricao.id as id',
                 DB::raw('DATE_FORMAT(inscricao.data,"%d/%m às %H:%i") as data'),
@@ -43,15 +47,18 @@ class Inscricao extends AbstractModel implements DefaultModel
                 'inscricao.participante_id as participante_id',
                 'inscricao.atividade_id as atividade_id',
                 'participante.nome as participante_nome',
+                'participante.edicao_ativa',
                 'participante.cpf as cpf',
                 DB::raw('DATE_FORMAT(inscricao.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(inscricao.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at'),
-            ])->orderBy('inscricao.data', 'DESC');
+            ])->orderBy('inscricao.data', 'DESC')->where('evento_id', '=', DB::table('participante')
+                ->where('participante.edicao_ativa', '=', Auth::user()->id)
+                ->get()[0]->edicao_ativa);
 
-        $query->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id');
-        $query->join('participante', 'participante.id', '=', 'inscricao.participante_id');
-        $query->where('evento_id', '=', DB::table('participante')
-            ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa);
+        //$query;
+        //$query->join('participante', 'participante.id', '=', 'inscricao.participante_id');
+        //$query->where('evento_id', '=', DB::table('participante')
+        //  ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.edicao_ativa', '=', Auth::user()->id)->get()[0]->edicao_ativa);
 
         if (isset($request_query['descricao'])) {
             if (!empty($request_query['descricao'])) {
@@ -115,6 +122,10 @@ class Inscricao extends AbstractModel implements DefaultModel
     {
 
         $columns = [
+            [
+                'field' => 'cpf',
+                'title' => 'CPF',
+            ],
 
             [
                 'field' => 'atividade_titulo',
@@ -164,17 +175,27 @@ class Inscricao extends AbstractModel implements DefaultModel
                 'atividade_id' => [
                     'type'          => 'select',
                     'placeholder'   => 'Atividade',
-                    'options' => Atividade::select(DB::raw('CONCAT(identificador, " - ", titulo) AS titulo'), 'id')->where('evento_id', '=', DB::table('participante')->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('identificador')->pluck('titulo', 'id')
+                    'options' => Atividade::select(DB::raw('CONCAT(identificador, " - ", titulo) AS titulo'), 'id')
+                        ->where('evento_id', '=', DB::table('participante')
+                            ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')
+                            ->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)
+                            ->get()[0]->edicao_ativa)->orderBy('identificador')
+                        ->pluck('titulo', 'id')
                 ],
             ]
         ];
     }
-
+    public static function verbose_name()
+    {
+        $verbose_name = 'inscricao';
+        return response()->json($verbose_name);
+    }
     public static function fieldsFormCreate()
     {
 
         return  [
             'fields' => [
+
                 [
                     'participante_id' => [
                         'type'        => 'select',

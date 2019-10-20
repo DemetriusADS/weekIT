@@ -7,6 +7,7 @@ use App\Http\Requests\AtividadeRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class AtividadeController extends AbstractController
 {
@@ -255,5 +256,39 @@ class AtividadeController extends AbstractController
 
         return response()
             ->json(['ganhador' => $ganhador]);
+    }
+    public function gerarRelatorio(Request $request)
+    {
+        //dd($request->id);
+        $atividadeLista = DB::table('atividade')
+            ->join('inscricao', 'inscricao.atividade_id', '=', 'atividade.id')
+            ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
+            ->select(
+                'participante.nome as nomeAluno',
+                'inscricao.status as status',
+            )
+            ->where('atividade.id', '=', $request->id)
+            ->orderBy('nomeAluno')
+            ->get();
+        //dd($atividadeLista);
+        $atividadeInfo = DB::table('atividade')
+            ->join('atividade_has_palestrante', 'atividade_has_palestrante.atividade_id', '=', 'atividade.id')
+            ->join('palestrante', 'palestrante.id', '=', 'atividade_has_palestrante.palestrante_id')
+            ->join('local', 'local.id', '=', 'atividade.local_id')
+            ->select(
+                'atividade.tipo as tipo',
+                'atividade.titulo as titulo',
+                DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as data'),
+                DB::raw('DATE_FORMAT(atividade.hora_inicio,"%H:%i") as horaInicio'),
+                DB::raw('DATE_FORMAT(atividade.hora_fim,"%H:%i") as horaFim'),
+                'local.descricao as local',
+                'palestrante.descricao as nomePalestrante'
+            )
+            ->where('atividade.id', '=', $request->id)
+            ->get();
+        // dd($atividadeInfo, $atividadeLista);
+        $pdf = PDF::loadView('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'))->setOption('margin-bottom', 20);
+        return $pdf->stream('listaPresenca.pdf');
+        return view('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'));
     }
 }

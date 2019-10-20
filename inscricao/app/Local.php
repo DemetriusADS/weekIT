@@ -17,13 +17,14 @@ class Local extends AbstractModel implements DefaultModel
     public static $verbose_plural   = 'locais';
     public static $verbose_genre    = 'M';
     public static $controller       = 'LocalController';
-    
+
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function search(Request $request){
+    public static function search(Request $request)
+    {
 
         $request_query      = $request->input('query');
         $page               = $request->input('pagination.page', 1);
@@ -33,26 +34,26 @@ class Local extends AbstractModel implements DefaultModel
         $excluded           = $request->input('excluded',  NULL);
 
         $query =  DB::table('local')
-           ->select(
+            ->select(
                 'local.id as id',
                 'local.descricao as descricao',
                 DB::raw('DATE_FORMAT(local.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(local.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at')
-            )->where('local.evento_id','=',DB::table('participante')
-                      ->join('evento','evento.id','=','participante.edicao_ativa')
-                      ->select('participante.edicao_ativa')
-                      ->where('participante.id','=',Auth::user()->id)
-                      ->get()[0]->edicao_ativa)
+            )->where('local.evento_id', '=', DB::table('participante')
+                ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')
+                ->select('participante.edicao_ativa')
+                ->where('participante.id', '=', Auth::user()->id)
+                ->get()[0]->edicao_ativa)
             ->orderBy('descricao');
 
-        if(isset($request_query['descricao'])){
-            if(!empty($request_query['descricao'])){
-                $query->where('local.descricao', 'like', '%'.$request_query['descricao'].'%');
+        if (isset($request_query['descricao'])) {
+            if (!empty($request_query['descricao'])) {
+                $query->where('local.descricao', 'like', '%' . $request_query['descricao'] . '%');
             }
         }
 
-        if(isset($sort)){
-            $query->orderBy($sort['field'],$sort['sort']);
+        if (isset($sort)) {
+            $query->orderBy($sort['field'], $sort['sort']);
         }
 
 
@@ -75,7 +76,8 @@ class Local extends AbstractModel implements DefaultModel
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function dataTablesColumns(){
+    public static function dataTablesColumns()
+    {
 
         $columns = [
             [
@@ -89,10 +91,11 @@ class Local extends AbstractModel implements DefaultModel
         return response()->json($columns);
     }
 
-    public static function dataTablesSearchForm(){
+    public static function dataTablesSearchForm()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 'data' => [
                     'type'          => 'text',
                     'placeholder'   => 'Descrição',
@@ -101,17 +104,18 @@ class Local extends AbstractModel implements DefaultModel
         ];
     }
 
-    public static function fieldsFormCreate(){
+    public static function fieldsFormCreate()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 [
                     'descricao' => [
                         'type'          => 'text',
                         'label'         => 'Descrição',
                         'placeholder'   => 'Descrição',
                         'required'      => 'required',
-                    ]                    
+                    ]
                 ],
 
                 [
@@ -124,7 +128,8 @@ class Local extends AbstractModel implements DefaultModel
         ];
     }
 
-    public static function fieldsFormEdit(){
+    public static function fieldsFormEdit()
+    {
         return  self::fieldsFormCreate();
     }
 
@@ -132,5 +137,9 @@ class Local extends AbstractModel implements DefaultModel
     {
         return $this->descricao;
     }
-
+    public static function verbose_name()
+    {
+        $verbose_name = 'local';
+        return response()->json($verbose_name);
+    }
 }

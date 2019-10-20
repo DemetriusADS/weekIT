@@ -35,7 +35,7 @@
             </div>
             <div class="m-portlet__body">
                 @include('layouts.partial.message')
-
+                <div class="table-responsive-md">
                 <table class="table m-table m-table--head-bg-success table-striped">
                     <thead>
                                 <tr>
@@ -53,7 +53,7 @@
                     @endforeach
                      </tbody>
                 </table>
-
+            </div>
             </div>
         </div>
     </div>

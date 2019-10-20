@@ -5,7 +5,7 @@
         @if(DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa == DB::table('evento')->max('id'))
             <div class="bs-component">
                 <div class="alert alert-dismissible" style="background-color: #ebfaeb;">
-                    <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2018 estão abertas de <b>12 a 30/11/2018</b>.</h4>
+                    <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2018 estão abertas de <b>12 a 30/11</b>.</h4>
                     
 
                     <p style="text-align: justify;">A inscrição no evento é gratuita e dá acesso às palestras, mesa redonda e mostra de trabalhos. A inscrição em cada minicurso é <strong>R$ 10,00</strong> (dez reais).</p>
@@ -26,23 +26,21 @@
                     </p>                                         
                 </div>
             </div>
+            <div class="m-portlet m-portlet--mobile">
+                    <div class="m-portlet__body">
+                            <div id="aviso"></div>
+                        <div id="atividades-abertas"></div> 
+                        
+                    </div>
+                </div> 
         @endif
-        <div id="aviso"></div>
-       <div id="content-incricoes"></div> 
-        
-        <div class="m-portlet m-portlet--mobile">
-            <div class="m-portlet__body">
-
-                <div id="content-minhas-incricoes"></div> 
-                
-            </div>
-        </div>        
     </div>
+    <div id='atividades-abertas'></div>
 @endsection
     @section('scripts')
         <script type="text/javascript">       
 
-            function listarInscricoesParticipante(){
+            /*function listarInscricoesParticipante(){
                 $.ajax({
                     url: 'inscricao/minhas-inscricoes',
                     type: 'GET',
@@ -51,7 +49,7 @@
                         var html =
                             '<h2>'+data.titulo +'</h2>'
                                 +'<br>'
-                            +'<table class="table table-striped">'
+                            +'<div class="table-responsive-md"><table class="table table-striped">'
                                 +'<tr>'
                                     +'<th>Titulo</th>'
                                     +'<th>Data</th>'
@@ -98,109 +96,92 @@
                             html += '</tr>';
                         });
                         
-                        html += '</table>';
+                        html += '</table></div>';
                         $('#content-minhas-incricoes').html(html);
                     }
                 });                
             }
-            listarInscricoesParticipante();            
+            listarInscricoesParticipante();  */          
             
-            function listarAtividadesParaInscricao(){
+            function inscricoesAbertas(){
+                var d = new Date();
+                dataHora = (d.toLocaleString());
                 $.ajax({
-                    url: 'inscricao/atividades-inscricao',
+                    url: '/inscricao/atividades-inscricao',
                     type: 'GET',
                     data: null,
-                    success: function(data) {
-                        var html = "";
-                        $.each(data.atividades, function(x, atividade){
-                            html += 
-                                '<div class="m-portlet m-portlet--mobile">'
-                                        +'<div class="m-portlet__body"><h2>Minicursos do dia '+ atividade.data +'</h2>'
-                                    +'<br>'
-                                    +'<table class="table table-striped">'
+                    success:function(data){
+                        var html =
+                            '<h2>'+data.titulo +'</h2>'
+                                +'<br>'
+                            +'<div class="table-responsive-md"><table class="table table-striped">'
                                 +'<tr>'
+                                   
                                     +'<th>Titulo</th>'
-                                    +'<th>Local</th>'
-                                    +'<th>Horário</th>'
                                     +'<th>Data</th>'
-                                    +'<th>CH</th>'
+                                    +'<th>Descrição</th>'
+                                    +'<th>Max</th>'
                                     +'<th>Inscritos</th>'
+                                   +'<th>CH</th>'
+                                   +'<th>Preço</th>'
                                     +'<th>Ação</th>'
-                                +'</tr>';                             
-                            
-                            $.each(atividade.atividades, function(y, item){
-                                html += 
-                                    '<tr>'
-                                    +'<td>'+atividade.atividades[y].identificador+' - '+ atividade.atividades[y].titulo+'</td>'               
-                                    +'<td>'+atividade.atividades[y].descricao+'</td>'               
-                                    +'<td>'+atividade.atividades[y].hora_inicio+' às '+atividade.atividades[y].hora_fim+'</td>'
-                                    +'<td>'+atividade.atividades[y].data_inicio+'</td>'
-                                    +'<td>'+atividade.atividades[y].carga_horaria + 'hrs'+'</td>'
-                                    +'<td>'+atividade.atividades[y].maximo_participantes+'/'+atividade.atividades[y].inscritos+'</td>';
-
-                                    if(!atividade.atividades[y].ja_inscrito) {                            
-                                            if (atividade.atividades[y].inscritos < atividade.atividades[y].maximo_participantes){
-                                                if (atividade.atividades[y].liberar_inscricao){
-                                                    html += '<td id="acao-'+atividade.atividades[y].id+'">'
-                                                            +'<div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="...">' 
-                                                            +'<button type="button" class="btn btn-sm  btn-success" onclick="fazerInscricao('+atividade.atividades[y].id+')">Inscrever</button>'
-                                                            +'</div>'                             
-                                                        +'</td>';                
-                                                } else {
-                                                    if (atividade.atividades[y].liberar_breve){
-                                                        html += '<td><span style="color: blue; font-weight: bold;">breve</span></td>';
-                                                    } else if (atividade.atividades[y].liberar_encerrado) {
-                                                        html += '<td><span style="color: orange; font-weight: bold;">encerrada</span></td>';
-                                                    }
-
-                                                }
-
-                                            } else {
-                                                if (atividade.atividades[y].liberar_esgotado){
-                                                    html += '<td><span style="color: red; font-weight: bold;">esgotado</span></td>';
-                                                } else {
-                                                    if (atividade.atividades[y].liberar_breve){
-                                                        html += '<td><span style="color: blue; font-weight: bold;">breve</span></td>';
-                                                    } else if (atividade.atividades[y].liberar_encerrado) {
-                                                        html += '<td><span style="color: orange; font-weight: bold;">encerrada</span></td>';
-                                                    }
-                                                }
-
-                                            }
-                                    } else {
-                                        html += '<td><span style="color: green; font-weight: bold;">inscrito!</span></td>';    
-                                    }
-                                 html += '</tr>';                                  
-                                
-                            });
-                            html += '</table></div></div>';
+                            +'</tr>';
+                        $.each(data.atividades, function(x, item){
+                                if(!data.atividades[x].ja_inscrito && data.atividades[x].liberar_inscricao){
+                                    html +='<tr>'
+                                +'<td>'+data.atividades[x].identificador +' - '+ data.atividades[x].titulo +'</td>'              
+                                +'<td>'+data.atividades[x].data_inicio+' de '+data.atividades[x].hora_inicio +' até '+ data.atividades[x].hora_fim +'</td>'               
+                                +'<td>'+data.atividades[x].descricao +'</td>'
+                                +'<td>'+data.atividades[x].maximo_participantes +'</td>' 
+                                +'<td>'+data.atividades[x].inscritos +'</td>'
+                                +'<td>R$ '+data.atividades[x].preco +'</td>'              
+                                +'<td>'+data.atividades[x].carga_horaria + 'hrs'+'</td>'
+                                +'<td id="acao2-'+data.atividades[x].id+'">'
+                                +'<div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="..."><button class="btn btn-info" onclick="inscrverAtividade('+data.atividades[x].id +')">Inscrever</button></td>'
+                                }
+                                else if(!data.atividades[x].ja_inscrito && data.atividades[x].liberar_inscricao){
+                                    html +='<tr>'
+                                +'<td>'+data.atividades[x].identificador +' - '+ data.atividades[x].titulo +'</td>'              
+                                +'<td>'+data.atividades[x].data_inicio+' de '+data.atividades[x].hora_inicio +' até '+ data.atividades[x].hora_fim +'</td>'               
+                                +'<td>'+data.atividades[x].descricao +'</td>'
+                                +'<td>'+data.atividades[x].maximo_participantes +'</td>' 
+                                +'<td>'+data.atividades[x].inscritos +'</td>'
+                                +'<td>R$ '+data.atividades[x].preco +'</td>'              
+                                +'<td>'+data.atividades[x].carga_horaria + 'hrs'+'</td>'
+                                +'<td id="acao"><button class="btn btn-info disabled">Inscrever</button></td>'
+                                }
+                            html += '</tr>';
                         });
-                        $('#content-incricoes').html(html);
+                        
+                        html += '</table></div>';
+                        $('#atividades-abertas').html(html);
                     }
-                    
-                });                
-                
+                })
             }
-            listarAtividadesParaInscricao();
+            inscricoesAbertas();
             
-            function fazerInscricao(atividade_id){
+            function inscrverAtividade(id){
                 $.ajax({
                     url: 'inscricao/realizar-inscricao',
                     type: 'GET',
-                    data: "atividade_id="+atividade_id,
+                    data: "atividade_id="+id,
                     success: function(data) {
-                        if (data.resposta == 1){
-                            $('#acao-'+atividade_id).html('<span style="color: green; font-weight: bold;">inscrito!</span>');
-                            $('#aviso').html("");
-                        } else {
+                        if (data.resposta == 1){                       
                             var html = 
-                                '<div class="m-form__section m-form__section--first "><div class="form-group m-form__group row"><div class="m-alert m-alert--icon m-alert--icon-solid m-alert--outline alert alert-danger alert-dismissible fade show" role="alert"><div class="m-alert__icon"><i class="flaticon-danger"></i></div><div class="m-alert__text"><strong>Aviso ! </strong>Você não pode se inscrever nesse evento pois já tem uma inscrição em outro    evento no mesmo horário !</div><div class="m-alert__close"><button type="button" class="close" data-dismiss="alert" aria-label="Close"></button></div></div></div></div>';
-                            $('#aviso').html(html);
-                        }                        
-                        listarInscricoesParticipante();
+                                '<div class="m-form__section m-form__section--first "><div class="form-group m-form__group row"><div class="m-alert m-alert--icon m-alert--icon-solid m-alert--outline alert alert-success alert-dismissible fade show" role="alert"><div class="m-alert__icon"><i class="flaticon-success"></i></div><div class="m-alert__text"><strong>Aviso ! </strong>Inscrito com sucesso!</div><div class="m-alert__close"><button type="button" class="close" data-dismiss="alert" aria-label="Close"></button></div></div></div></div>';
+                            $('#aviso2').html(html);
+                            $('#acao2-'+id).html('<span style="color: green; font-weight: bold;">Inscrito</span>');                            
+                        }else{
+                            var html = 
+                                '<div class="m-form__section m-form__section--first "><div class="form-group m-form__group row"><div class="m-alert m-alert--icon m-alert--icon-solid m-alert--outline alert alert-danger alert-dismissible fade show" role="alert"><div class="m-alert__icon"><i class="flaticon-danger"></i></div><div class="m-alert__text"><strong>Aviso ! </strong>Você não pode se inscrever nessa atividade pois já tem uma inscrição em outra atividade no mesmo horário.</div><div class="m-alert__close"><button type="button" class="close" data-dismiss="alert" aria-label="Close"></button></div></div></div></div>';
+                            $('#aviso2').html(html);
+                            $('#acao2-'+id).html('<span style="color: red; font-weight: bold;">Choque de horarios</span>');
+                        }
+                        inscricoesAbertas();
                     }
                 });
             }
+            window.adicionarInscricao = adicionarInscricao
             
             function removerInscricao(id){
                 $.ajax({
@@ -214,8 +195,7 @@
                             $('#aviso').html(html);
                             $('#acao-'+id).html('<span style="color: orange; font-weight: bold;">removida</span>');                            
                         }                        
-                        listarAtividadesParaInscricao();
-                        listarInscricoesParticipante();
+                        inscricoesAbertas();
                     }
                 });
             }

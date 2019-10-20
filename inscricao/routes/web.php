@@ -52,7 +52,7 @@ Route::post('/inscricao/pesquisar-inscricoes-nome', 'HomeController@pesquisaNome
 Route::post('/inscricao/pesquisar-inscricoes-cpf', 'HomeController@pesquisaCPF')->name('pesquisar-inscricoes-cpf');
 Route::get('/atividade/gerenciar-monitor', 'MonitorController@home')->name('gerenciar-monitor');
 Route::get('/atividade/monitor/carregar-monitorias', 'MonitorController@carregarMonitorias');
-Route::get('/atividade/monitor/vincular-monitor', 'MonitorController@vincularMonitor');
+Route::get('/atividade/monitor/vincular-monitor', 'MonitorController@vincularMonitor')->name('vincular-monitor');
 Route::get('/atividade/monitor/remover-monitoria', 'MonitorController@removerMonitoria');
 Route::get('/atividade/presenca/gerenciar-presenca', 'AtividadeController@carregarAtividades');
 Route::get('/atividade/presenca/carregar-participantes', 'AtividadeController@carregarParticipantes');
@@ -68,5 +68,7 @@ Route::POST('/participanteinfo/coordenadoraccess', 'ParticipanteInfoController@p
 Route::get('/gerarpdf/{id?}', 'PdfGenerator@getInformations')->name('gerarpdf');
 Route::get('/crachaatividades/{id}', 'PdfGenerator@crachaAtividade')->name('cracha_atividade');
 Route::resource('pdf', 'PdfGenerator');
+Route::get('/areaparticipante', 'AreaDoParticipanteController@areaInscricao')->name('areaInscricaoParticipante');
 Route::get('/pdfdelete/{id?}', 'PdfGenerator@deleta')->name('deletar-da-lista-pdf');
 Route::post('/pdfshow', 'PdfGenerator@mostrar')->name('shownomestopdf');
+Route::get('/atividades/gerarlista/{id}', 'AtividadeController@gerarRelatorio')->name('gerarRelatorio');

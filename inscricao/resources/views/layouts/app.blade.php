@@ -24,6 +24,7 @@
     <link href="{{ asset('assets/vendors/base/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/demo/demo5/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     
     <!--end::Base Styles -->
     <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}" />
@@ -58,8 +59,8 @@
                     <div class="m-stack__item m-brand">
                         <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                             <div class="m-stack__item m-stack__item--middle m-brand__logo">
-                            <a href="{{route('home')}}" class="m-brand__logo-wrapper">
-                                    <img alt="" src="{{ asset('img/logo-sys.png')}}" style="max-width: 210px;"/>
+                            <a href="{{route('home')}}" class="m-brand__logo-wrapper w-auto">
+                                    <img alt="" class="w-auto" src="{{ asset('img/logoWeek.png')}}" style="max-width: 210px;"/>
                                 </a>
                             </div>
                         </div>
@@ -77,7 +78,7 @@
                                                         {{ Auth::user()->email }}
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="/inscricao/participante/edit/{{ Auth::user()->id }}">
+                                                    <a class="dropdown-item" href="/participante/update/{{ Auth::user()->id }}">
                                                         <i class="la la-edit"></i>
                                                         Alterar cadastro
                                                     </a>

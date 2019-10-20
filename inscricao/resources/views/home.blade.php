@@ -3,8 +3,32 @@
 
 @if(Auth::user()->tipo == 'coordenador')
 @section('content')
-    <div class="m-content text-center">
-        <hr>
+   <div class="m-content">
+        @php
+        $maxEventoID = DB::table('evento')->max('id');
+        $verify = DB::table('evento')
+        ->join('inscricao_eventos','inscricao_eventos.evento_id','=','evento.id')
+        ->join('participante','participante.edicao_ativa','=','evento.id')
+        ->select('inscricao_eventos.participante_id as id')
+        ->where([
+            ['inscricao_eventos.participante_id','=',Auth::user()->id],
+            ['inscricao_eventos.evento_id','=',$maxEventoID],
+            ])
+        ->get();
+      // dd($verify->isEmpty());
+       
+        if($verify->isEmpty()){
+        echo(' <form action="'.route("eventoUpdate", DB::table("evento")->max("id")).'" method="post">
+                        <div class="alert alert-dismissible" style="background-color: #fbc8c8;">                        
+                        <p>Você ainda não se Inscreveu na nova ediçao de'. DB::table("evento")->max("ano").'</p>
+                        <button type="submit"  class="btn btn-danger">Edição'. DB::table("evento")->max("ano").'</button>
+                       </div>
+                    </form>');
+    }
+    @endphp
+   </div>
+     <div class="m-content text-center">
+            <hr>
         <div class="row">
             <div class="col-md-6 col-lg-3">
               <div class="widget-small primary coloured-icon"><i class="icon fa fa-calendar fa-3x"></i>
@@ -121,8 +145,10 @@
                             @if($inscricao->status == 'isento')
                                <td id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide" id="status-{{$inscricao->id}}" >isento</span></td>
                             @endif                
-
-
+                            @if($inscricao->status == 'gratuito')
+                            <td id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide" id="status-{{$inscricao->id}}" >gratuito</span></td>
+                         @endif
+                         @if($inscricao->status != 'gratuito')
                         <td>
                             <div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="..."> 
                                 <button type="button" class="btn btn-sm  btn-success" onclick="alterarStatus({{$inscricao->id}}, 'pago')">Pago</button>
@@ -131,6 +157,9 @@
                                 <button type="button" class="btn btn-sm btn-info" onclick="alterarStatus({{$inscricao->id}}, 'isento')">Isento</button>
                             </div>                             
                         </td>
+                        @else
+                            <td></td>
+                        @endif
                     </tr>
                     @endforeach
                 </table>                    
@@ -163,7 +192,10 @@
 
                             if(item.status == 'isento')
                                 html += '<td id="status-'+item.id+'"><span class="m-badge m-badge--info m-badge--wide" id="status-'+item.id+'" >isento</span></td>';
+                                if(item.status == 'gratuito')
+                                html += '<td id="status-'+item.id+'"><span class="m-badge m-badge--info m-badge--wide" id="status-'+item.id+'" >gratuito</span></td>';
 
+                    if(item.status != 'gratuito'){
 
                     html += '<td>'
                             +'<div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="...">' 
@@ -172,8 +204,8 @@
                                 +'<button type="button" class="btn btn-sm btn-warning" onclick="alterarStatus('+item.id+', \'andamento\')">Em andamento</button>'
                                 +'<button type="button" class="btn btn-sm btn-info" onclick="alterarStatus('+item.id+', \'isento\')">Isento</button>'
                             +'</div>'                             
-                        +'</td>'
-                    +'</tr>';
+                        +'</td>'}
+                    html+='</tr>';
                 return html;
             }
             
@@ -344,10 +376,17 @@
                         <li><del>Inscrições de 26/11/2018 a 30/11/2018, o pagamento deverá ser efetuado até 30/11 (sexta-feira)<del></li>
                         <li>Inscrições após 30/11 devem ser pagas no credenciamento do evento</li>
                         </ul>
-                        <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"> <b>Aviso</b> - Por favor, verifique seu cadastro e certifique-se de atualizar seu nome completo pois este será impresso em seu(s) certificado(s).
+                        <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"> <b>Aviso</b> - Por favor, certifique-se que seu nome completo pois este será impresso em seu(s) certificado(s). Procure um coordenador.
                         </p>                                         
                     </div>
                 </div>
+                <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body">
+                                <div id="aviso"></div>
+                            <div id="atividades-abertas"></div> 
+                            
+                        </div>
+                    </div> 
                 @else  
                     <form action="{{route('eventoUpdate', DB::table('evento')->max('id'))}}" method="post">
                         <div class="alert alert-dismissible" style="background-color: #fbc8c8;">                        
@@ -357,6 +396,89 @@
                     </form>
              @endif    
     </div>    
+@endsection
+@section('scripts')
+<script type="text/javascript">   
+function inscricoesAbertas(){
+    var d = new Date();
+    dataHora = (d.toLocaleString());
+    $.ajax({
+        url: '/inscricao/atividades-inscricao',
+        type: 'GET',
+        data: null,
+        success:function(data){
+            var html =
+                '<h2>'+data.titulo +'</h2>'
+                    +'<br>'
+                +'<div class="table-responsive-md"><table class="table table-striped">'
+                    +'<tr>'
+                       
+                        +'<th>Titulo</th>'
+                        +'<th>Data</th>'
+                        +'<th>Descrição</th>'
+                        +'<th>Max</th>'
+                        +'<th>Inscritos</th>'
+                       +'<th>CH</th>'
+                       +'<th>Preço</th>'
+                        +'<th>Ação</th>'
+                +'</tr>';
+            $.each(data.atividades, function(x, item){
+                    if(!data.atividades[x].ja_inscrito && data.atividades[x].liberar_inscricao){
+                        html +='<tr>'
+                    +'<td>'+data.atividades[x].identificador +' - '+ data.atividades[x].titulo +'</td>'              
+                    +'<td>'+data.atividades[x].data_inicio+' de '+data.atividades[x].hora_inicio +' até '+ data.atividades[x].hora_fim +'</td>'               
+                    +'<td>'+data.atividades[x].descricao +'</td>'
+                    +'<td>'+data.atividades[x].maximo_participantes +'</td>' 
+                    +'<td>'+data.atividades[x].inscritos +'</td>'
+                    +'<td>R$ '+data.atividades[x].preco +'</td>'              
+                    +'<td>'+data.atividades[x].carga_horaria + 'hrs'+'</td>'
+                    +'<td id="acao2-'+data.atividades[x].id+'">'
+                    +'<div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="..."><button class="btn btn-info" onclick="inscrverAtividade('+data.atividades[x].id +')">Inscrever</button></td>'
+                    }
+                    else if(!data.atividades[x].ja_inscrito && data.atividades[x].liberar_inscricao){
+                        html +='<tr>'
+                    +'<td>'+data.atividades[x].identificador +' - '+ data.atividades[x].titulo +'</td>'              
+                    +'<td>'+data.atividades[x].data_inicio+' de '+data.atividades[x].hora_inicio +' até '+ data.atividades[x].hora_fim +'</td>'               
+                    +'<td>'+data.atividades[x].descricao +'</td>'
+                    +'<td>'+data.atividades[x].maximo_participantes +'</td>' 
+                    +'<td>'+data.atividades[x].inscritos +'</td>'
+                    +'<td>R$ '+data.atividades[x].preco +'</td>'              
+                    +'<td>'+data.atividades[x].carga_horaria + 'hrs'+'</td>'
+                    +'<td id="acao"><button class="btn btn-info disabled">Inscrever</button></td>'
+                    }
+                html += '</tr>';
+            });
+            
+            html += '</table></div>';
+            $('#atividades-abertas').html(html);
+        }
+    })
+}
+inscricoesAbertas();
+
+function inscrverAtividade(id){
+    $.ajax({
+        url: 'inscricao/realizar-inscricao',
+        type: 'GET',
+        data: "atividade_id="+id,
+        success: function(data) {
+            if (data.resposta == 1){                       
+                var html = 
+                    '<div class="m-form__section m-form__section--first "><div class="form-group m-form__group row"><div class="m-alert m-alert--icon m-alert--icon-solid m-alert--outline alert alert-success alert-dismissible fade show" role="alert"><div class="m-alert__icon"><i class="flaticon-success"></i></div><div class="m-alert__text"><strong>Aviso ! </strong>Inscrito com sucesso!</div><div class="m-alert__close"><button type="button" class="close" data-dismiss="alert" aria-label="Close"></button></div></div></div></div>';
+                $('#aviso2').html(html);
+                $('#acao2-'+id).html('<span style="color: green; font-weight: bold;">Inscrito</span>');                            
+            }else{
+                var html = 
+                    '<div class="m-form__section m-form__section--first "><div class="form-group m-form__group row"><div class="m-alert m-alert--icon m-alert--icon-solid m-alert--outline alert alert-danger alert-dismissible fade show" role="alert"><div class="m-alert__icon"><i class="flaticon-danger"></i></div><div class="m-alert__text"><strong>Aviso ! </strong>Você não pode se inscrever nessa atividade pois já tem uma inscrição em outra atividade no mesmo horário.</div><div class="m-alert__close"><button type="button" class="close" data-dismiss="alert" aria-label="Close"></button></div></div></div></div>';
+                $('#aviso2').html(html);
+                $('#acao2-'+id).html('<span style="color: red; font-weight: bold;">Choque de horarios</span>');
+            }
+            inscricoesAbertas();
+        }
+    });
+}
+window.adicionarInscricao = adicionarInscricao;
+</script>
 @endsection
 
 <!-- Sessão de aluno financeiro -->

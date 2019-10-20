@@ -21,27 +21,23 @@ class ParticipanteInfoController extends Controller
         $eventoID = Auth::user()->edicao_ativa;
         $participanteID = $request->input('participante_id');
         $atividadeID = $request->get('atividadeID');
-        //dd($participanteID, $atividadeID);
+
         $this->setPresenca($participanteID, $atividadeID, $eventoID);
         return $this->getViewParticipante($participanteID, $eventoID);
     }
     public function show(Request $request, $participanteId, $eventoId)
     {
 
-        //$this->getViewParticipante($participanteId, $eventoId);
+
         $data = $this->getDados($participanteId, $eventoId);
         $dadosPessoais = $this->getDadosPessoais($participanteId, $eventoId);
 
 
-        // dd($dataE);
-        //return view('participante.participanteInfo', compact('data', 'dadosPessoais'));
-        //dd($dadosPessoais, $data);
+
         date_default_timezone_set('America/Sao_Paulo');
         $date = date('d/m/Y H:i');
         $time = date('H:i');
-        //$date += $time;
-        // dd($date);
-        //dd(Auth::check());
+
         if (!is_null($data[0])) {
             if (Auth::check()) {
                 $occour = 0;
@@ -56,12 +52,10 @@ class ParticipanteInfoController extends Controller
                             ['atividade_has_monitor.monitor_id', '=', $userLoggedID->id]
                         ])
                         ->paginate($this->totalPage);
-                    //dd($data[0]);
                     foreach ($data as $arrayIndex => $atividadeID) {
                         foreach ($atividadeHasMonitor as $arrayIndex2 => $atividadeID2) {
                             $dataInicio = $atividadeID->DataInicio . " " . $atividadeID->HoraInicio;
                             $dataFim = $atividadeID->DataFim . " " . $atividadeID->HoraFim;
-                            //dd($date, $atividadeID->DataFim);
                             if ($atividadeID->AtividadeID == $atividadeID2->AtividadesIn) {
                                 if ($date >= $dataInicio) {
                                     if ($date <= $dataFim) {
@@ -104,7 +98,7 @@ class ParticipanteInfoController extends Controller
     {
         $data = $this->getDados($participanteID, $eventoID);
         $dadosPessoais = $this->getDadosPessoais($participanteID, $eventoID);
-        //dd($data, $dadosPessoais);
+
         return view('participante.participanteInfo', compact('data', 'dadosPessoais'));
     }
 
@@ -133,7 +127,7 @@ class ParticipanteInfoController extends Controller
     }
 
     function getDados($participanteID, $eventoID)
-    {        
+    {
         return DB::table('inscricao')
             ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
             ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')

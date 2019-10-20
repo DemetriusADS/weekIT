@@ -18,7 +18,11 @@ class Horario extends AbstractModel implements DefaultModel
     public static $verbose_genre    = 'M';
     public static $controller       = 'HorarioController';
     
-    
+    public static function verbose_name()
+    {
+        $verbose_name = 'horarios';
+        return response()->json($verbose_name);
+    }
     public static function insert($attributes){
         
         unset($attributes['_token']);

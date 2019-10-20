@@ -13,7 +13,7 @@
                 </a>
             </li>            
             <li class="m-menu__item {{ request()->is('fazer-inscricao') ? ' m-menu__item--active' : '' }}" aria-haspopup="true">
-                <a href="/inscricao/fazer-inscricao" class="m-menu__link">
+                <a href="/exibir-inscricoes" class="m-menu__link">
                     <span class="m-menu__item-here"></span>
                     <span class="m-menu__link-text">
                         Minhas Inscrições
