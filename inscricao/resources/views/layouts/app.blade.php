@@ -78,7 +78,7 @@
                                                         {{ Auth::user()->email }}
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="/inscricao/participante/edit/{{ Auth::user()->id }}">
+                                                    <a class="dropdown-item" href="/participante/update/{{ Auth::user()->id }}">
                                                         <i class="la la-edit"></i>
                                                         Alterar cadastro
                                                     </a>

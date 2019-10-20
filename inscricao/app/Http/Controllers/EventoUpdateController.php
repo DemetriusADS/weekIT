@@ -23,7 +23,7 @@ class EventoUpdateController extends Controller
                 if ($eventID == $value->id) {
                     //dd($eventID);
                     $userID = Auth::user()->id;
-                    $qrcode = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=http://localhost/participanteinfo/" . $userID . "/" . $eventID;
+                    $qrcode = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=http://weekit.conquista.ifba.edu.br/inscricao/participanteinfo/" . $userID . "/" . $eventID;
                     DB::table('participante')
                         ->where('id', Auth::user()->id)
                         ->update(['edicao_ativa' => $eventID]);
