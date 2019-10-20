@@ -145,8 +145,10 @@
                             @if($inscricao->status == 'isento')
                                <td id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide" id="status-{{$inscricao->id}}" >isento</span></td>
                             @endif                
-
-
+                            @if($inscricao->status == 'gratuito')
+                            <td id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide" id="status-{{$inscricao->id}}" >gratuito</span></td>
+                         @endif
+                         @if($inscricao->status != 'gratuito')
                         <td>
                             <div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="..."> 
                                 <button type="button" class="btn btn-sm  btn-success" onclick="alterarStatus({{$inscricao->id}}, 'pago')">Pago</button>
@@ -155,6 +157,7 @@
                                 <button type="button" class="btn btn-sm btn-info" onclick="alterarStatus({{$inscricao->id}}, 'isento')">Isento</button>
                             </div>                             
                         </td>
+                        @endif
                     </tr>
                     @endforeach
                 </table>                    
