@@ -24,7 +24,7 @@
                     var url_listas = `/atividades/gerarlista/${row.id}`;
                       
                         console.log('ok')              
-                        return '<div class="dropdown"><button class="btn btn-brand dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Ações </button> <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> <a class="dropdown-item" href="'+url_show+'" title="Exibe detalhes do registro">Detalhes</a> <a class="dropdown-item" href="'+url_edit+'" title="Altere dados desse registro">Editar</a> <a class="dropdown-item" href="'+url_delete+'" title="Clique aqui para excluir esse registro">Excluir</a><a class="dropdown-item" href="'+url_edit+'" title="Altere dados desse registro">Editar</a> <a class="dropdown-item" href="'+url_listas+'" title="Clique aqui para gerar uma lista de presença">Lista de Alunos</a> </div></div>';
+                        return '<div class="dropdown"><button class="btn btn-brand dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Ações </button> <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> <a class="dropdown-item" href="'+url_show+'" title="Exibe detalhes do registro">Detalhes</a> <a class="dropdown-item" href="'+url_edit+'" title="Altere dados desse registro">Editar</a> <a class="dropdown-item" href="'+url_delete+'" title="Clique aqui para excluir esse registro">Excluir</a> <a class="dropdown-item" href="'+url_listas+'" title="Clique aqui para gerar uma lista de presença">Lista de Alunos</a> </div></div>';
                        
                 }
             });}else{
