@@ -131,6 +131,8 @@
                                 <button type="button" class="btn btn-sm btn-info" onclick="alterarStatus({{$inscricao->id}}, 'isento')">Isento</button>
                             </div>                             
                         </td>
+                        @else
+                            <td></td>
                         @endif
                     </tr>
                     @endforeach
