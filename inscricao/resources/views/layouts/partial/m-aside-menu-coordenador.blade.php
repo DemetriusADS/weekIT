@@ -138,6 +138,18 @@
                             </a>
                         </li>
                         <li class="m-menu__item "  aria-haspopup="true">
+                            <a  href="{{route('participantes-planilha')}}" class="m-menu__link ">
+                                <i class="m-menu__link-icon flaticon-edit"></i>
+                                <span class="m-menu__link-title">
+                                    <span class="m-menu__link-wrap">
+                                        <span class="m-menu__link-text">
+                                            Gerar planilha
+                                        </span>
+                                    </span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="m-menu__item "  aria-haspopup="true">
                             <a  href="{{route('pdf.index')}}" class="m-menu__link ">
                                 <i class="m-menu__link-icon flaticon-add"></i>
                                 <span class="m-menu__link-title">
@@ -208,6 +220,18 @@
                                     <span class="m-menu__link-wrap">
                                         <span class="m-menu__link-text">
                                             Lançar presenças
+                                        </span>
+                                    </span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="m-menu__item "  aria-haspopup="true">
+                            <a  href="{{route('atividades-planilha')}}" class="m-menu__link ">
+                                <i class="m-menu__link-icon flaticon-edit"></i>
+                                <span class="m-menu__link-title">
+                                    <span class="m-menu__link-wrap">
+                                        <span class="m-menu__link-text">
+                                            Gerar Planilha
                                         </span>
                                     </span>
                                 </span>

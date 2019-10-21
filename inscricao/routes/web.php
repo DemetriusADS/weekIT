@@ -1,6 +1,7 @@
 <?php
 
 use \Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +12,8 @@ use \Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
 
 Route::get('/', function () {
     return view('auth.login');
@@ -72,3 +75,5 @@ Route::get('/areaparticipante', 'AreaDoParticipanteController@areaInscricao')->n
 Route::get('/pdfdelete/{id?}', 'PdfGenerator@deleta')->name('deletar-da-lista-pdf');
 Route::post('/pdfshow', 'PdfGenerator@mostrar')->name('shownomestopdf');
 Route::get('/atividades/gerarlista/{id}', 'AtividadeController@gerarRelatorio')->name('gerarRelatorio');
+Route::get('/atividade/planilha', 'ExcelController@atividadesPlanilha')->name('atividades-planilha');
+Route::get('/participante/planilha', 'ExcelController@participantesPlanilha')->name('participantes-planilha');
