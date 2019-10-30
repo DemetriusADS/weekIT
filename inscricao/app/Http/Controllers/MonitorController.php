@@ -130,7 +130,7 @@ class MonitorController extends AbstractController
         $monitorias = DB::table('atividade_has_monitor')
             ->select(
                 'atividade_has_monitor.monitor_id as monitor',
-                'atividade_has_monitor.atividade_id as atividade',
+                'atividade_has_monitor.atividade_id as atividade'
             )->where([
                 ['atividade_has_monitor.monitor_id', '=', $monitor_id],
                 ['atividade_has_monitor.atividade_id', '=', $atividade_id]

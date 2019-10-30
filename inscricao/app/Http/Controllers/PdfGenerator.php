@@ -77,7 +77,7 @@ class PdfGenerator extends Controller
             ->join('evento', 'evento.id', '=', 'inscricao_eventos.evento_id')
             ->select(
                 'participante_id as id',
-                'participante.nome as nome',
+                'participante.nome as nome'
             )
             ->where([
                 ['inscricao_eventos.evento_id', '=', Auth::user()->edicao_ativa],

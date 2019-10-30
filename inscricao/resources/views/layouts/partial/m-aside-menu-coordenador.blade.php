@@ -379,7 +379,7 @@
                             foreach($att as $evento){  
                                 if($evento->id != 0){
                                 echo '<li class="m-menu__item" aria-haspopup="true">
-                                        <a  href="/eventochangeano/'.$evento->id.'" class="m-menu__link ">
+                                        <a  href="'.route('eventochangeano',$evento->id).'" class="m-menu__link ">
                                             <i class="m-menu__link-icon flaticon-list"></i>
                                             <span class="m-menu__link-title">
                                                 <span class="m-menu__link-wrap">

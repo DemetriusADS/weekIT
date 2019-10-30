@@ -265,7 +265,7 @@ class AtividadeController extends AbstractController
             ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
             ->select(
                 'participante.nome as nomeAluno',
-                'inscricao.status as status',
+                'inscricao.status as status'
             )
             ->where('atividade.id', '=', $request->id)
             ->orderBy('nomeAluno')
