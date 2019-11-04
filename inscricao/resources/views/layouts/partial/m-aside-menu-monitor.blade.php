@@ -1,68 +1,60 @@
-<div class="m-stack__item m-stack__item--middle m-stack__item--fluid">
-    <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-light " id="m_aside_header_menu_mobile_close_btn">
-        <i class="la la-close"></i>
-    </button>
-    <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light ">
-        <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-            <li class="m-menu__item {{ request()->is('home') ? ' m-menu__item--active' : '' }}" aria-haspopup="true">
-                <a href="{{route('home')}}" class="m-menu__link">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        Dashboard
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Alterna navegação">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+       <!-- <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+            <li class="nav-item {{ request()->is('home') ? ' active' : '' }}" aria-haspopup="true">
+                <a href="{{route('home')}}" class="nav-link">
+                    <span class="nav-item-here"></span>
+                    <span class="nav-link-text">
+                        Inscrição
                     </span>
                 </a>
+            </li> -->
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0 p-1" style="font-size: 16px">
+            <li class="nav-item {{ request()->is('home') ? ' active' : '' }}" aria-haspopup="true">
+                <a href="{{route('home')}}" class="nav-link">
+                   
+                        Inscrição
+                </a>
             </li>            
-            <li class="m-menu__item {{ request()->is('fazer-inscricao') ? ' m-menu__item--active' : '' }}" aria-haspopup="true">
-                <a href="/exibir-inscricoes" class="m-menu__link">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
+            <li class="nav-item {{ request()->is('minhas-inscricoes') ? ' active' : '' }}" aria-haspopup="true">
+                <a href="/exibir-inscricoes" class="nav-link">
+                    <span class="nav-item-here"></span>
+                    <span class="nav-link-text">
                         Minhas Inscrições
                     </span>
                 </a>
-            </li>            
-            
-            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('atividade/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
-                <a  href="#" class="m-menu__link m-menu__toggle">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        @php 
+            </li>          
+
+            <li class="nav-item dropdown {{ request()->is('/*') ? ' active' : '' }}">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @php 
                             echo "Edição: ". DB::table('participante')
                                         ->join('evento','evento.id','=','participante.edicao_ativa')
                                         ->select('evento.ano')->where('participante.id','=',Auth::user()->id)->get()[0]->ano;
                         @endphp
-                    </span>
-                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i>
                 </a>
-                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                    <ul class="m-menu__subnav">
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         @php
                             $att = DB::table('evento')->get();
                             $insc = DB::table('inscricao_eventos')->get();
                             foreach($att as $evento){                              
                                     foreach($insc as $inscrito){
                                         if($evento->id != 0 && $evento->id == $inscrito->evento_id && Auth::user()->id == $inscrito->participante_id){
-                                            echo '<li class="m-menu__item" aria-haspopup="true">
-                                                        <a  href="/eventochangeano/'.$evento->id.'" class="m-menu__link ">
-                                                            <i class="m-menu__link-icon flaticon-list"></i>
-                                                            <span class="m-menu__link-title">
-                                                                <span class="m-menu__link-wrap">
-                                                                    <span class="m-menu__link-text">
-                                                                        '.$evento->ano.'
-                                                                    </span>
-                                                                </span>
-                                                            </span>
-                                                        </a>
-                                                    </li>';
+                                            echo ' <a  href="'.route('eventochangeano',$evento->id).'" class="dropdown-item">
+                                                                    <i class="m-menu__link-icon flaticon-list"></i>
+                                                                                '.$evento->ano.'
+                                                                </a>';
                                             break;
                                         }                               
-                                    }                         
-                            }
+                                    }                        
+                                }
                         @endphp
-                    </ul>
+                   
                 </div>
-            </li>            
+            </li>
+
         </ul>
     </div>
 </div>

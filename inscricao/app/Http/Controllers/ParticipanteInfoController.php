@@ -32,65 +32,71 @@ class ParticipanteInfoController extends Controller
         $data = $this->getDados($participanteId, $eventoId);
         $dadosPessoais = $this->getDadosPessoais($participanteId, $eventoId);
 
-
+        // dd($dadosPessoais);
 
         date_default_timezone_set('America/Sao_Paulo');
         $date = date('d/m/Y H:i');
         $time = date('H:i');
 
-        if (!is_null($data[0])) {
-            if (Auth::check()) {
-                $occour = 0;
-                $userLoggedID = Auth::user();
-                if ($userLoggedID->tipo == 'monitor') {
-                    $atividadeHasMonitor = DB::table('atividade_has_monitor')
-                        ->join('atividade', 'atividade.id', '=', 'atividade_has_monitor.atividade_id')
-                        ->select(
-                            'atividade_has_monitor.atividade_id as AtividadesIn'
-                        )
-                        ->where([
-                            ['atividade_has_monitor.monitor_id', '=', $userLoggedID->id]
-                        ])
-                        ->paginate($this->totalPage);
-                    foreach ($data as $arrayIndex => $atividadeID) {
-                        foreach ($atividadeHasMonitor as $arrayIndex2 => $atividadeID2) {
-                            $dataInicio = $atividadeID->DataInicio . " " . $atividadeID->HoraInicio;
-                            $dataFim = $atividadeID->DataFim . " " . $atividadeID->HoraFim;
-                            if ($atividadeID->AtividadeID == $atividadeID2->AtividadesIn) {
-                                if ($date >= $dataInicio) {
-                                    if ($date <= $dataFim) {
-                                        $this->setPresenca($participanteId, $atividadeID->AtividadeID, $eventoId);
-                                        $occour++;
+        //dd($data->isEmpty());
+        if (!($dadosPessoais->isEmpty())) {
+            if (!($data->isEmpty())) {
+                if (Auth::check()) {
+                    $occour = 0;
+                    $userLoggedID = Auth::user();
+                    if ($userLoggedID->tipo == 'monitor') {
+                        $atividadeHasMonitor = DB::table('atividade_has_monitor')
+                            ->join('atividade', 'atividade.id', '=', 'atividade_has_monitor.atividade_id')
+                            ->select(
+                                'atividade_has_monitor.atividade_id as AtividadesIn'
+                            )
+                            ->where([
+                                ['atividade_has_monitor.monitor_id', '=', $userLoggedID->id]
+                            ])
+                            ->paginate($this->totalPage);
+                        foreach ($data as $arrayIndex => $atividadeID) {
+                            foreach ($atividadeHasMonitor as $arrayIndex2 => $atividadeID2) {
+                                $dataInicio = $atividadeID->DataInicio . " " . $atividadeID->HoraInicio;
+                                $dataFim = $atividadeID->DataFim . " " . $atividadeID->HoraFim;
+                                if ($atividadeID->AtividadeID == $atividadeID2->AtividadesIn) {
+                                    if ($date >= $dataInicio) {
+                                        if ($date <= $dataFim) {
+                                            $this->setPresenca($participanteId, $atividadeID->AtividadeID, $eventoId);
+                                            $occour++;
+                                        } else {
+                                            return 'Esta atividade já encerrou. Por favor, procure um coordenador';
+                                            $occour++;
+                                        }
                                     } else {
-                                        return 'Esta atividade já encerrou. Por favor, procure um coordenador';
+                                        return 'O Evento ainda não Iniciou';
                                         $occour++;
                                     }
-                                } else {
-                                    return 'O Evento ainda não Iniciou';
-                                    $occour++;
                                 }
                             }
                         }
-                    }
-                    if ($occour == 0) {
-                        echo ('<br>Você não é monitor de nenhuma das atividades desse participante');
-                    } // dd($occour);
-                    //dd($teste);
-                } elseif ($userLoggedID->tipo == 'coordenador') {
-                    foreach ($data as $arrayIndex => $atividadeID) {
-                        $dataInicio = $atividadeID->DataInicio . " " . $atividadeID->HoraInicio;
-                        if ($date >= $dataInicio) {
-                            return view('participante.coordenadorAccess', compact('data', 'userLoggedID', 'dadosPessoais'));
-                            $occour++;
+                        if ($occour == 0) {
+                            echo ('<br>Você não é monitor de nenhuma das atividades desse participante');
+                        } // dd($occour);
+                        //dd($teste);
+                    } elseif ($userLoggedID->tipo == 'coordenador') {
+                        foreach ($data as $arrayIndex => $atividadeID) {
+                            $dataInicio = $atividadeID->DataInicio . " " . $atividadeID->HoraInicio;
+                            if ($date >= $dataInicio) {
+                                return view('participante.coordenadorAccess', compact('data', 'userLoggedID', 'dadosPessoais'));
+                                $occour++;
+                            }
                         }
                     }
+                } else {
+                    echo 'Monitor não logado';
                 }
+                return $this->getViewParticipante($participanteId, $eventoId);
             } else {
-                echo 'Monitor não logado';
+                echo 'Participante não cadastrado em alguma atividade';
+                return $this->getViewParticipante($participanteId, $eventoId);
             }
-            return $this->getViewParticipante($participanteId, $eventoId);
         } else {
-            return 'Participante não existe ou não cadastrado';
+            return 'Participante não cadastrado em nosso sistema.';
         }
     }
 
@@ -104,13 +110,10 @@ class ParticipanteInfoController extends Controller
 
     function getDadosPessoais($participanteID, $eventoID)
     {
-        $totalPage = 10;
 
-        return DB::table('inscricao')
-            ->join('inscricao_eventos', 'inscricao_eventos.participante_id', '=', 'inscricao.participante_id')
-            ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
-            ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
-            ->join('evento', 'evento.id', '=', 'atividade.evento_id')
+        return DB::table('participante')
+            ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')
+            // ->join('evento', 'evento.id', '=', 'atividade.evento_id')
             ->select(
                 'participante.tipo',
                 'participante.id',
@@ -120,8 +123,8 @@ class ParticipanteInfoController extends Controller
                 'evento.nome as Evento',
                 'evento.ano as EventoAno'
             )->where([
-                ['participante.id', 'like',  $participanteID],
                 ['evento.id', '=', $eventoID],
+                ['participante.id', '=',  $participanteID],
             ])
             ->get();
     }

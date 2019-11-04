@@ -6,25 +6,45 @@
    <div class="m-content">
         @php
         $maxEventoID = DB::table('evento')->max('id');
-        $verify = DB::table('evento')
-        ->join('inscricao_eventos','inscricao_eventos.evento_id','=','evento.id')
-        ->join('participante','participante.edicao_ativa','=','evento.id')
-        ->select('inscricao_eventos.participante_id as id')
-        ->where([
-            ['inscricao_eventos.participante_id','=',Auth::user()->id],
-            ['inscricao_eventos.evento_id','=',$maxEventoID],
-            ])
-        ->get();
+        date_default_timezone_set('America/Sao_Paulo');
+        $date = date('Y-m-d');
+        $data_insc_inicio = DB::table('evento')
+            ->select('evento.data_inicio_insc as inicio')
+            ->where('evento.id','=',$maxEventoID)
+            ->get();
+        $data_insc_fim = DB::table('evento')
+            ->select('evento.data_fim_insc as fim')
+            ->where('evento.id','=',$maxEventoID)
+            ->get();
+            foreach ($data_insc_inicio as $key => $value) {
+                $dataInicio=$value->inicio;
+            }
+            foreach ($data_insc_fim as $key => $value) {
+                $dataFim = $value->fim;
+            }
+            
+        if ($date >= $dataInicio   && $date <= $dataFim) {
+            $verify = DB::table('evento')
+                ->join('inscricao_eventos','inscricao_eventos.evento_id','=','evento.id')
+                ->join('participante','participante.edicao_ativa','=','evento.id')
+                ->select('inscricao_eventos.participante_id as id')
+                ->where([
+                    ['inscricao_eventos.participante_id','=',Auth::user()->id],
+                    ['inscricao_eventos.evento_id','=',$maxEventoID],
+                    ])
+                ->get();
       // dd($verify->isEmpty());
-       
-        if($verify->isEmpty()){
-        echo(' <form action="'.route("eventoUpdate", DB::table("evento")->max("id")).'" method="post">
+
+        
+            if($verify->isEmpty()){
+                echo(' <form action="'.route("eventoUpdate", DB::table("evento")->max("id")).'" method="post">
                         <div class="alert alert-dismissible" style="background-color: #fbc8c8;">                        
-                        <p>Você ainda não se Inscreveu na nova ediçao de'. DB::table("evento")->max("ano").'</p>
-                        <button type="submit"  class="btn btn-danger">Edição'. DB::table("evento")->max("ano").'</button>
+                        <p>Você ainda não se Inscreveu na nova ediçao de '. DB::table("evento")->max("ano").'</p>
+                        <button type="submit"  class="btn btn-danger">Edição '. DB::table("evento")->max("ano").'</button>
                        </div>
                     </form>');
-    }
+        }
+    }   
     @endphp
    </div>
      <div class="m-content text-center">

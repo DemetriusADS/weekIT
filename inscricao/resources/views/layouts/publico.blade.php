@@ -34,7 +34,7 @@
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
-<body class="m-page--wide m-header--fixed m-header--fixed-mobile m-footer--push m-aside--offcanvas-default"  >
+<body class="m-page--wide m-header--fixed m-header--fixed-mobile m-footer--push m-aside--offcanvas-default" >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
     

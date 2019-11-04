@@ -159,7 +159,7 @@ class AtividadeController extends AbstractController
             ->where('participante.cpf', '=', self::Mask("###.###.###-##", $request->input('cpf')))
             ->get();
 
-        if (!is_null($participante)) {
+        if (!is_null($participante)) { //
             $presente = 0;
             if (count($participante) > 0) {
                 $has_presenca = DB::table('inscricao')
@@ -196,8 +196,8 @@ class AtividadeController extends AbstractController
         $atividade_id = $request->input('atividade_id');
 
         $atividade_tipo = DB::table('atividade')
-            ->select('tipo')
-            ->where('id', '=', $atividade_id)->get()[0]->tipo;
+            ->select('atividade.tipo')
+            ->where('atividade.id', '=', $atividade_id)->get()[0]->tipo;
 
         if ($atividade_tipo == 'minicurso') {
             return response()

@@ -55,10 +55,6 @@ class Inscricao extends AbstractModel implements DefaultModel
                 ->where('participante.edicao_ativa', '=', Auth::user()->id)
                 ->get()[0]->edicao_ativa);
 
-        //$query;
-        //$query->join('participante', 'participante.id', '=', 'inscricao.participante_id');
-        //$query->where('evento_id', '=', DB::table('participante')
-        //  ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.edicao_ativa', '=', Auth::user()->id)->get()[0]->edicao_ativa);
 
         if (isset($request_query['descricao'])) {
             if (!empty($request_query['descricao'])) {

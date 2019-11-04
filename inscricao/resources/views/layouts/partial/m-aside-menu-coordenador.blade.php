@@ -1,403 +1,158 @@
-<div class="m-stack__item m-stack__item--middle m-stack__item--fluid">
-    <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-light " id="m_aside_header_menu_mobile_close_btn">
-        <a class="la la-close"></a>
-    </button>
-    <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light ">
-        <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-            <li class="m-menu__item {{ request()->is('home') ? ' m-menu__item--active' : '' }}" aria-haspopup="true">
-                <a href="{{route('home')}}" class="m-menu__link">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        Dashboard
-                    </span>
+ <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Alterna navegação">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 p-1" style="font-size: 16px">
+            <li class="nav-item {{ request()->is('home') ? ' active' : '' }}">
+                 <a class="nav-link" href="{{route('home')}}">
+                    Dashboard
                 </a>
-            </li>            
-            <li class="m-menu__item {{ request()->is('fazer-inscricao') ? ' m-menu__item--active' : '' }}" aria-haspopup="true">
-                <a href="/inscricao/fazer-inscricao" class="m-menu__link">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        Minhas Inscrições
-                    </span>
-                </a>
-            </li>    
-                    
-            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('evento/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
-                <a  href="{{route('evento.index')}}" class="m-menu__link m-menu__toggle">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        Evento
-                    </span>
-                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                </a>
-                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                    <ul class="m-menu__subnav">
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('evento.create')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-add"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Cadastrar evento
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('evento.index')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-list"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Listar eventos
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>            
-            
-            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('inscricao/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
-                <a  href="{{route('inscricao.index')}}" class="m-menu__link m-menu__toggle">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        Inscrição
-                    </span>
-                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                </a>
-                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                    <ul class="m-menu__subnav">
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('inscricao.create')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-add"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Cadastrar inscrição
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('inscricao.index')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-list"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Listar inscrições
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+             </li>
+            <li class="nav-item {{ request()->is('fazer-inscricao') ? ' active' : '' }}">
+                <a class="nav-link " href="/exibir-inscricoes">Minhas Inscrições</a>
             </li>
-
-            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('participante/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
-                <a  href="{{route('participante.index')}}" class="m-menu__link m-menu__toggle">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        Participante
-                    </span>
-                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                </a>
-                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                    <ul class="m-menu__subnav">
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('participante.create')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-add"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Cadastrar participante
-                                        </span>
-                                    </span>
-                                </span>
+                  <li class="nav-item dropdown {{ request()->is('evento/*') ? ' active' : '' }}">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="{{ route('evento.index') }}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Evento
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <a class="dropdown-item" href="{{ route('evento.create') }}">
+                                <i class="m-menu__link-icon flaticon-add"></i>Cadastrar evento
                             </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('participante.index')}}" class="m-menu__link ">
+                            <a class="dropdown-item" href="{{ route('evento.index') }}">
+                                    <i class="m-menu__link-icon flaticon-list"></i>
+                                    Listar eventos
+                                </a>
+                        </div>
+                  </li>
+             <li class="nav-item dropdown {{ request()->is('inscricao/*') ? ' active' : '' }}">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="{{route('inscricao.index')}}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Inscrição
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <a class="dropdown-item" href="{{route('inscricao.create')}}">
+                            <i class="m-menu__link-icon flaticon-add"></i>
+                            Cadastrar inscrição</a>
+                          <a class="dropdown-item" href="{{route('inscricao.index')}}">
                                 <i class="m-menu__link-icon flaticon-list"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Listar participantes
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('participantes-planilha')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-edit"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Gerar planilha
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('pdf.index')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-add"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Gerar Crachás
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                                Listar inscrições
+                        </a>
+                        </div>
+             </li>
+            <li class="nav-item dropdown {{ request()->is('participante/*') ? ' active' : '' }}">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="{{route('participante.index')}}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Participante
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{{route('participante.create')}}">
+                            <i class="m-menu__link-icon flaticon-add"></i>
+                            Cadastrar participante
+                    </a>
+                    <a class="dropdown-item" href="{{route('participante.index')}}">
+                            <i class="m-menu__link-icon flaticon-list"></i>
+                            Listar participantes
+                    </a>
+                    <a class="dropdown-item" href="{{route('participantes-planilha')}}">
+                            <i class="m-menu__link-icon flaticon-edit"></i>
+                            Gerar planilha
+                    </a>
+                    <a class="dropdown-item" href="{{route('pdf.index')}}">
+                            <i class="m-menu__link-icon flaticon-add"></i>
+                            Gerar Crachás
+                    </a>
+            </div>
             </li>
-
-            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('atividade/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
-                <a  href="{{route('atividade.index')}}" class="m-menu__link m-menu__toggle">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
+            <li class="nav-item dropdown {{ request()->is('atividade/*') ? ' active' : '' }}">
+                 <a href='{{ route('atividade.index') }}' class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Atividade
-                    </span>
-                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i>
                 </a>
-                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                    <ul class="m-menu__subnav">
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('atividade.create')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-add"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Cadastrar atividade
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('atividade.index')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-list"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Listar atividades
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('gerenciar-monitor')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-settings"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Gerenciar monitor
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('gerenciar-presenca')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-edit"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Lançar presenças
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('atividades-planilha')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-edit"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Gerar Planilha
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('gerenciar-sorteio')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-chat"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Sorteio
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>                         
-                    </ul>
-                </div>
-            </li>
-
-            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('palestrante/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
-                <a  href="#" class="m-menu__link m-menu__toggle">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        Colaborador
-                    </span>
-                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                </a>
-                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                    <ul class="m-menu__subnav">
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('palestrante.create')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-add"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Cadastrar palestrante
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('monitor.create')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-add"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Cadastrar monitor
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>                        
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('palestrante.index')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-list"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Listar palestrantes
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('monitor.index')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-list"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Listar monitores
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>                        
-                    </ul>
-                </div>
-            </li>          
-
-            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('local/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
-                <a  href="{{route('local.index')}}" class="m-menu__link m-menu__toggle">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        Local
-                    </span>
-                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                </a>
-                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                    <ul class="m-menu__subnav">
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('local.create')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-add"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Cadastrar local
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item "  aria-haspopup="true">
-                            <a  href="{{route('local.index')}}" class="m-menu__link ">
-                                <i class="m-menu__link-icon flaticon-list"></i>
-                                <span class="m-menu__link-title">
-                                    <span class="m-menu__link-wrap">
-                                        <span class="m-menu__link-text">
-                                            Listar locais
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            
-            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ request()->is('/*') ? ' m-menu__item--active' : '' }}"  m-menu-submenu-toggle="click" aria-haspopup="true">
-                <a  href="#" class="m-menu__link m-menu__toggle">
-                    <span class="m-menu__item-here"></span>
-                    <span class="m-menu__link-text">
-                        @php 
-                            echo "Edição: ". DB::table('participante') //ERRO DA EDIÇÃO DO EVENTO
-                                        ->join('evento','evento.id','=','participante.edicao_ativa')
-                                        ->select('evento.ano')
-                                        ->where('participante.id','=',Auth::user()->id)->get()[0]->ano;
-                        @endphp
-                    </span>
-                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                    <i class="m-menu__ver-arrow la la-angle-right"></i> -->
-                </a>
-              <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                    <ul class="m-menu__subnav">
-                        @php
-                            $att = DB::table('evento')->get();
-                            foreach($att as $evento){  
-                                if($evento->id != 0){
-                                echo '<li class="m-menu__item" aria-haspopup="true">
-                                        <a  href="'.route('eventochangeano',$evento->id).'" class="m-menu__link ">
-                                            <i class="m-menu__link-icon flaticon-list"></i>
-                                            <span class="m-menu__link-title">
-                                                <span class="m-menu__link-wrap">
-                                                    <span class="m-menu__link-text">
-                                                        '.$evento->ano.'
-                                                     </span>
-                                                </span>
-                                            </span>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{{route('atividade.create')}}">
+                            <i class="m-menu__link-icon flaticon-add"></i>
+                          Cadastrar atividade
+                        </a>
+                        <a  href="{{route('atividade.index')}}" class="dropdown-item" >
+                            <i class="m-menu__link-icon flaticon-list"></i>
+                            Listar atividades
+                        </a>
+                        <a  href="{{route('gerenciar-monitor')}}" class="dropdown-item">
+                            <i class="m-menu__link-icon flaticon-settings"></i>
+                           Gerenciar monitor
+                        </a>
+                        <a  href="{{route('gerenciar-presenca')}}" class="dropdown-item">
+                            <i class="m-menu__link-icon flaticon-edit"></i>
+                           Lançar presenças
+                        </a>
+                        <a  href="{{route('atividades-planilha')}}" class="dropdown-item">
+                            <i class="m-menu__link-icon flaticon-edit"></i>
+                           Gerar Planilha</a>
+                   <a  href="{{route('gerenciar-sorteio')}}" class="dropdown-item">
+                            <i class="m-menu__link-icon flaticon-chat"></i>
+                           Sorteio
+                        </a>
+                                </div>
+                              </li>
+                              <li class="nav-item dropdown {{ request()->is('palestrante/*') ? ' active' : '' }}">
+                                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Colaborador
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <a  href="{{route('palestrante.create')}}" class="dropdown-item">
+                                                    <i class="m-menu__link-icon flaticon-add"></i>
+                                                   Cadastrar palestrante
+                                                </a>
+                                            <a  href="{{route('monitor.create')}}" class="dropdown-item">
+                                                    <i class="m-menu__link-icon flaticon-add"></i>
+                                                   Cadastrar monitor
+                                            </a>
+                                            <a  href="{{route('palestrante.index')}}" class="dropdown-item">
+                                                    <i class="m-menu__link-icon flaticon-list"></i>
+                                                   Listar palestrantes
+                                                </a>
+                                           <a  href="{{route('monitor.index')}}" class="dropdown-item">
+                                                    <i class="m-menu__link-icon flaticon-list"></i>
+                                                    Listar monitores
+                                                </a>
+                                    </div>
+                                  </li>
+                                  <li class="nav-item dropdown {{ request()->is('local/*') ? ' active' : '' }}">
+                                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="{{route('local.index')}}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Local
                                         </a>
-                                    </li>';
-                                }                        
-                            }
-                        @endphp
-                    </ul>
-                </div>
-            </li>            
-        </ul>
-    </div>
-</div>
-
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                <a  href="{{route('local.create')}}" class="dropdown-item">
+                                                        <i class="m-menu__link-icon flaticon-add"></i>
+                                                       Cadastrar local
+                                                               </a>
+                                               <a  href="{{route('local.index')}}" class="dropdown-item">
+                                                        <i class="m-menu__link-icon flaticon-list"></i>
+                                                       Listar locais
+                                                               </a>
+                                        </div>
+                                      </li>
+                                      <li class="nav-item dropdown {{ request()->is('/*') ? ' active' : '' }}">
+                                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    @php 
+                                                    echo "Edição: ". DB::table('participante') //ERRO DA EDIÇÃO DO EVENTO
+                                                                ->join('evento','evento.id','=','participante.edicao_ativa')
+                                                                ->select('evento.ano')
+                                                                ->where('participante.id','=',Auth::user()->id)->get()[0]->ano;
+                                                @endphp
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                    @php
+                                                    $att = DB::table('evento')->get();
+                                                    foreach($att as $evento){  
+                                                        if($evento->id != 0){
+                                                        echo ' <a  href="'.route('eventochangeano',$evento->id).'" class="dropdown-item">
+                                                                    <i class="m-menu__link-icon flaticon-list"></i>
+                                                                                '.$evento->ano.'
+                                                                </a>';
+                                                        }                        
+                                                    }
+                                                @endphp
+                                            </div>
+                                          </li>
+          </ul>
+        </div>
 

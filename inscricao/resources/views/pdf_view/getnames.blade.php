@@ -9,7 +9,7 @@
               $getAtividades = DB::table('atividade')
               ->select(
                     'atividade.id as id',
-                    'atividade.titulo as nome',
+                    'atividade.titulo as nome'
               )->where('atividade.evento_id','=',Auth::user()->edicao_ativa)
               ->get();
              // dd($getParticipantes);
@@ -34,7 +34,7 @@
           ->join('inscricao_eventos','inscricao_eventos.participante_id','=','participante.id')
           ->select(
                 'participante.id as id',
-                'participante.nome as nome',
+                'participante.nome as nome'
           )->where('inscricao_eventos.evento_id','=',Auth::user()->edicao_ativa)
           ->get();
          // dd($getParticipantes);
@@ -125,7 +125,7 @@
                                                       <td class="align-content-center">
                                                            <div class="input-group mb-3">
                                                             <h4 style="line-height: 150%">'.$value->nome.'</h4> 
-                                                            <form class="form-inline" action="/pdfdelete/'.$idSelecionado.'" method="get">
+                                                            <form class="form-inline" action="/pdfdel/'.$idSelecionado.'" method="get">
                                                                   <div class="input-group-append">
                                                                               <button class="btn btn-danger" style="margin-left: 5px" type="Submit">-</button>
                                                                   </div>
