@@ -22,7 +22,7 @@
             foreach ($data_insc_fim as $key => $value) {
                 $dataFim = $value->fim;
             }
-            
+
         if ($date >= $dataInicio   && $date <= $dataFim) {
             $verify = DB::table('evento')
                 ->join('inscricao_eventos','inscricao_eventos.evento_id','=','evento.id')
@@ -44,7 +44,7 @@
                        </div>
                     </form>');
         }
-    }   
+    }
     @endphp
    </div>
      <div class="m-content text-center">
@@ -142,6 +142,7 @@
                         <th style="width: 120px;">Data</th>
                         <th style="width: 140px;">Status</th>
                         <th style="width: 200px;">Alterar para</th>
+                        <th style="width: 30px;">Ação</th>
                     </tr>
                     @foreach($data as $inscricao)
                     <tr>
@@ -180,7 +181,12 @@
                         @else
                             <td></td>
                         @endif
-                    </tr>
+                        @if($inscricao->status != 'pago')
+                        <td>
+                            <button class="btn btn-danger link" type="button"><a href='/inscricao/delete/{{ $inscricao->id }}'>-</button>
+                        </td>
+                        @endif
+                    </tr>                    
                     @endforeach
                 </table>                    
                 </div>
@@ -225,6 +231,11 @@
                                 +'<button type="button" class="btn btn-sm btn-info" onclick="alterarStatus('+item.id+', \'isento\')">Isento</button>'
                             +'</div>'                             
                         +'</td>'}
+                        if(item.status != 'pago'){
+                            html+= '<td>'
+                            +'<button class="btn btn-danger" type="button"><a href="/inscricao/delete/'+item.id+'>-</button>'
+                        +'</td>'
+                        }
                     html+='</tr>';
                 return html;
             }
@@ -249,7 +260,7 @@
                     pesquisaNome();     
                 }
             }  
-            
+           
             function pesquisaNome(){
                 $("#bt_pesquisar").prop("disabled", true);
                 $.ajax({
@@ -376,13 +387,14 @@
 @elseif(Auth::user()->tipo == 'aluno')
     @section('content')
         <div class="m-content">
-            @if(DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa == DB::table('evento')->max('id'))
-                <div class="bs-component">
+               
+                @if(DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa == DB::table('evento')->max('id'))
+               <!-- <div class="bs-component">
                     <div class="alert alert-dismissible" style="background-color: #ebfaeb;">
                         <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2019 estão abertas de <b>12 a 30/11/2019</b>.</h4>
                         
 
-                        <p style="text-align: justify;">A inscrição no evento é gratuita e dá acesso às palestras, mesa redonda e mostra de trabalhos. A inscrição em cada minicurso é <strong>R$ 10,00</strong> (dez reais).</p>
+                        <p style="text-align: justify;">A inscrição em cada minicurso é <strong>R$ 10,00</strong> (dez reais).</p>
                         <p style="text-align: justify;">O pagamento das inscrições em minicurso deverá ser feito no IFBA (<strong>ao lado da cantina</strong>), nos seguintes dias e horários:</p>
                         <ul>
                         <li><strong>Manhã</strong>: toda quarta e sexta das 10:00 às 11:00 horas</li>
@@ -399,7 +411,7 @@
                         <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"> <b>Aviso</b> - Por favor, certifique-se que seu nome completo pois este será impresso em seu(s) certificado(s). Procure um coordenador.
                         </p>                                         
                     </div>
-                </div>
+                </div>-->
                 <div class="m-portlet m-portlet--mobile">
                         <div class="m-portlet__body">
                                 <div id="aviso"></div>
@@ -408,9 +420,12 @@
                         </div>
                     </div> 
                 @else  
+                <div class="alert alert-dismissible bg-warning">
+                        <p style="text-align: justify;">A inscrição no evento é gratuita e dá acesso às palestras, mesa redonda e mostra de trabalhos.</p>
+                    </div><br>
                     <form action="{{route('eventoUpdate', DB::table('evento')->max('id'))}}" method="post">
-                        <div class="alert alert-dismissible" style="background-color: #fbc8c8;">                        
-                        <p>Você ainda não se Inscreveu na nova ediçao de @php echo DB::table('evento')->max('ano')@endphp</p>
+                        <div class="alert alert-dismissible bg-success">                        
+                        <p style='color:white'>Você ainda não se Inscreveu na nova ediçao de @php echo DB::table('evento')->max('ano')@endphp</p>
                         <button type="submit"  class="btn btn-danger">Edição @php echo DB::table('evento')->max('ano')@endphp</button>
                        </div>
                     </form>

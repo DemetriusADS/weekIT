@@ -71,8 +71,11 @@ class ParticipanteController extends AbstractController
      */
     public function update(ParticipanteRequest $request)
     {
-        $entity = $this->model::find($request->input('id'));
-        $route  = redirect()->route($this->model::$base_name_route . '.edit', ['id' => $request->input('id')]);
+        // dd($request->id);
+        $entity = $this->model::find($request->id);
+        //dd($entity);
+
+        $route  = redirect()->route($this->model::$base_name_route . '.edit', ['id' => $request->id]);
         $input = $request->all();
         if ($request->input('password') == null) {
             $input = $request->except('password');

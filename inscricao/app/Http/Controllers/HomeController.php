@@ -227,6 +227,9 @@ class HomeController extends Controller
         if (!is_null($inscricoes)) {
             return response()
                 ->json(['inscricoes' => $inscricoes, 'titulo' => $titulo]);
+        } else {
+            return response()
+                ->json(['inscricoes' => 'Você ainda não se inscreveu em nenhuma atividade']);
         }
     }
 

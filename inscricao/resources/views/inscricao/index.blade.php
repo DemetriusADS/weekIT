@@ -35,9 +35,7 @@
                 </div>
             </div>
             <div class="m-portlet__body">
-
                 @include('layouts.partial.message')
-
                 @include('layouts.components.form.form-search',$model::dataTablesSearchForm())
                 <div class="m_datatable" id="json_data"></div>
             </div>
@@ -50,7 +48,6 @@
     <script type="text/javascript">
         $('.input-cpf').mask('999.999.999-99');
         var DatatableRemoteAjax = function() {
-
             var demo = function() {
                 var columns = <?php echo json_encode($model::dataTablesColumns()->getData()); ?>;
                 var datatable = $('.m_datatable').mDatatable({
@@ -61,7 +58,7 @@
                         read: {
                             // sample GET method
                             method: 'GET',
-                            url: '{{ url(route($model::$base_name_route.'.search')) }}',
+                            url: '{{ route($model::$base_name_route.'.search') }}',
                             map: function(raw) {
                                 // sample data mapping
                                 var dataSet = raw;

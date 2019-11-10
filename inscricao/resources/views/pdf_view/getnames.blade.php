@@ -18,7 +18,7 @@
              <!-- <div class='list-group float-md-right width = 50px'>-->
              <button class="btn btn-outline-danger float-md-right m-1"> <a href="{{route('gerarpdf')}}" class="text-dark">Gerar Todos</a></button>
               <!--</div>-->
-              <div class="dropdown float-right">
+              <div class="btn-group dropleft float-right">
                         <button class="btn btn-outline-warning dropdown-toggle m-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Atividades
                         </button>

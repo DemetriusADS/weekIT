@@ -92,7 +92,7 @@ class ParticipanteInfoController extends Controller
                 }
                 return $this->getViewParticipante($participanteId, $eventoId);
             } else {
-                echo 'Participante não cadastrado em alguma atividade';
+                echo 'Participante não cadastrado em, pelo menos, uma atividade';
                 return $this->getViewParticipante($participanteId, $eventoId);
             }
         } else {

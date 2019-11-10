@@ -17,19 +17,25 @@
             $participante->Nome_Cracha = $primeiroNome." ".$ultimoNome;
             $participante->Nome_Cracha = mb_convert_case($participante->Nome_Cracha, MB_CASE_TITLE, 'UTF-8');
       @endphp
-      <div class="border" style="float: left; padding: 8px; margin: 2px; height: 200px; width: 220px">
-      <div class="text-center">
+      <div class="border" style="float: left; margin: 2px; height:100px; ">
+      <div class="text-center" style="float: left; padding-top: 10px">
                   
-                        @php
-                        echo("<img style='align-content: center; margin-left:5px;'  src='".$participante->QRCODE."'>");
+                  @php
                         echo('<h5 class="font-weight-bold" style=" margin-left:7%; padding:0">'.$participante->Nome_Cracha.'</h5>');
-                        echo ("<div style='align-content: center;margin-left:3%'>".DNS1D::getBarcodeHTML($participante->CPF, "UPCA")."</div>");
-                        echo('<h6 style="margin-left:8%">'.$participante->CPF.'</h6>')                      
+                        echo ("<div style='align-content: center;margin-left:3%'>".DNS1D::getBarcodeHTML($participante->CPF, "C128")."</div>");
+                        echo('<h6 style="margin-left:8%">'.$participante->CPF.'</h6>');
                   @endphp
                   
       </div>
+            <div style="float: left; padding-top: -5px"> 
+                  @php
+                        echo("<img style='align-content: center; margin-left:5px;float: left'  src='".$participante->QRCODE."'>");
+                  @endphp
+            </div>
+            <div class="clearfix"></div>
       </div>
       </div>
+     
                   
       @endforeach   
 </div>

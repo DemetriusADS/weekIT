@@ -109,8 +109,8 @@
                                     +'<th>Descrição</th>'
                                     +'<th>Max</th>'
                                     +'<th>Inscritos</th>'
-                                   +'<th>CH</th>'
                                    +'<th>Preço</th>'
+                                   +'<th>CH</th>'
                                     +'<th>Ação</th>'
                             +'</tr>';
                         $.each(data.atividades, function(x, item){

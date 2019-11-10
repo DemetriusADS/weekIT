@@ -23,12 +23,13 @@ class ParticipantesPlanilha implements FromCollection, WithMapping, WithHeadings
                 'participante.nome',
                 'participante.email',
                 'participante.cpf',
+                'participante.instituicao',
                 'atividade.titulo as ativTitulo'
             )
             ->where([
                 ['participante.edicao_ativa', '=', Auth::user()->edicao_ativa],
-                ['inscricao.presente', '=', '1']
-                //['participante.tipo', '=', 'coordenador']
+                ['inscricao.presente', '=', '1'],
+                ['participante.tipo', '!=', 'coordenador']
             ])
             ->orderBy('nome')
             ->get();
@@ -39,6 +40,7 @@ class ParticipantesPlanilha implements FromCollection, WithMapping, WithHeadings
             'CPF',
             'Nome',
             'Email',
+            'É do IFBA?',
             'Atividade'
         ];
     }
@@ -48,6 +50,7 @@ class ParticipantesPlanilha implements FromCollection, WithMapping, WithHeadings
             $participante->cpf,
             $participante->nome,
             $participante->email,
+            $participante->instituicao,
             $participante->ativTitulo
         ];
     }

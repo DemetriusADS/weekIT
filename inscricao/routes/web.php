@@ -77,3 +77,5 @@ Route::post('/pdfshow', 'PdfGenerator@mostrar')->name('shownomestopdf');
 Route::get('/atividades/gerarlista/{id}', 'AtividadeController@gerarRelatorio')->name('gerarRelatorio');
 Route::get('/atividade/planilha', 'ExcelController@atividadesPlanilha')->name('atividades-planilha');
 Route::get('/participante/planilha', 'ExcelController@participantesPlanilha')->name('participantes-planilha');
+Route::get('/updatedb', 'updateBanco@updateDB')->name('updateDB');
+Route::get('/participante/update/{id}', 'ParticipanteController@update');
