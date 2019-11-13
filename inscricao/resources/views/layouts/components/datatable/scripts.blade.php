@@ -21,7 +21,7 @@
                     var url_show = '{{route($model::$base_name_route.'.show')}}/' + row.id;
                     var url_edit = '{{route($model::$base_name_route.'.edit')}}/' + row.id;
                     var url_delete = '{{route($model::$base_name_route.'.delete')}}/' + row.id;
-                    var url_listas = `/atividades/gerarlista/${row.id}`;
+                    var url_listas = `gerarlista/${row.id}`;
                     return '<div class="dropdown"><button class="btn btn-brand dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Ações </button> <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> <a class="dropdown-item" href="'+url_show+'" title="Exibe detalhes do registro">Detalhes</a> <a class="dropdown-item" href="'+url_edit+'" title="Altere dados desse registro">Editar</a> <a class="dropdown-item" href="'+url_delete+'" title="Clique aqui para excluir esse registro">Excluir</a> <a class="dropdown-item" href="'+url_listas+'" title="Clique aqui para gerar uma lista de presença">Lista de Alunos</a> </div></div>';
                        
                 }

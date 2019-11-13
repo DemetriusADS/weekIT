@@ -10,12 +10,7 @@ use Illuminate\Support\Arr;
 
 class PdfGenerator extends Controller
 {
-    private $getList;
 
-    public function __construct()
-    {
-        $getList = session('getList');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -77,7 +72,7 @@ class PdfGenerator extends Controller
             ->join('evento', 'evento.id', '=', 'inscricao_eventos.evento_id')
             ->select(
                 'participante_id as id',
-                'participante.nome as nome',
+                'participante.nome as nome'
             )
             ->where([
                 ['inscricao_eventos.evento_id', '=', Auth::user()->edicao_ativa],
@@ -129,14 +124,11 @@ class PdfGenerator extends Controller
      */
     public function deleta($id)
     {
-        //dd($id);
         $getList = session('getList');
-        //dd($getList);
         $ids = array_column($getList, 'id');
         $index = array_search($id, $ids);
         array_splice($getList, $index, 1);
         session(['getList' => $getList]);
-        //dd($getList);
         return redirect()->back();
     }
     public function getInformations($idVerificador = null)
@@ -148,19 +140,6 @@ class PdfGenerator extends Controller
             if ($userID->edicao_ativa == $eventoRecente) {
                 if (!is_null($idVerificador)) {
                     $getList = session()->get('getList');
-                    //dd($getList);
-                    $ids = data_get($getList, []);
-                    //dd($ids);
-
-                    //$getList = (object) $getList;
-
-                    //dd($getList->values()->all());
-                    //dd($object);
-
-
-                    //foreach ($ids as $index) {
-
-                    //dd($index);
                     $participantesData = DB::table('inscricao_eventos')
                         ->join('participante', 'participante.id', '=', 'inscricao_eventos.participante_id')
                         ->join('evento', 'evento.id', '=', 'inscricao_eventos.evento_id')
@@ -258,8 +237,9 @@ class PdfGenerator extends Controller
         */
         //dd($participantesData);
         //return view('pdf_view.crachas', compact('participantesData'));
-        $pdf = PDF::loadView('pdf_view.crachas', compact('participantesData'))->setOption('margin-bottom', 20);
-        return $pdf->stream('teste.pdf');
+        //$pdf = App::make('dompdf.wrapper');
+        $pdf = PDF::loadView('pdf_view.crachas', compact('participantesData'));
+        return $pdf->stream('grachas.pdf');
         //return PDF::loadFile('http://www.github.com')->inline('github.pdf');
     }
 }

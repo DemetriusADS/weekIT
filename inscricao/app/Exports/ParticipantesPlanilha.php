@@ -17,15 +17,21 @@ class ParticipantesPlanilha implements FromCollection, WithMapping, WithHeadings
     public function collection()
     {
         return DB::table('participante')
+            ->join('inscricao', 'inscricao.participante_id', '=', 'participante.id')
+            ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
             ->select(
                 'participante.nome',
                 'participante.email',
-                'participante.cpf'
+                'participante.cpf',
+                'participante.instituicao',
+                'atividade.titulo as ativTitulo'
             )
             ->where([
-                ['participante.edicao_ativa', '=', Auth::user()->edicao_ativa],
-                ['participante.tipo', '=', 'coordenador']
+                ['atividade.evento_id', '=', Auth::user()->edicao_ativa],
+                ['inscricao.presente', '=', '1'],
+                ['participante.tipo', '!=', 'coordenador']
             ])
+            ->orderBy('nome')
             ->get();
     }
     public function headings(): array
@@ -34,6 +40,8 @@ class ParticipantesPlanilha implements FromCollection, WithMapping, WithHeadings
             'CPF',
             'Nome',
             'Email',
+            'É do IFBA?',
+            'Atividade'
         ];
     }
     public function map($participante): array
@@ -42,6 +50,8 @@ class ParticipantesPlanilha implements FromCollection, WithMapping, WithHeadings
             $participante->cpf,
             $participante->nome,
             $participante->email,
+            $participante->instituicao,
+            $participante->ativTitulo
         ];
     }
 }

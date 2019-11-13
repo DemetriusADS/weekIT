@@ -80,7 +80,7 @@
 
                             </div>
                             <div class="col m--align-right m-login__form-right">
-                                <a href="/inscricao/recuperar-senha" id="m_login_forget_password" class="m-link">Esqueceu a senha ?</a>
+                                <a href="recuperar-senha" id="m_login_forget_password" class="m-link">Esqueceu a senha ?</a>
                                 <a href="{{ route('cadastrar') }}" id="m_login_cadastro" class="m-link">Cadastre-se</a>
                             </div>                          
                         </div>

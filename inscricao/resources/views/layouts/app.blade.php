@@ -24,97 +24,62 @@
     <link href="{{ asset('assets/vendors/base/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/demo/demo5/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     
     <!--end::Base Styles -->
     <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}" />
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118415870-2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-118415870-2');
-    </script>
     <style>
         body{
-            min-width: 350px;
+            min-width: 430px !important;
+           
         }
     </style>
 
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
-<body class="m-page--wide m-header--fixed m-header--fixed-mobile m-footer--push m-aside--offcanvas-default"  >
+<body>
 <!-- begin:: Page -->
-<div class="m-grid m-grid--hor m-grid--root m-page">
-    <!-- begin::Header -->
-    <header class="m-grid__item		m-header "  data-minimize="minimize" data-minimize-offset="200" data-minimize-mobile-offset="200" >
-        <div class="m-header__top">
-            <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
-                <div class="m-stack m-stack--ver m-stack--desktop">
                     <!-- begin::Brand -->
-                    <div class="m-stack__item m-brand">
-                        <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
-                            <div class="m-stack__item m-stack__item--middle m-brand__logo">
-                            <a href="{{route('home')}}" class="m-brand__logo-wrapper w-auto">
-                                    <img alt="" class="w-auto" src="{{ asset('img/logoWeek.png')}}" style="max-width: 210px;"/>
-                                </a>
+                    <div class="sticky-top bg-light" style="min-width: 430px;" >
+                    <div class="m-1">
+                            <a class="navbar-brand float-left"  href="{{route('home')}}">
+                              <img class="float-left" src="{{ asset('img/logoWeek.png')}}" width="210" height="80" alt="">
+                            </a>
+                            <div class="btn-group float-right" style="margin-top: 30px">
+                                    <button type="button" class="btn btn-danger dropdown-toggle float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ Auth::user()->email }}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="participante/update/{{ Auth::user()->id }}">
+                                            <i class="la la-edit"></i>
+                                            Alterar cadastro
+                                        </a>
+                                        <a class="dropdown-item" href="{{route('logout')}}">
+                                            <i class="la la-close"></i>
+                                            Sair
+                                        </a>                                                   
+                                    </div>                                                
+                                </div>
+                                <div class="clearfix"></div>
                             </div>
-                        </div>
+
+                            <nav class="navbar navbar-expand-lg navbar-dark" style='background: darkgreen'>
+                                    @include('layouts.partial.m-aside-menu-'. Auth::user()->tipo)
+                                </nav>
                     </div>
-                    <!-- end::Brand -->
-                    <!-- begin::Topbar -->
-                    <div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
-                        <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
-                            <div class="m-stack__item m-topbar__nav-wrapper">
-                                <ul class="m-topbar__nav m-nav m-nav--inline">
-                                    <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click">
-                                        <div class="col mt-4">
-                                            <div class="dropdown">
-                                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" style="background: #d31717;border: 1px solid #b61010;"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {{ Auth::user()->email }}
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="/participante/update/{{ Auth::user()->id }}">
-                                                        <i class="la la-edit"></i>
-                                                        Alterar cadastro
-                                                    </a>
-                                                    <a class="dropdown-item" href="{{route('logout')}}">
-                                                        <i class="la la-close"></i>
-                                                        Sair
-                                                    </a>                                                   
-                                                </div>                                                
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end::Topbar -->
-                </div>
-            </div>
-        </div>
-        <div class="m-header__bottom">
-            <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
-                <div class="m-stack m-stack--ver m-stack--desktop">
-                    <!-- begin::Horizontal Menu -->
-                    @include('layouts.partial.m-aside-menu-'. Auth::user()->tipo)
-                    <!-- end::Horizontal Menu -->
-                </div>
-            </div>
-        </div>
-    </header>
+                    
+                    
+                            
+   
     <!-- end::Header -->
     <!-- begin::Body -->
-    <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container m-body">
-        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+    <div>
+        <div class="m-3">
             @yield('content')
         </div>
-    </div>
+        
     <!-- end::Body -->
     <!-- begin::Footer -->
     <footer class="m-grid__item m-footer ">
@@ -131,13 +96,10 @@
         </div>
     </footer>
     <!-- end::Footer -->
-</div>
+
 <!-- end:: Page -->
 
 <!-- begin::Scroll Top -->
-<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
-    <i class="la la-arrow-up"></i>
-</div>
 <!-- end::Scroll Top -->
 <!-- begin::Quick Nav -->
 

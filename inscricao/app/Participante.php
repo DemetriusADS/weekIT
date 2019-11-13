@@ -191,15 +191,15 @@ class Participante extends AbstractModel implements DefaultModel
 
                 [
                     'instituicao' => [
-                        'type'          => 'text',
-                        'label'         => 'Instituição',
-                        'placeholder'   => 'Instituição',
-                    ],
+                        'type'          =>  'select',
+                        'options' => [
+                            'Sim' => 'Não',
+                            'Não' => 'Não',
 
-                    'campus' => [
-                        'type'          => 'text',
-                        'label'         => 'Campus',
-                        'placeholder'   => 'Campus',
+                        ],
+                        'label'         => 'É aluno do IFBA?',
+                        'placeholder'   => 'É aluno do IFBA?',
+                        'required'      => 'required',
                     ],
                 ],
 
@@ -301,14 +301,14 @@ class Participante extends AbstractModel implements DefaultModel
                 ],
                 [
                     'telefone1' => [
-                        'type'          => 'text',
+                        'type'          => 'number',
                         'label'         => 'Telefone 1',
                         'placeholder'   => 'Telefone 1',
                         'required'      => 'required',
                     ],
 
                     'telefone2' => [
-                        'type'          => 'text',
+                        'type'          => 'number',
                         'label'         => 'Telefone 2',
                         'placeholder'   => 'Telefone 2',
                     ],
@@ -316,16 +316,22 @@ class Participante extends AbstractModel implements DefaultModel
 
                 [
                     'instituicao' => [
+                        'type'          =>  'select',
+                        'options' => [
+                            'Sim' => 'Sim',
+                            'Não' => 'Não',
+
+                        ],
+                        'label'         => 'É aluno do IFBA?',
+                        'required'      => 'required',
+                    ],
+                    'nome_cracha' => [
                         'type'          => 'text',
-                        'label'         => 'Instituição',
-                        'placeholder'   => 'Instituição',
+                        'label'         => 'Nome para crachá',
+                        'placeholder'   => 'Nome e sobrenome apenas',
+                        'required'      => 'required',
                     ],
 
-                    'campus' => [
-                        'type'          => 'text',
-                        'label'         => 'Campus',
-                        'placeholder'   => 'Campus',
-                    ],
                 ],
 
                 [
@@ -334,12 +340,7 @@ class Participante extends AbstractModel implements DefaultModel
                         'label'         => 'Curso',
                         'placeholder'   => 'Curso',
                     ],
-                    'nome_cracha' => [
-                        'type'          => 'text',
-                        'label'         => 'Nome para crachá',
-                        'placeholder'   => 'Nome e sobrenome apenas',
-                        'required'      => 'required',
-                    ],
+
                 ],
 
                 [

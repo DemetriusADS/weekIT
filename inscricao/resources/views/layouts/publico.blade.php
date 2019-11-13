@@ -34,7 +34,7 @@
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
-<body class="m-page--wide m-header--fixed m-header--fixed-mobile m-footer--push m-aside--offcanvas-default"  >
+<body class="m-page--wide m-header--fixed m-header--fixed-mobile m-footer--push m-aside--offcanvas-default" >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
     
@@ -43,7 +43,7 @@
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container pt-3">
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
             <div  class="m-brand__logo-wrapper" style="display:block; text-align: center; margin:auto;">
-                <img alt="" class="w-auto" src="{{asset('img/logoWeek.png')}}" class="p-3 img-fluid" />
+                <img alt="" class="w-auto" src="{{asset('img/logoWeek.png')}}" style="max-width: 300px" class="p-3 img-fluid" />
             </div>
             @yield('content')
         </div>

@@ -62,7 +62,6 @@ class AtividadeController extends AbstractController
     {
         $entity = $this->model::find($request->input('id'));
         $route  = redirect()->route($this->model::$base_name_route . '.edit', ['id' => $request->input('id')]);
-
         if ($entity->update($request->all()))
             return $route->with('success', $entity . '  atualizado com sucesso');
 
@@ -159,7 +158,7 @@ class AtividadeController extends AbstractController
             ->where('participante.cpf', '=', self::Mask("###.###.###-##", $request->input('cpf')))
             ->get();
 
-        if (!is_null($participante)) {
+        if (!is_null($participante)) { //
             $presente = 0;
             if (count($participante) > 0) {
                 $has_presenca = DB::table('inscricao')
@@ -196,8 +195,8 @@ class AtividadeController extends AbstractController
         $atividade_id = $request->input('atividade_id');
 
         $atividade_tipo = DB::table('atividade')
-            ->select('tipo')
-            ->where('id', '=', $atividade_id)->get()[0]->tipo;
+            ->select('atividade.tipo')
+            ->where('atividade.id', '=', $atividade_id)->get()[0]->tipo;
 
         if ($atividade_tipo == 'minicurso') {
             return response()
@@ -265,7 +264,7 @@ class AtividadeController extends AbstractController
             ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
             ->select(
                 'participante.nome as nomeAluno',
-                'inscricao.status as status',
+                'inscricao.status as status'
             )
             ->where('atividade.id', '=', $request->id)
             ->orderBy('nomeAluno')
@@ -287,7 +286,9 @@ class AtividadeController extends AbstractController
             ->where('atividade.id', '=', $request->id)
             ->get();
         // dd($atividadeInfo, $atividadeLista);
-        $pdf = PDF::loadView('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'))->setOption('margin-bottom', 20);
+        PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf = PDF::loadView('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'));
+        //$pdf->setOptions(['dpi' => 150]);
         return $pdf->stream('listaPresenca.pdf');
         return view('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'));
     }
