@@ -32,10 +32,11 @@ class AbstractController extends Controller
     {
 
         $entity = $this->model::find($id);
+        dd($entity);
         if ($id != \Auth::id()) {
-            if (\Auth::user()->tipo != 'coordenador'){
-                abort(403, 'Ação não autorizada.');    
-            }            
+            if (\Auth::user()->tipo != 'coordenador') {
+                abort(403, 'Ação não autorizada.');
+            }
         }
         return view('layouts.views-genericas.editar.padrao', [
             'model' => $this->model,
@@ -83,15 +84,13 @@ class AbstractController extends Controller
     {
         $id = $request->get('id');
         $entity = $this->model::find($id);
-        $route  = redirect()->route($this->base_name_route.'.index');
+        $route  = redirect()->route($this->base_name_route . '.index');
 
 
-        if($this->model::destroy($id, $ip, $user_agent)){
-            return $route->with('success', $entity. ' excluído com sucesso');
+        if ($this->model::destroy($id, $ip, $user_agent)) {
+            return $route->with('success', $entity . ' excluído com sucesso');
         }
 
-        return $route->with('warning', $entity. ' não pode ser excluído');
+        return $route->with('warning', $entity . ' não pode ser excluído');
     }
-
-
 }

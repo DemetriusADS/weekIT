@@ -27,7 +27,7 @@ class ParticipantesPlanilha implements FromCollection, WithMapping, WithHeadings
                 'atividade.titulo as ativTitulo'
             )
             ->where([
-                ['participante.edicao_ativa', '=', Auth::user()->edicao_ativa],
+                ['atividade.evento_id', '=', Auth::user()->edicao_ativa],
                 ['inscricao.presente', '=', '1'],
                 ['participante.tipo', '!=', 'coordenador']
             ])

@@ -62,7 +62,6 @@ class AtividadeController extends AbstractController
     {
         $entity = $this->model::find($request->input('id'));
         $route  = redirect()->route($this->model::$base_name_route . '.edit', ['id' => $request->input('id')]);
-
         if ($entity->update($request->all()))
             return $route->with('success', $entity . '  atualizado com sucesso');
 
@@ -287,7 +286,9 @@ class AtividadeController extends AbstractController
             ->where('atividade.id', '=', $request->id)
             ->get();
         // dd($atividadeInfo, $atividadeLista);
-        $pdf = PDF::loadView('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'))->setOption('margin-bottom', 20);
+        PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf = PDF::loadView('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'));
+        //$pdf->setOptions(['dpi' => 150]);
         return $pdf->stream('listaPresenca.pdf');
         return view('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'));
     }

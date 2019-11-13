@@ -10,12 +10,7 @@ use Illuminate\Support\Arr;
 
 class PdfGenerator extends Controller
 {
-    private $getList;
 
-    public function __construct()
-    {
-        $getList = session('getList');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -242,7 +237,8 @@ class PdfGenerator extends Controller
         */
         //dd($participantesData);
         //return view('pdf_view.crachas', compact('participantesData'));
-        $pdf = PDF::loadView('pdf_view.crachas', compact('participantesData'))->setOption('margin-bottom', 20);
+        //$pdf = App::make('dompdf.wrapper');
+        $pdf = PDF::loadView('pdf_view.crachas', compact('participantesData'));
         return $pdf->stream('grachas.pdf');
         //return PDF::loadFile('http://www.github.com')->inline('github.pdf');
     }
