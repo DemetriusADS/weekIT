@@ -34,7 +34,8 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
         parent::__construct($attributes);
     }
 
-    public static function insert($attributes){
+    public static function insert($attributes)
+    {
 
         unset($attributes['_token']);
         unset($attributes['password_confirmed']);
@@ -44,14 +45,15 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
         return self::create($attributes);
     }
 
-    public function update(array $attributes = [], array $options = []){
+    public function update(array $attributes = [], array $options = [])
+    {
 
         unset($attributes['_token']);
         unset($attributes['password_confirmed']);
 
-        if(empty($attributes['password'])){
+        if (empty($attributes['password'])) {
             unset($attributes['password']);
-        }else{
+        } else {
             $attributes['password']   = Hash::make($attributes['password']);
         }
 
@@ -69,7 +71,8 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function search(Request $request){
+    public static function search(Request $request)
+    {
 
         $request_query      = $request->input('query');
         $page               = $request->input('pagination.page', 1);
@@ -77,7 +80,7 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
         $columns            = $request->input('columns',  ['*']);
         $sort               = $request->input('sort',  NULL);
         $excluded           = $request->input('excluded',  NULL);
-        
+
         $query =  DB::table('participante')
             ->select([
                 'participante.id as id',
@@ -92,32 +95,32 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
 
         $query->join('roles', 'roles.id', '=', 'participante.roles_id');
 
-        if(isset($request_query['name'])){
-            if(!empty($request_query['name'])){
-                $query->where('participante.name', 'like', '%'.$request_query['name'].'%');
+        if (isset($request_query['name'])) {
+            if (!empty($request_query['name'])) {
+                $query->where('participante.name', 'like', '%' . $request_query['name'] . '%');
             }
         }
 
-        if(isset($request_query['email'])){
-            if(!empty($request_query['email'])){
-                $query->where('participante.email', 'like',  '%'.$request_query['email'].'%');
+        if (isset($request_query['email'])) {
+            if (!empty($request_query['email'])) {
+                $query->where('participante.email', 'like',  '%' . $request_query['email'] . '%');
             }
         }
 
-        if(is_null($excluded)){
+        if (is_null($excluded)) {
             $query->whereNull('participante.deleted_at');
         }
 
-        if(isset($sort)){
-            $query->orderBy($sort['field'],$sort['sort']);
+        if (isset($sort)) {
+            $query->orderBy($sort['field'], $sort['sort']);
         }
 
-        if(is_null($excluded)){
+        if (is_null($excluded)) {
             $query->whereNull('participante.deleted_at');
         }
 
 
-        
+
 
         $paginator  = $query->paginate($perpage, $columns, 'page', $page);
 
@@ -137,7 +140,8 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function dataTablesColumns(){
+    public static function dataTablesColumns()
+    {
 
         $columns = [
             [
@@ -168,10 +172,11 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
      * Retorna os campos usados na geração do formulário de busca na tela de listagem dos registros
      * @return array
      */
-    public static function dataTablesSearchForm(){
+    public static function dataTablesSearchForm()
+    {
 
         return  [
-            'fields' =>[
+            'fields' => [
                 'name' => [
                     'type'          => 'text',
                     'placeholder'  => 'Nome',
@@ -189,7 +194,8 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
      *
      * @return array
      */
-    public static function fieldsFormCreate(){
+    public static function fieldsFormCreate()
+    {
 
         return  [
             'fields' => [
@@ -267,7 +273,8 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
      *
      * @return array
      */
-    public static function fieldsFormEdit(){
+    public static function fieldsFormEdit()
+    {
 
         return  [
             'fields' => [
@@ -340,15 +347,13 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
                 ],
             ]
         ];
-
-
     }
 
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new meuResetDeSenha($token));
-    }    
-    
+    }
+
     public function role()
     {
         return $this->belongsTo('App\Role', 'roles_id');
@@ -363,5 +368,4 @@ class User extends Authenticatable implements DefaultModel, CanResetPasswordCont
     {
         return $this->email;
     }
-
 }

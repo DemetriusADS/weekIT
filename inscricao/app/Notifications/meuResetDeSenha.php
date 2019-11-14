@@ -40,13 +40,13 @@ class meuResetDeSenha extends Notification
      */
     public function toMail($notifiable)
     {
-    return (new MailMessage)
-        ->subject('Redefinição de senha')
-        ->greeting('Olá!')
-        ->line('Você está recebendo este e-mail porque nós recebemos uma requisição para sua conta.')
-        ->action('REDEFINIR SENHA', route('password.reset', $this->token))
-        ->line('Se você não requisitou uma redefinição de senha, nenhuma ação é necessária.')
-        ->markdown('vendor.notifications.email');
+        return (new MailMessage)
+            ->subject('Redefinição de senha')
+            ->greeting('Olá!')
+            ->line('Você está recebendo este e-mail porque nós recebemos uma requisição para sua conta.')
+            ->action('REDEFINIR SENHA', route('password.reset', $this->token))
+            ->line('Se você não requisitou uma redefinição de senha, nenhuma ação é necessária.')
+            ->markdown('vendor.notifications.email');
     }
 
     /**

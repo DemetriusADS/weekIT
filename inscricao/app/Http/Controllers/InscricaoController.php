@@ -7,6 +7,9 @@ use App\Http\Requests\InscricaoRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\Confirmacoes;
+use App\Events\ConfirmacaoEvent;
 
 class InscricaoController extends AbstractController
 {
@@ -148,14 +151,20 @@ class InscricaoController extends AbstractController
     public function alterarStatus(Request $request)
     {
         $entity = $this->model::find($request->input('id'));
+        //dd($request->all());
+        $participanteID = $entity->participante_id;
+        $email = DB::table('participante')->select('email')->where('id', '=', $participanteID)->get()[0]->email;
+        //dd($participanteID, $email);
         $route  = redirect()->route($this->model::$base_name_route . '.edit', ['id' => $request->input('id')]);
+        event(new ConfirmacaoEvent($participanteID, $email, $entity->atividade_id, $request->status));
+        if ($entity->update($request->all())) {
 
-        if ($entity->update($request->all()))
             return response()
                 ->json(['data' => $entity]);
-
-        return response()
-            ->json(['warning' => 'Ops, algo deu errado']);
+        } else {
+            return response()
+                ->json(['warning' => 'Ops, algo deu errado']);
+        }
     }
 
     public function fazerInscricao(Request $request)
