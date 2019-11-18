@@ -13,7 +13,8 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
+                    <h5> O servidor do IFBA só está disparando emails para os endereços @gmail. Pedimos desculpas pelo transtorno e estamos trabalhando para resolver isso o quanto antes.</h5>
+                    <h6>Se vc precisa redefinir sua senha, envie um email para weekit.vdc@ifba.edu.br, que iremos te responder o mais breve possivel.<br>Agradecemos pela compreensão.</h6><br><br>
                     <form method="POST" action="{{ route('password.email') }}">
                         {{ csrf_field() }}
 

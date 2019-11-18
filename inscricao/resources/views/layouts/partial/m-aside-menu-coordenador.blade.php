@@ -130,6 +130,18 @@
                                                                </a>
                                         </div>
                                       </li>
+                                      <li class='nav-item dropdown {{ request()->is('relatorio/*') ? 'active' : '' }}'>
+                                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Relatórios
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                <a  href="{{route('relatorio.atividade')}}" class="dropdown-item">
+                                                        <i class="m-menu__link-icon flaticon-list"></i>
+                                                                Atividades
+                                                </a>
+                                        </div>
+
+                                      </li>
                                       <li class="nav-item dropdown {{ request()->is('/*') ? ' active' : '' }}">
                                             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     @php 

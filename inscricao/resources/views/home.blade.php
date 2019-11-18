@@ -124,16 +124,65 @@
       <div class="m-portlet m-portlet--mobile">
             <div class="m-portlet__body">
                   <h2 id="titulo">{{$titulo}}</h2>
-                  <form class="form-inline" method="none" onkeypress="return event.keyCode != 13;">
-                        <div class="form-group mx-sm-3">
-                              <input class="form-control search-field" type="text" id="cpf" placeholder="CPF">
+                  <div class="float-md-left">
+                        <div class="ml-md-5 mb-sm-2 float-md-right">
+                                    <h5>Remover Insc. Ñ Pagas</h5>
+                                    <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModalCenter">
+                              Remover Tudo
+                        </button>
+          
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalCenterTitle">AVISO!</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  Deseja realmente remover todas as inscrições em andamento?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <a href="{{ route('removerNp') }}">
+                              <button type="button"class="btn  btn-danger">Confirmar</button>
+                        </a>
+                </div>
+              </div>
+            </div>
+          </div>
+                             
                         </div>
+                        <div class="ml-md-5 mb-sm-2 float-md-right">
+                              <h5>Filtrar Status</h5>
+                        <div class="btn-group m-btn-group float-md-right" id="filtrarStatus" role="group" aria-label="...">
+                              <button type="button" id="pago" class="btn  btn-success">Pago</button>
+                              <button type="button" id="gratuito" class="btn  btn-info">Gratuito</button>
+                              <button type="button" id="andamento" class="btn  btn-warning">Em andamento</button>
+                              <button type="button" id="isento" class="btn  btn-info">Isento</button>
+                              <button type="button" class="btn  btn-dark">Todos</button>
+                        </div>
+                        </div>
+                  <div class=" float-md-left">
+                        <h5>Buscar</h5>
+                  <form class="form-inline" method="none" onkeypress="return event.keyCode != 13;">
+                       
+                              <input class="form-control search-field" type="text" id="cpf" placeholder="CPF">
+                       
                         <div class="form-group mx-sm-3">
                               <input class="form-control search-field" type="text" id="nome" placeholder="Nome">
                         </div>
                         <button id="bt_pesquisar" class="btn btn-info" onclick="pesquisa()"
                               type="button">Buscar</button>
                   </form>
+            </div>
+                  <br>
+          
+      </div>
+                  
                   <br>
                   <div id="aviso"></div>
                   <div id="content-gerenciar-incricoes">
@@ -154,29 +203,29 @@
                                     <td>{{$inscricao->data}}</td>
 
                                     @if($inscricao->status == 'cancelado')
-                                    <td id="status-{{$inscricao->id}}"><span
+                                    <td data-estado="{{$inscricao->status}}" id="status-{{$inscricao->id}}"><span
                                                 class="m-badge m-badge--danger m-badge--wide"
-                                                id="status-{{$inscricao->id}}">cancelado</span></td>
+                                                id="status-{{$inscricao->status}}">cancelado</span></td>
                                     @endif
 
                                     @if($inscricao->status == 'andamento')
-                                    <td id="status-{{$inscricao->id}}"><span
+                                    <td data-estado="{{$inscricao->status}}" id="status-{{$inscricao->id}}"><span
                                                 class="m-badge m-badge--warning m-badge--wide"
-                                                id="status-{{$inscricao->id}}">em andamento</span></td>
+                                                id="status-{{$inscricao->status}}">em andamento</span></td>
                                     @endif
 
                                     @if($inscricao->status == 'pago')
-                                    <td id="status-{{$inscricao->id}}"><span
+                                    <td data-estado="{{$inscricao->status}}" id="status-{{$inscricao->id}}"><span
                                                 class="m-badge m-badge--success m-badge--wide"
-                                                id="status-{{$inscricao->id}}">pago</span></td>
+                                                id="status-{{$inscricao->status}}">pago</span></td>
                                     @endif
 
                                     @if($inscricao->status == 'isento')
-                                    <td id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide"
+                                    <td data-estado="{{$inscricao->status}}" id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide"
                                                 id="status-{{$inscricao->id}}">isento</span></td>
                                     @endif
                                     @if($inscricao->status == 'gratuito')
-                                    <td id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide"
+                                    <td data-estado="{{$inscricao->status}}" id="status-{{$inscricao->id}}"><span class="m-badge m-badge--info m-badge--wide"
                                                 id="status-{{$inscricao->id}}">gratuito</span></td>
                                     @endif
                                     @if($inscricao->status != 'gratuito')
@@ -216,6 +265,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js" type="text/javascript">
 </script>
 <script type="text/javascript">
+      var tds = document.querySelectorAll('table td[data-estado]');
+      document.querySelector('#filtrarStatus').addEventListener('click', function(e) {
+      var estado = e.target.id;
+      for (var i = 0; i < tds.length; i++) {
+            var tr = tds[i].closest('tr');
+            tr.style.display = estado == tds[i].dataset.estado || !estado ? '' : 'none';
+            }
+      });
       $('#cpf').mask('999.999.999-99');
 
       function prepareTableLines(item) {
@@ -227,22 +284,22 @@
             '<td>' + item.data + '</td>';
 
       if (item.status == 'cancelado')
-            html += '<td id="status-' + item.id + '"><span class="m-badge m-badge--danger m-badge--wide" id="status-' +
+            html += '<td data-estado="'+item.status+'" id="status-' + item.id + '"><span class="m-badge m-badge--danger m-badge--wide" id="status-' +
             item.id + '" >cancelado</span></td>';
 
       if (item.status == 'andamento')
-            html += '<td id="status-' + item.id + '"><span class="m-badge m-badge--warning m-badge--wide" id="status-' +
+            html += '<td data-estado="'+item.status+'" id="status-' + item.id + '"><span class="m-badge m-badge--warning m-badge--wide" id="status-' +
             item.id + '" >em andamento</span></td>';
 
       if (item.status == 'pago')
-            html += '<td id="status-' + item.id + '"><span class="m-badge m-badge--success m-badge--wide" id="status-' +
+            html += '<td data-estado="'+item.status+'" id="status-' + item.id + '"><span class="m-badge m-badge--success m-badge--wide" id="status-' +
             item.id + '" >pago</span></td>';
 
       if (item.status == 'isento')
-            html += '<td id="status-' + item.id + '"><span class="m-badge m-badge--info m-badge--wide" id="status-' +
+            html += '<td data-estado="'+item.status+'" id="status-' + item.id + '"><span class="m-badge m-badge--info m-badge--wide" id="status-' +
             item.id + '" >isento</span></td>';
       if (item.status == 'gratuito')
-            html += '<td id="status-' + item.id + '"><span class="m-badge m-badge--info m-badge--wide" id="status-' +
+            html += '<td data-estado="'+item.status+'" id="status-' + item.id + '"><span class="m-badge m-badge--info m-badge--wide" id="status-' +
             item.id + '" >gratuito</span></td>';
 
       if (item.status != 'gratuito') {

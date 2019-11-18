@@ -49,7 +49,6 @@
                     </a>
                 </div>
                 <div class="m-login__signin">
-
                     @include('layouts.partial.message')
 
                     <form class="m-login__form m-form mt-0" method="POST"  action="{{ route('login') }}">

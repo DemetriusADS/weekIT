@@ -44,6 +44,7 @@ foreach (\App\Resource::all() as $resource) {
 }
 Auth::routes();
 
+Route::get('/deletenp', 'InscricaoController@removerNaoPagas')->name('removerNp');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/eventochangeano/{id}', 'HomeController@alteraAnoSistema')->name('eventochangeano');
 Route::get('/cadastrar', 'Publico\ParticipanteController@create')->name('cadastrar');
@@ -79,3 +80,4 @@ Route::get('/atividade/planilha', 'ExcelController@atividadesPlanilha')->name('a
 Route::get('/participante/planilha', 'ExcelController@participantesPlanilha')->name('participantes-planilha');
 Route::get('/updatedb', 'updateBanco@updateDB')->name('updateDB');
 Route::get('/participante/update/{id}', 'ParticipanteController@update');
+Route::get('/relatorio/atividades', 'RelatorioController@atividades')->name('relatorio.atividade');

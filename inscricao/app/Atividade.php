@@ -34,6 +34,7 @@ class Atividade extends AbstractModel implements DefaultModel
         $excluded           = $request->input('excluded',  NULL);
 
         $query =  DB::table('atividade')
+            // ->join('inscricao', 'inscricao.atividade_id', '=', 'atividade.id')
             ->select([
                 'atividade.id as id',
                 'atividade.identificador as identificador',
@@ -50,15 +51,15 @@ class Atividade extends AbstractModel implements DefaultModel
                 'atividade.tipo as tipo',
                 'atividade.local_id as local_id',
                 'atividade.evento_id as evento_id',
-
+                // DB::raw('count(*) as inscritos, inscricao.id'),
                 DB::raw('DATE_FORMAT(atividade.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(atividade.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at'),
-            ])->where('atividade.evento_id', '=', DB::table('participante')
+            ]) //->where('inscricao.atividade_id', '=', 'atividade.id')
+            ->where('atividade.evento_id', '=', DB::table('participante')
                 ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id', '=', Auth::user()->id)->get()[0]->edicao_ativa)->orderBy('titulo');
 
         $query->join('local', 'local.id', '=', 'atividade.local_id');
         $query->join('evento', 'evento.id', '=', 'atividade.evento_id');
-
         if (isset($request_query['descricao'])) {
             if (!empty($request_query['descricao'])) {
                 $query->where('atividade.descricao', 'like', '%' . $request_query['descricao'] . '%');
@@ -95,6 +96,7 @@ class Atividade extends AbstractModel implements DefaultModel
 
 
         $paginator  = $query->paginate($perpage, $columns, 'page', $page);
+        dd($paginator);
 
         return response()->json([
             'meta' => [

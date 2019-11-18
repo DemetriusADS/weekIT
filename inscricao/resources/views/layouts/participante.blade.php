@@ -106,7 +106,7 @@
                                    
                                     +'<th>Titulo</th>'
                                     +'<th>Data</th>'
-                                    +'<th>Descrição</th>'
+                                    +'<th>Local</th>'
                                     +'<th>Max</th>'
                                     +'<th>Inscritos</th>'
                                    +'<th>Preço</th>'

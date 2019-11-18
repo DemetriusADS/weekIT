@@ -40,6 +40,7 @@ class Participante extends AbstractModel implements DefaultModel
         $excluded           = $request->input('excluded',  NULL);
 
         $query =  DB::table('participante')
+            ->join('inscricao_eventos', 'inscricao_eventos.participante_id', '=', 'participante.id')
             ->select([
                 'participante.id as id',
                 'participante.nome as nome',
@@ -56,7 +57,8 @@ class Participante extends AbstractModel implements DefaultModel
                 DB::raw('DATE_FORMAT(participante.nascimento,"%d/%m/%Y %H:%i:%s") as nascimento'),
                 DB::raw('DATE_FORMAT(participante.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(participante.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at'),
-            ])->orderBy('nome');
+            ])->where('inscricao_eventos.evento_id', '=', Auth::user()->edicao_ativa)
+            ->orderBy('nome');
 
         if (isset($request_query['cpf'])) {
             if (!empty($request_query['cpf'])) {

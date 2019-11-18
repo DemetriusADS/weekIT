@@ -279,7 +279,6 @@ class HomeController extends Controller
             ->where([
                 ['participante.nome', 'like', '%' . $request->input('nome') . '%'],
                 ['atividade.evento_id', '=', $this->getEdicaoAtiva()],
-                ['atividade.tipo', '=', 'minicurso'],
             ])
             ->orderBy('inscricao.data', 'DESC')
             ->paginate($this->totalPage);
@@ -307,7 +306,6 @@ class HomeController extends Controller
             ->where([
                 ['participante.cpf', 'like', '%' . $request->input('cpf') . '%'],
                 ['atividade.evento_id', '=', $this->getEdicaoAtiva()],
-                ['atividade.tipo', '=', 'minicurso'],
             ])
             ->orderBy('inscricao.data', 'DESC')
             ->paginate($this->totalPage);

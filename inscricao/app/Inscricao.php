@@ -34,6 +34,7 @@ class Inscricao extends AbstractModel implements DefaultModel
         $sort               = $request->input('sort',  NULL);
         $excluded           = $request->input('excluded',  NULL);
 
+
         $query =  DB::table('inscricao')
             ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
             ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
@@ -51,9 +52,9 @@ class Inscricao extends AbstractModel implements DefaultModel
                 'participante.cpf as cpf',
                 DB::raw('DATE_FORMAT(inscricao.created_at,"%d/%m/%Y %H:%i:%s") as created_at'),
                 DB::raw('DATE_FORMAT(inscricao.updated_at,"%d/%m/%Y %H:%i:%s") as updated_at'),
-            ])->orderBy('inscricao.data', 'DESC')->where('evento_id', '=', DB::table('participante')
-                ->where('participante.edicao_ativa', '=', Auth::user()->id)
-                ->get()[0]->edicao_ativa);
+            ])
+            ->where('atividade.evento_id', '=', Auth::user()->edicao_ativa)
+            ->orderBy('inscricao.data', 'DESC');
 
 
         if (isset($request_query['descricao'])) {
@@ -97,6 +98,7 @@ class Inscricao extends AbstractModel implements DefaultModel
         }
 
         $paginator  = $query->paginate($perpage, $columns, 'page', $page);
+
 
         return response()->json([
             'meta' => [

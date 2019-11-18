@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Confirmacoes;
 use App\Events\ConfirmacaoEvent;
+use Illuminate\Support\Facades\Auth;
 
 class InscricaoController extends AbstractController
 {
@@ -91,10 +92,11 @@ class InscricaoController extends AbstractController
         $data_pretendida = DB::table('atividade')
             ->select(DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as  data_inicio'), 'atividade.hora_inicio', 'atividade.hora_fim')
             ->where('atividade.id', '=', $atividadeId)->get();
-
+        //dd($data_pretendida, $datas_inscrito);
         foreach ($datas_inscrito as $data_inscrito) {
             foreach ($data_pretendida as $data_inscrever) {
-                if (date_create($data_inscrito->data_inicio) == date_create($data_inscrever->data_inicio)) {
+                //dd(($data_inscrito->data_inicio == $data_inscrever->data_inicio), $data_inscrever->data_inicio, $data_inscrito->data_inicio);
+                if ($data_inscrito->data_inicio == $data_inscrever->data_inicio) {
                     if ($this::intervaloEntreDatas(
                         $data_inscrito->hora_inicio,
                         $data_inscrito->hora_fim,
@@ -117,9 +119,9 @@ class InscricaoController extends AbstractController
         $agoraInicioTimestamp = strtotime($agoraInicio);
         $agoraFimTimestamp = strtotime($agoraFim);
         if ($agoraInicioTimestamp > $inicioTimestamp) {
-            return (($agoraInicioTimestamp >= $inicioTimestamp) && ($agoraInicioTimestamp <= $fimTimestamp));
+            return (($agoraInicioTimestamp >= $inicioTimestamp) && ($agoraInicioTimestamp < $fimTimestamp));
         } else {
-            return (($inicioTimestamp >= $agoraInicioTimestamp) && ($inicioTimestamp <= $agoraFimTimestamp));
+            return (($inicioTimestamp >= $agoraInicioTimestamp) && ($inicioTimestamp < $agoraFimTimestamp));
         }
     }
 
@@ -150,6 +152,7 @@ class InscricaoController extends AbstractController
 
     public function alterarStatus(Request $request)
     {
+
         $entity = $this->model::find($request->input('id'));
         //dd($request->all());
         $participanteID = $entity->participante_id;
@@ -169,7 +172,9 @@ class InscricaoController extends AbstractController
 
     public function fazerInscricao(Request $request)
     {
+        $entity = null;
         $flag_choque_horario = $this::hasChoqueHorario($request->input('atividade_id'), \Auth::user()->id);
+
         $atividade = DB::table('atividade')
             ->select(
                 'atividade.tipo as tipo'
@@ -177,28 +182,27 @@ class InscricaoController extends AbstractController
             ->where('atividade.id', '=', $request->input('atividade_id'))
             ->get();
         $atividadeTipo = null;
-        // dd($atividade);
+
         foreach ($atividade as $key => $value) {
-            //dd($value);
+
             $atividadeTipo = $value->tipo;
         }
-        //dd($atividadeTipo);
+
 
         if (!$flag_choque_horario) {
             if ($atividadeTipo == 'minicurso') {
                 $request->request->add(['status' => "andamento"]);
+            } else {
+                $request->request->add(['status' => "gratuito"]);
             }
-        } else {
-            $request->request->add(['status' => "gratuito"]);
+            $request->request->add(['participante_id' => \Auth::user()->id]);
+            $request->request->add(['atividade_id' => $request->input('atividade_id')]);
+            $input = $request->all();
+            $ip = $request->ip();
+            $user_agent = $request->server('HTTP_USER_AGENT');
+
+            $entity = $this->model::insert($input, $ip, $user_agent);
         }
-        $request->request->add(['participante_id' => \Auth::user()->id]);
-        $request->request->add(['atividade_id' => $request->input('atividade_id')]);
-
-        $input = $request->all();
-        $ip = $request->ip();
-        $user_agent = $request->server('HTTP_USER_AGENT');
-
-        $entity = $this->model::insert($input, $ip, $user_agent);
         if (!is_null($entity)) {
             return response()
                 ->json(['resposta' => 1]);
@@ -208,7 +212,37 @@ class InscricaoController extends AbstractController
                 ->json(['resposta' => 2]);
         }
     }
+    public function removerNaoPagas()
+    {
+        if (Auth::user()->tipo == 'coordenador') {
+            $ip = null;
+            $user_agent = null;
+            $date = date('d/m/Y');
+            $getList = DB::table('inscricao')
+                ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
+                ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
+                ->select(
+                    'inscricao.id as id',
+                    DB::raw('DATE_FORMAT(inscricao.data,"%d/%m/%Y") as data'),
+                    'inscricao.participante_id as participante_id',
+                    'inscricao.atividade_id',
+                    'participante.email as email'
+                )
+                ->where('atividade.evento_id', '=', Auth::user()->edicao_ativa)
+                ->where('inscricao.status', '=', 'andamento')
+                ->orWhere('inscricao.status', '=', 'cancelado')
 
+                ->get();
+            //dd($getList);
+            foreach ($getList as $key => $value) {
+                if ($value->data < $date) {
+                    event(new ConfirmacaoEvent($value->participante_id, $value->email, $value->atividade_id, "cancelado"));
+                    $this->model::destroy($value->id, $ip, $user_agent);
+                }
+            }
+            return redirect()->back();
+        }
+    }
     public function removerInscricao(Request $request, $ip = null, $user_agent = null)
     {
 
