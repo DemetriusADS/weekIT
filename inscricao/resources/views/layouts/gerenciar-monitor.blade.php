@@ -133,10 +133,6 @@
                                 '<div class="m-form__section m-form__section--first "><div class="form-group m-form__group row"><div class="m-alert m-alert--icon m-alert--icon-solid m-alert--outline alert alert-success alert-dismissible fade show" role="alert"><div class="m-alert__icon"><i class="flaticon-success"></i></div><div class="m-alert__text"><strong>Aviso ! </strong>Monitoria removida com sucesso !</div><div class="m-alert__close"><button type="button" class="close" data-dismiss="alert" aria-label="Close"></button></div></div></div></div>';
                             $('#aviso').html(html);
                             carregarMonitorias();
-                            console.log($("#monitor_select").val());
-                            if ($("#monitor_select").val() != ""){
-                                carregaAtividades();
-                            }
                             $('#bt_vincular').prop('disabled', false);
                         }                        
                     }

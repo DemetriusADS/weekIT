@@ -236,10 +236,10 @@ class PdfGenerator extends Controller
             --testar com mais de um cadastro no evento.
         */
         //dd($participantesData);
-        //return view('pdf_view.crachas', compact('participantesData'));
+        return view('pdf_view.crachas', compact('participantesData'));
         //$pdf = App::make('dompdf.wrapper');
-        $pdf = PDF::loadView('pdf_view.crachas', compact('participantesData'));
-        return $pdf->stream('grachas.pdf');
+        //$pdf = PDF::loadView('pdf_view.crachas', compact('participantesData'));
+        //return $pdf->stream('grachas.pdf');
         //return PDF::loadFile('http://www.github.com')->inline('github.pdf');
     }
 }

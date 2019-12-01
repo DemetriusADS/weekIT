@@ -195,7 +195,7 @@ class Participante extends AbstractModel implements DefaultModel
                     'instituicao' => [
                         'type'          =>  'select',
                         'options' => [
-                            'Sim' => 'Não',
+                            'Sim' => 'Sim',
                             'Não' => 'Não',
 
                         ],

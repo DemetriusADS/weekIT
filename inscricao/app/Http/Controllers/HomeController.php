@@ -35,6 +35,8 @@ class HomeController extends Controller
             ->select(
                 'participante.cpf',
                 'participante.nome',
+                'participante.curso',
+                'participante.instituicao',
                 'atividade.identificador',
                 'atividade.titulo',
                 'inscricao.id',

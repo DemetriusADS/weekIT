@@ -126,16 +126,22 @@
                                 +'<td id="acao2-'+data.atividades[x].id+'">'
                                 +'<div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="..."><button class="btn btn-info" onclick="inscrverAtividade('+data.atividades[x].id +')">Inscrever</button></td>'
                                 }
-                                else if(!data.atividades[x].ja_inscrito && data.atividades[x].liberar_inscricao){
-                                    html +='<tr>'
-                                +'<td>'+data.atividades[x].identificador +' - '+ data.atividades[x].titulo +'</td>'              
-                                +'<td>'+data.atividades[x].data_inicio+' de '+data.atividades[x].hora_inicio +' até '+ data.atividades[x].hora_fim +'</td>'               
+                                else if(!data.atividades[x].ja_inscrito && !data.atividades[x].liberar_inscricao){
+                                    html +='<tr>';
+                              if(data.atividades[x].maximo_participantes == data.atividades[x].inscritos){
+                                   html+= '<td><del>' + data.atividades[x].identificador + ' - ' +
+                                    data.atividades[x].titulo + '</del><span class="text-danger font-weight-bold"> Esgotado! </span></td>' ;
+                              }else{
+                                    html+= '<td>' + data.atividades[x].identificador + ' - ' +
+                                    data.atividades[x].titulo + '</td>' ;
+                              }
+                                    html+='<td>'+data.atividades[x].data_inicio+' de '+data.atividades[x].hora_inicio +' até '+ data.atividades[x].hora_fim +'</td>'               
                                 +'<td>'+data.atividades[x].descricao +'</td>'
                                 +'<td>'+data.atividades[x].maximo_participantes +'</td>' 
                                 +'<td>'+data.atividades[x].inscritos +'</td>'
                                 +'<td>R$ '+data.atividades[x].preco +'</td>'              
                                 +'<td>'+data.atividades[x].carga_horaria + 'hrs'+'</td>'
-                                +'<td id="acao"><button class="btn btn-info disabled">Inscrever</button></td>'
+                                +'<td id="acao"><button class="btn btn-metal disabled">Inscrever</button></td>'
                                 }
                             html += '</tr>';
                         });

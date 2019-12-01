@@ -3,6 +3,13 @@
 
 @if(Auth::user()->tipo == 'coordenador')
 @section('content')
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+      .table-overflow {
+    max-height:700px;
+    overflow-y:auto;
+}
+</style>
 <div class="m-content">
       @php
       $maxEventoID = DB::table('evento')->max('id');
@@ -36,7 +43,7 @@
 
 
             if($verify->isEmpty()){
-            echo(' <form action="'.route(" eventoUpdate", DB::table("evento")->max("id")).'" method="post">
+            echo(' <form action="'.route("eventoUpdate", DB::table("evento")->max("id")).'" method="post">
                   <div class="alert alert-dismissible" style="background-color: #fbc8c8;">
                         <p>Você ainda não se Inscreveu na nova ediçao de '. DB::table("evento")->max("ano").'</p>
                         <button type="submit" class="btn btn-danger">Edição '.
@@ -76,9 +83,9 @@
             </div>
             <div class="col-md-6 col-lg-3">
                   <div class="widget-small warning coloured-icon"><i class="icon fa fa-edit fa-3x"></i>
-                        <div class="info">
-                              <h4>Inscrições</h4>
-                              <p><b>
+                        <div class="info text-center">
+                              <span class="text-left" style="font-size: 16px; ">Inscrições totais: </span>
+                              <b>
                                           {{
                             DB::table('inscricao')
                                 ->leftjoin('atividade', 'atividade.id','=','inscricao.atividade_id')
@@ -86,7 +93,18 @@
                                 ->where('evento_id','=',DB::table('participante')->join('evento','evento.id','=','participante.edicao_ativa')->select('participante.edicao_ativa')->where('participante.id','=',Auth::user()->id)->get()[0]->edicao_ativa)
                                 ->count() 
                       }}
-                                    </b></p>
+                                    </b><br>
+                                    <span class="text-left" style="font-size: 14px">Inscrições minicursos: </span>
+                                   <b> {{ 
+                                    DB::table('inscricao')
+                                ->join('atividade', 'atividade.id','=','inscricao.atividade_id')
+                                ->select('inscricao.id')
+                                ->where([
+                                      ['atividade.evento_id','=',Auth::user()->edicao_ativa],
+                                      ['atividade.tipo','=','minicurso']
+                                ])
+                                ->count() 
+                                     }}</b>
                         </div>
                   </div>
             </div>
@@ -122,56 +140,84 @@
 </div>
 <div class="m-content">
       <div class="m-portlet m-portlet--mobile">
-            <div class="m-portlet__body">
+            <div class="container-fluid">
                   <h2 id="titulo">{{$titulo}}</h2>
                   <div class="float-md-left">
-                        <div class="ml-md-5 mb-sm-2 float-md-right">
-                                    <h5>Remover Insc. Ñ Pagas</h5>
-                                    <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModalCenter">
-                              Remover Tudo
+                              <div class="ml-md-1 mb-sm-2 mt-4 ">
+                                          <h5>Remover Inscrições Não Pagas</h5>
+                             <!-- Button trigger modal -->
+                             <form action="{{ route('removerNp') }}" method="post" id="formRemove" class="form form-inline">
+                              {{ csrf_field() }}
+                              <div class="input-group mb-3">
+                                          <div class="input-group-prepend">
+                                                <label class="input-group-text" for="dataSelected">A anteriores a:  </label>
+                                          </div>
+                              
+                       <input class="form form-control" type="date" id='dataSelected' name="dataSelect" required>
+                       <div class="input-group-append" id="button-addon4">
+                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModalCenter" onclick="getDate()">
+                                    Remover
+                              </button>
+                              </div>
+                        </div>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="warning" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="warning">AVISO!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
                         </button>
-          
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalCenterTitle">AVISO!</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      </div>
+                      <div id="load">
+                      <div class="modal-body">
+                        Deseja realmente remover todas as inscrições em andamento, feitas até do dia <span class='font-weight-bold text-danger' id='getDataSelected'></span>?
+                      </div>
+                      <div class="modal-footer">
+                           
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" onclick="loading()"class="btn  btn-danger">Confirmar</button>
+                            </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </form>
+            @if (Session::has('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <h4 class="alert-heading">Inscrições removidas com sucesso!</h4>
+                   Foram removidas <strong>{{Session::get('success')}}</strong> inscrições.
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  Deseja realmente remover todas as inscrições em andamento?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                  <a href="{{ route('removerNp') }}">
-                              <button type="button"class="btn  btn-danger">Confirmar</button>
-                        </a>
-                </div>
-              </div>
-            </div>
-          </div>
-                             
-                        </div>
-                        <div class="ml-md-5 mb-sm-2 float-md-right">
-                              <h5>Filtrar Status</h5>
-                        <div class="btn-group m-btn-group float-md-right" id="filtrarStatus" role="group" aria-label="...">
-                              <button type="button" id="pago" class="btn  btn-success">Pago</button>
-                              <button type="button" id="gratuito" class="btn  btn-info">Gratuito</button>
-                              <button type="button" id="andamento" class="btn  btn-warning">Em andamento</button>
-                              <button type="button" id="isento" class="btn  btn-info">Isento</button>
-                              <button type="button" class="btn  btn-dark">Todos</button>
-                        </div>
-                        </div>
-                  <div class=" float-md-left">
-                        <h5>Buscar</h5>
+                @elseif(Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  Não foram achados registros anteriores a <strong>{{ Session::get('error') }}</strong>.
+                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                   </button>
+                 </div>
+@endif
+                              </div>
+                              <div class="ml-md-5 mb-sm-2 mt-4 float-md-right">
+                                    <h5>Filtrar Status</h5>
+                              <div class="btn-group m-btn-group" id="filtrarStatus" role="group" aria-label="...">
+                                    <button type="button" id="pago" class="btn  btn-outline-success">Pago</button>
+                                    <button type="button" id="gratuito" class="btn  btn-outline-info">Gratuito</button>
+                                    <button type="button" id="andamento" class="btn  btn-outline-warning">Em andamento</button>
+                                    <button type="button" id="isento" class="btn  btn-outline-info">Isento</button>
+                                    <button type="button" class="btn  btn-outline-dark">Todos</button>
+                              </div>
+                              </div>
+                        <div class=" float-md-left mt-4">
+                              <h5>Buscar</h5>
                   <form class="form-inline" method="none" onkeypress="return event.keyCode != 13;">
-                       
+                        <div class="form-group mx-sm-3">
                               <input class="form-control search-field" type="text" id="cpf" placeholder="CPF">
-                       
+                        </div>
                         <div class="form-group mx-sm-3">
                               <input class="form-control search-field" type="text" id="nome" placeholder="Nome">
                         </div>
@@ -179,14 +225,16 @@
                               type="button">Buscar</button>
                   </form>
             </div>
-                  <br>
-          
-      </div>
-                  
+            <br>
+    
+</div>
+<div class="clearfix"></div>
                   <br>
                   <div id="aviso"></div>
-                  <div id="content-gerenciar-incricoes">
-                        <table class="table table-striped">
+                  <div class="table-overflow">
+                  <div class="table-responsive">
+                 
+                        <table class="table table-striped" id='content-gerenciar-incricoes'>
                               <tr>
                                     <th style="width: 130px;">CPF</th>
                                     <th style="width: 230px;">Participante</th>
@@ -194,6 +242,7 @@
                                     <th style="width: 120px;">Data</th>
                                     <th style="width: 140px;">Status</th>
                                     <th style="width: 200px;">Alterar para</th>
+                                    <th></th>
                               </tr>
                               @foreach($data as $inscricao)
                               <tr>
@@ -201,7 +250,6 @@
                                     <td>{{$inscricao->nome}}</td>
                                     <td>{{$inscricao->identificador .' - '. $inscricao->titulo}}</td>
                                     <td>{{$inscricao->data}}</td>
-
                                     @if($inscricao->status == 'cancelado')
                                     <td data-estado="{{$inscricao->status}}" id="status-{{$inscricao->id}}"><span
                                                 class="m-badge m-badge--danger m-badge--wide"
@@ -248,13 +296,15 @@
                                     @endif
                                     @if($inscricao->status != 'pago')
                                     <td>
-                                          <button class="btn btn-danger link" type="button"><a
-                                                      href='/inscricao/delete/{{ $inscricao->id }}'>-</button>
+                                         <a href='inscricao/delete/{{ $inscricao->id }}'>
+                                           <button class="btn btn-sm btn-danger link" type="button">-</button>
+                                          </a>
                                     </td>
                                     @endif
                               </tr>
                               @endforeach
                         </table>
+                  </div>
                   </div>
                   <div id="links">{!! $data->links() !!}</div>
             </div>
@@ -265,7 +315,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js" type="text/javascript">
 </script>
 <script type="text/javascript">
-      var tds = document.querySelectorAll('table td[data-estado]');
+function loading(){
+      html='<div class="d-flex justify-content-center"><div class="spinner-grow text-danger" role="status">'+
+            '<span class="sr-only">Loading...</span>'+
+      '</div>'
+      html2 = 'Excluindo'+'<div class="spinner-grow text-danger" role="status">'+
+            '<span class="sr-only">Loading...</span>'+
+      '</div>'
+      document.getElementById('warning').innerHTML = html2;
+      document.getElementById("load").innerHTML = "<div class='modal-body'>Aguarde...</div>";
+      document.getElementById("formRemove").submit();
+}
+function getDate(){
+      var getDate = document.querySelector("#dataSelected").value;
+      document.getElementById("getDataSelected").innerHTML = getDate;
+}
+
+  var tds = document.querySelectorAll('table td[data-estado]');
       document.querySelector('#filtrarStatus').addEventListener('click', function(e) {
       var estado = e.target.id;
       for (var i = 0; i < tds.length; i++) {
@@ -319,7 +385,9 @@
       }
       if (item.status != 'pago') {
             html += '<td>' +
-                  '<button class="btn btn-danger" type="button"><a href="/inscricao/delete/' + item.id + '>-</button>' +
+                  '<a href="inscricao/delete/' + item.id +'">'+
+                  ' <button style="background: #f4516c" class="btn btn-sm btn-danger" type="button">-</button>'
+                  +'</a>' +
                   '</td>'
       }
       html += '</tr>';
@@ -357,7 +425,7 @@
                   var numLinhas = 0;
                   $('#titulo').val(data.titulo);
                   var html =
-                        '<table class="table table-striped">' +
+                  '<table class="table table-striped">' +
                         '<tr>' +
                         '<th style="width: 130px;">CPF</th>' +
                         '<th style="width: 230px;">Participante</th>' +
@@ -365,12 +433,13 @@
                         '<th style="width: 120px;">Data</th>' +
                         '<th style="width: 140px;">Status</th>' +
                         '<th style="width: 200px;">Alterar para</th>' +
+                        '<th></th>'+
                         '</tr>';
                   $.each(data.data.data, function(i, item) {
                         html += prepareTableLines(data.data.data[i]);
                         numLinhas++;
                   });
-                  html += '</table>';
+                   html += '</table>';
                   $('#content-gerenciar-incricoes').html(html);
                   $("#bt_pesquisar").prop("disabled", false);
                   if (numLinhas < 15) {
@@ -392,7 +461,6 @@
                   var numLinhas = 0;
                   $('#titulo').val(data.titulo);
                   var html =
-                        '<table class="table table-striped">' +
                         '<tr>' +
                         '<th style="width: 130px;">CPF</th>' +
                         '<th style="width: 230px;">Participante</th>' +
@@ -400,12 +468,12 @@
                         '<th style="width: 120px;">Data</th>' +
                         '<th style="width: 140px;">Status</th>' +
                         '<th style="width: 200px;">Alterar para</th>' +
+                        '<th></th>'+
                         '</tr>';
                   $.each(data.data.data, function(i, item) {
                         html += prepareTableLines(data.data.data[i]);
                         numLinhas++;
                   });
-                  html += '</table>';
                   $('#content-gerenciar-incricoes').html(html);
                   $("#bt_pesquisar").prop("disabled", false);
                   if (numLinhas < 15) {
@@ -425,7 +493,6 @@
             success: function(data) {
                   $('#titulo').val(data.titulo);
                   var html =
-                        '<table class="table table-striped">' +
                         '<tr>' +
                         '<th style="width: 130px;">CPF</th>' +
                         '<th style="width: 230px;">Participante</th>' +
@@ -437,7 +504,6 @@
                   $.each(data.data.data, function(i, item) {
                         html += prepareTableLines(data.data.data[i]);
                   });
-                  html += '</table>';
                   $('#content-gerenciar-incricoes').html(html);
             }
       });
@@ -489,31 +555,33 @@
       @if(!($verify->isEmpty()))
        <div class="bs-component">
                     <div class="alert alert-dismissible" style="background-color: #ebfaeb;">
-                        <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2019 estão abertas de <b>14 a 27/11/2019</b>.</h4>
+                       
+                        <h4 class="block sbold" style="padding-bottom: 10px;">As inscrições na Week-IT 2019 estão abertas. <!--de <b>14 a 27/11/2019</b>.--></h4>
                         
-                        <p style="text-align: justify;">Você tem acesso gratuito às palestras, mesa redonda e mostra de trabalhos.</p>
+                        <p style="text-align: justify;">Você tem acesso gratuito às palestras, mesa redonda e mostra de trabalhos. <strong> Não se esqueca de se inscrever.</strong></p>
                         <p style="text-align: justify;">A inscrição em cada minicurso é <strong>R$ 10,00</strong> (dez reais).</p>
-                       <!-- <p style="text-align: justify;">O pagamento das inscrições em minicurso deverá ser feito no IFBA (<strong>ao lado da cantina</strong>), nos seguintes dias e horários:</p>
+                       <p style="text-align: justify;">O pagamento das inscrições em minicurso deverá ser feito no IFBA (<strong>ao lado da cantina</strong>), a partir de <strong>Segunda-feira (18/11/2019).</strong></p>
+                       <h4> Atenção </h4>
+                      
                         <ul>
-                        <li><strong>Manhã</strong>: toda quarta e sexta das 10:00 às 11:00 horas</li>
-                        <li><strong>À tarde</strong>: segunda, quinta e sexta das 15:30 às 17 horas</li>
-                        <li><strong>À noite</strong>: todos os dias das 19:00 às 21:00 horas</li>
+                        <li><strong>Manhã</strong>: entrar em contato com Ricardo: 77981343096</li>
+                        <li><strong>À tarde</strong>: 15:30 às 17hrs</li>
+                        <li><strong>À noite</strong>: 19h às 20:30</li>
                         </ul>
-                        <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"><strong>As inscrições não pagas até a data limite serão canceladas e as vagas correspondentes serão liberadas para novas inscrições:</strong></p>
+                        <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"><strong>As inscrições não pagas até a data limite serão <strong>canceladas</strong>  e as vagas correspondentes serão liberadas para novas inscrições:</strong></p>
                         <ul>
-                        <li><del>Inscrições de 12 a 18/11/2018, o pagamento deverá ser efetuado até 21/11 (quarta-feira)</del></li>
-                        <li><del>Inscrições de 19 a 25/11/2018, o pagamento deverá ser efetuado até 28/11 (quarta-feira)</del></li>
-                        <li><del>Inscrições de 26/11/2018 a 30/11/2018, o pagamento deverá ser efetuado até 30/11 (sexta-feira)<del></li>
-                        <li>Inscrições após 30/11 devem ser pagas no credenciamento do evento</li>
+                        <li><del>Inscrições de <strong>14 a 19/11</strong>, o pagamento deverá ser efetuado até <strong>20/11 (Quarta-feira)</strong>.</del></li>
+                        <li>Inscrições de <strong> 20 a 22/11</strong>, o pagamento deverá ser efetuado até <strong>23/11 (Sábado)</strong>.</li>
+                        <li>Inscrições após<strong> 22/11</strong> devem ser pagas no credenciamento do evento <strong>(25/11)</strong>.</li>
                         </ul>
                         <p style="padding: 5px 10px;background: #fbc8c8;margin-top: 12px;"> <b>Aviso</b> - Por favor, certifique-se que seu nome completo pois este será impresso em seu(s) certificado(s). Procure um coordenador.
-                        </p>  -->                                       
+                        </p>                                        
                     </div>
                 </div>
      
       <div class="m-portlet m-portlet--mobile">
             <div class="m-portlet__body">
-                  <div id="aviso"></div>
+                  <div id="aviso2"></div>
                   <div id="atividades-abertas"></div>
 
             </div>
@@ -523,7 +591,10 @@
           $dataInicio = DB::table('evento')->select('data_inicio_insc')->where('id', '=', $maxid)->get()[0]->data_inicio_insc;
           $dataFim = DB::table('evento')->select('data_fim_insc')->where('id', '=', $maxid)->get()[0]->data_fim_insc;
       @endphp
-      @if($dataInicio >= date('Y-m-d'))
+      @if($dataInicio > date('Y-m-d'))
+      @php
+          echo date('Y-m-d');
+      @endphp
       <h1>As Inscrições para a Week IT 2019 estarão abertas a partir do dia 14/11. Aguarde!</h1>
       <br>
       @elseif($dataFim < date('Y-m-d'))
@@ -531,17 +602,18 @@
       @else
       <form action="{{route('eventoUpdate', DB::table('evento')->max('id'))}}" method="post">
                         <div class="alert alert-dismissible bg-success">                        
-                        <p style="color: white">Você ainda não se Inscreveu na nova ediçao de @php echo DB::table('evento')->max('ano')@endphp</p>
-                        <button type="submit"  class="btn btn-danger">Edição @php echo DB::table('evento')->max('ano')@endphp</button>
+                        <p style="color: white">Se inscreva aqui na Ediçao @php echo DB::table('evento')->max('ano')@endphp</p>
+                        <button type="submit"  class="btn btn-danger">Inscrever</button>
                        </div>
                     </form>
+                    <div class="alert alert-dismissible bg-warning">
+                  
+                              <p style="text-align: justify;">A inscrição para o evento é gratuita e dá acesso às palestras, mesa redonda e
+                                    mostra de trabalhos.</p>
+                        </div>
                     @endif
       @endif
-      <div class="alert alert-dismissible bg-warning">
-                  
-                  <p style="text-align: justify;">A inscrição para o evento é gratuita e dá acesso às palestras, mesa redonda e
-                        mostra de trabalhos.</p>
-            </div>
+      
       
 </div>
 @endsection
@@ -567,8 +639,8 @@ function inscricoesAbertas() {
                         '<th>Descrição</th>' +
                         '<th>Max</th>' +
                         '<th>Inscritos</th>' +
-                        '<th>CH</th>' +
                         '<th>Preço</th>' +
+                        '<th>CH</th>' +
                         '<th>Ação</th>' +
                         '</tr>';
                   $.each(data.atividades, function(x, item) {
@@ -590,12 +662,17 @@ function inscricoesAbertas() {
                                     '<td id="acao2-' + data.atividades[x].id + '">' +
                                     '<div class="btn-group m-btn-group" id="alterar-status" role="group" aria-label="..."><button class="btn btn-info" onclick="inscrverAtividade(' +
                                     data.atividades[x].id + ')">Inscrever</button></td>'
-                        } else if (!data.atividades[x].ja_inscrito && data.atividades[x]
+                        } else if (!data.atividades[x].ja_inscrito && !data.atividades[x]
                               .liberar_inscricao) {
-                              html += '<tr>' +
-                                    '<td>' + data.atividades[x].identificador + ' - ' +
-                                    data.atividades[x].titulo + '</td>' +
-                                    '<td>' + data.atividades[x].data_inicio + ' de ' +
+                              html += '<tr>';
+                              if(data.atividades[x].maximo_participantes == data.atividades[x].inscritos){
+                                   html+= '<td><del>' + data.atividades[x].identificador + ' - ' +
+                                    data.atividades[x].titulo + '</del><span class="text-danger font-weight-bold"> Esgotado! </span></td>' ;
+                              }else{
+                                    html+= '<td>' + data.atividades[x].identificador + ' - ' +
+                                    data.atividades[x].titulo + '</td>' ;
+                              }
+                                    html+='<td>' + data.atividades[x].data_inicio + ' de ' +
                                     data.atividades[x].hora_inicio + ' até ' + data
                                     .atividades[x].hora_fim + '</td>' +
                                     '<td>' + data.atividades[x].descricao + '</td>' +
@@ -605,7 +682,7 @@ function inscricoesAbertas() {
                                     '<td>R$ ' + data.atividades[x].preco + '</td>' +
                                     '<td>' + data.atividades[x].carga_horaria + 'hrs' +
                                     '</td>' +
-                                    '<td id="acao"><button class="btn btn-info disabled">Inscrever</button></td>'
+                                    '<td id="acao"><button class="btn btn-metal disabled">Inscrever</button></td>'
                         }
                         html += '</tr>';
                   });
@@ -654,6 +731,10 @@ window.adicionarInscricao = adicionarInscricao;
 <!-- Sessão de aluno monitor -->
 @elseif(Auth::user()->tipo == 'monitor')
 @section('content')
+
+
+      <div>
 @include('layouts.gerenciar-presenca')
+      </div>
 @endsection
 @endif

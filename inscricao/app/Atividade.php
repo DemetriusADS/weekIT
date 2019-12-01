@@ -96,7 +96,7 @@ class Atividade extends AbstractModel implements DefaultModel
 
 
         $paginator  = $query->paginate($perpage, $columns, 'page', $page);
-        dd($paginator);
+        //dd($paginator);
 
         return response()->json([
             'meta' => [

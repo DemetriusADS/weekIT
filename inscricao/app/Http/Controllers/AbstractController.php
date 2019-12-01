@@ -32,7 +32,7 @@ class AbstractController extends Controller
     {
 
         $entity = $this->model::find($id);
-        dd($entity);
+        //dd($entity);
         if ($id != \Auth::id()) {
             if (\Auth::user()->tipo != 'coordenador') {
                 abort(403, 'Ação não autorizada.');

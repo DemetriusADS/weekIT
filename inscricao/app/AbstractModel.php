@@ -60,7 +60,7 @@ class AbstractModel extends Model
     {
         unset($attributes['_token']);
 
-        $old_row = json_encode($this::find($attributes['id']));
+        $old_row = json_encode($this::find($attributes["id"]));
 
         if (!is_null(parent::update($attributes))) {
 

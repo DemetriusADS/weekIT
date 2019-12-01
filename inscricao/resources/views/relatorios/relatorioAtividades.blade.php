@@ -6,6 +6,14 @@
           overflow-y:auto;
       }
       </style>
+       <h5>Ordenar por</h5>
+      <div class="btn-group m-btn-group mb-3" id="filtrarRelatorio" role="group" aria-label="...">
+          <a href="{{ route("setOrdem.atividade","identificador") }}">  <button type="button" id="pago" class="btn btn-sm  btn-success">Identificador</button></a>
+          <a href="{{ route("setOrdem.atividade","titulo") }}">  <button type="button" id="gratuito" class="btn btn-sm  btn-success">Titulo</button></a>
+          <a href="{{ route("setOrdem.atividade","participantes") }}">  <button type="button" id="andamento" class="btn btn-sm  btn-success">Inscrições</button></a>
+          <a href="{{ route("setAtividadeTipo","minicurso") }}">  <button type="button" id="isento" class="btn btn-sm  btn-success">Minicursos</button></a>
+          <a href="{{ route("setOrdem.atividade") }}">  <button type="button" class="btn btn-sm  btn-metal">Limpar</button></a>
+       </div>
     <div>
       <!-- estrutura para botões etc...-->
       <div class="accordion" id="accordionExample">
@@ -27,7 +35,11 @@
             <div class="card" >
               <div class="card-header" style="background: white !important" id="heading{{ $value->atividadeID }}">
                 <h2 class="mb-0">
-                  <button class="btn btn-outline-success w-100" type="button" data-toggle="collapse" data-target="#collapse{{ $value->atividadeID }}" aria-expanded="true" aria-controls="collapseOne">
+                  @if($value->participantes != $value->max_participantes)
+                    <button class="btn btn-outline-success w-100" type="button" data-toggle="collapse" data-target="#collapse{{ $value->atividadeID }}" aria-expanded="true" aria-controls="collapseOne">
+                  @else
+                    <button class="btn btn-outline-danger w-100" type="button" data-toggle="collapse" data-target="#collapse{{ $value->atividadeID }}" aria-expanded="true" aria-controls="collapseOne">
+                  @endif
                     <table class="table table-borderless">                         
                               
                                <tr>
@@ -53,7 +65,7 @@
                                           ])
                                     ->count();
                                    @endphp
-                                   <td>{{ $count }}</td>
+                                   <td id="count">{{ $count }}</td>
                                    <td>{{ $countP }}</td>
                                    <td>{{ $countI }}</td>
                               </tr>
@@ -112,5 +124,12 @@
             @endforeach
           </div>
     </div>
+
    
+@endsection
+@section('scripts')
+    <script type="text/javascript">
+            var table = document.getElementById("count");
+            console.log(table);
+    </script>
 @endsection

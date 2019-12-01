@@ -34,7 +34,7 @@ class ParticipanteInfoController extends Controller
 
         // dd($dadosPessoais);
 
-        date_default_timezone_set('America/Sao_Paulo');
+
         $date = date('d/m/Y H:i');
         $time = date('H:i');
 
@@ -44,6 +44,7 @@ class ParticipanteInfoController extends Controller
                 if (Auth::check()) {
                     $occour = 0;
                     $userLoggedID = Auth::user();
+                    //dd($userLoggedID->tipo);
                     if ($userLoggedID->tipo == 'monitor') {
                         $atividadeHasMonitor = DB::table('atividade_has_monitor')
                             ->join('atividade', 'atividade.id', '=', 'atividade_has_monitor.atividade_id')
@@ -64,44 +65,69 @@ class ParticipanteInfoController extends Controller
                                             $this->setPresenca($participanteId, $atividadeID->AtividadeID, $eventoId);
                                             $occour++;
                                         } else {
-                                            return 'Esta atividade já encerrou. Por favor, procure um coordenador';
                                             $occour++;
+                                            echo ('<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>A atividade ' . $atividadeID->AtividadeCod . ' já encerrou. Se necessário, procure um coordenador.</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>');
+                                            //return $this->getViewParticipante($participanteId, $eventoId);
                                         }
                                     } else {
-                                        return 'O Evento ainda não Iniciou';
                                         $occour++;
+                                        echo ('<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>O Evento ainda não Iniciou.</strong>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>');
+                                        // return $this->getViewParticipante($participanteId, $eventoId);
                                     }
                                 }
                             }
                         }
                         if ($occour == 0) {
-                            echo ('<br>Você não é monitor de nenhuma das atividades desse participante');
+                            echo ('<div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <strong>Você não é monitor de nenhuma das atividades desse participante</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>');
+                            // return $this->getViewParticipante($participanteId, $eventoId);
                         } // dd($occour);
                         //dd($teste);
                     } elseif ($userLoggedID->tipo == 'coordenador') {
                         foreach ($data as $arrayIndex => $atividadeID) {
                             $dataInicio = $atividadeID->DataInicio . " " . $atividadeID->HoraInicio;
                             if ($date >= $dataInicio) {
-                                return view('participante.coordenadorAccess', compact('data', 'userLoggedID', 'dadosPessoais'));
                                 $occour++;
+                                return view('participante.coordenadorAccess', compact('data', 'userLoggedID', 'dadosPessoais'));
                             }
                         }
                     }
                 } else {
-                    echo 'Monitor não logado';
+                    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Monitor não logado</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>';
                 }
-                return $this->getViewParticipante($participanteId, $eventoId);
+                //return $this->getViewParticipante($participanteId, $eventoId);
             } else {
-                echo 'Participante não cadastrado em, pelo menos, uma atividade';
-                return $this->getViewParticipante($participanteId, $eventoId);
+                echo ('<div class="alert alert-info alert-dismissible fade show" role="alert"><strong>Participante não cadastrado em, pelo menos, uma atividade</strong>  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>');
             }
+            return $this->getViewParticipante($participanteId, $eventoId);
         } else {
-            return 'Participante não cadastrado em nosso sistema.';
+            return '<span style="color: red; font-weight:bold">Participante não cadastrado em nosso sistema.</span>';
         }
     }
 
     function getViewParticipante($participanteID, $eventoID)
     {
+
         $data = $this->getDados($participanteID, $eventoID);
         $dadosPessoais = $this->getDadosPessoais($participanteID, $eventoID);
 
@@ -134,11 +160,14 @@ class ParticipanteInfoController extends Controller
         return DB::table('inscricao')
             ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
             ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
+            ->join('local', 'local.id', '=', 'atividade.local_id')
             ->join('evento', 'evento.id', '=', 'atividade.evento_id')
             ->select(
                 'atividade.id as AtividadeID',
+                'atividade.carga_horaria',
                 'atividade.identificador as AtividadeCod',
                 'atividade.titulo as Atividade',
+                'local.descricao as local',
                 'inscricao.status as Status',
                 'inscricao.presente as presente',
                 DB::raw('DATE_FORMAT(inscricao.data,"%d/%m/%Y %H:%i") as data'),
@@ -153,7 +182,8 @@ class ParticipanteInfoController extends Controller
                 ['participante.id', 'like',  $participanteID],
                 ['atividade.evento_id', '=', $eventoID],
             ])
-            ->orderBy('inscricao.data', 'DESC')
+            ->orderBy('DataInicio')
+            ->orderBy('HoraInicio')
             ->get();
     }
 
@@ -166,25 +196,40 @@ class ParticipanteInfoController extends Controller
                 if ($atividadeId->AtividadeID == $atividadeID) {
                     if ($atividadeId->Status == 'pago' || $atividadeId->Status == 'isento' || $atividadeId->Status == 'gratuito') {
                         if ($atividadeId->presente == 0) {
-                            $input = DB::update("UPDATE inscricao SET presente = 1 
+                            $input = DB::update("UPDATE inscricao SET presente = 1, update_at = now() 
                     WHERE participante_id = $participanteID and atividade_id = $atividadeID");
                             if (!is_null($input)) {
-                                echo ("<br><h3>Presença Confirmada</h3><br>");
-                                header("refresh: 3;" . route('home'));
+                                echo '<div class="alert alert-info alert-dismissible fade show" role="alert">
+                                <strong>Presença Confirmada</strong> na atividade ' . $atividadeId->AtividadeCod . '.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>';
+                                //return $this->getViewParticipante($participanteID, $eventoID);
                             }
                         } else {
-                            echo ("<br><h3>O Partificante já possui presença nesta atividade");
-                            header("refresh: 3;" . route('home'));
+                            echo ('<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>O Particicante já possui presença na atividade ' . $atividadeId->AtividadeCod . '</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>');
+                            //header("refresh: 10;" . route('home'));
                         }
                     } else {
-                        echo ("<br><h3>Pagamento não Identificado");
-                        return $this->getViewParticipante($participanteID, $eventoID);
+                        echo ('<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Pagamento não Identificado</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>');
+                        //return $this->getViewParticipante($participanteID, $eventoID);
                     }
                 }
             }
         } else {
             echo ("<br><h3>Verifique se você está no evento mais recente");
-            header("refresh: 3;" . route('home'));
+            header("refresh: 5;" . route('home'));
         }
     }
 }

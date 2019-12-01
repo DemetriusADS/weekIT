@@ -212,18 +212,19 @@ class InscricaoController extends AbstractController
                 ->json(['resposta' => 2]);
         }
     }
-    public function removerNaoPagas()
+    public function removerNaoPagas(Request $request)
     {
         if (Auth::user()->tipo == 'coordenador') {
+            // dd();
             $ip = null;
             $user_agent = null;
-            $date = date('d/m/Y');
+            $date = $request->dataSelect;
             $getList = DB::table('inscricao')
                 ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
                 ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
                 ->select(
                     'inscricao.id as id',
-                    DB::raw('DATE_FORMAT(inscricao.data,"%d/%m/%Y") as data'),
+                    DB::raw('DATE_FORMAT(inscricao.data,"%Y-%m-%d") as data'),
                     'inscricao.participante_id as participante_id',
                     'inscricao.atividade_id',
                     'participante.email as email'
@@ -233,14 +234,21 @@ class InscricaoController extends AbstractController
                 ->orWhere('inscricao.status', '=', 'cancelado')
 
                 ->get();
-            //dd($getList);
+            $success = 0;
             foreach ($getList as $key => $value) {
-                if ($value->data < $date) {
-                    event(new ConfirmacaoEvent($value->participante_id, $value->email, $value->atividade_id, "cancelado"));
-                    $this->model::destroy($value->id, $ip, $user_agent);
+
+                if ($value->data <= $date) {
+                    //dd($value);
+                    //event(new ConfirmacaoEvent($value->participante_id, $value->email, $value->atividade_id, "cancelado"));
+                    //$this->model::destroy($value->id, $ip, $user_agent);
+                    $success++;
                 }
             }
-            return redirect()->back();
+            if ($success > 0) {
+                return redirect()->back()->with('success', $success);
+            } else {
+                return redirect()->back()->with('error', $date);
+            }
         }
     }
     public function removerInscricao(Request $request, $ip = null, $user_agent = null)

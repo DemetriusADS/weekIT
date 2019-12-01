@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AtividadeRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Events\CancelamentoEvent;
 use Illuminate\Support\Facades\DB;
 use PDF;
 
@@ -62,6 +63,7 @@ class AtividadeController extends AbstractController
     {
         $entity = $this->model::find($request->input('id'));
         $route  = redirect()->route($this->model::$base_name_route . '.edit', ['id' => $request->input('id')]);
+
         if ($entity->update($request->all()))
             return $route->with('success', $entity . '  atualizado com sucesso');
 
@@ -95,11 +97,7 @@ class AtividadeController extends AbstractController
                     'atividade.tipo',
                     DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as data_inicio')
                 )
-                ->where('atividade.evento_id', '=', DB::table('participante')
-                    ->join('evento', 'evento.id', '=', 'participante.edicao_ativa')
-                    ->select('participante.edicao_ativa')
-                    ->where('participante.id', '=', \Auth::user()->id)
-                    ->get()[0]->edicao_ativa)
+                ->where('atividade.evento_id', '=', \Auth::user()->edicao_ativa)
                 ->orderBy('atividade.identificador')
                 ->get();
         }
@@ -124,12 +122,15 @@ class AtividadeController extends AbstractController
                     'participante.nome',
                     'inscricao.id as inscricao_id',
                     'inscricao.presente',
+                    'atividade.data_inicio as data',
                     'inscricao.status'
                 )
                 ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
+                ->join('atividade', 'atividade.id', '=', 'inscricao.atividade_id')
                 ->where('inscricao.atividade_id', '=', $request->input('atividade_id'))
                 ->orderBy('participante.nome')
                 ->get();
+            //dd($participantes);
             if (!is_null($participantes)) {
                 return response()
                     ->json(['participantes' => $participantes, 'tipo' => $atividade_tipo[0]->tipo]);
@@ -144,7 +145,7 @@ class AtividadeController extends AbstractController
     {
         $id = $request->input('inscricao_id');
         $presente = $request->input('presente');
-        $input = DB::update("UPDATE inscricao SET presente = $presente WHERE id = $id");
+        $input = DB::update("UPDATE inscricao SET presente = $presente, updated_at = now() WHERE id = $id");
         if (!is_null($input)) {
             return response()
                 ->json(['resposta' => $input]);
@@ -193,7 +194,12 @@ class AtividadeController extends AbstractController
     {
         $participante_id = $request->input('participante_id');
         $atividade_id = $request->input('atividade_id');
-
+        $presente_is_set = DB::table('inscricao')
+            ->select('inscricao.presente')
+            ->where([
+                ['inscricao.participante_id', '=', $participante_id],
+                ['inscricao.atividade_id', '=', $atividade_id]
+            ])->get()[0]->presente;
         $atividade_tipo = DB::table('atividade')
             ->select('atividade.tipo')
             ->where('atividade.id', '=', $atividade_id)->get()[0]->tipo;
@@ -202,11 +208,12 @@ class AtividadeController extends AbstractController
             return response()
                 ->json(['resposta' => self::setaPresencaMinicurso($participante_id, $atividade_id)]);
         } else {
-            $input = DB::insert("INSERT INTO inscricao(status, presente, participante_id, 
-                    atividade_id, created_at, updated_at) 
-                VALUES ('gratuito', 1, $participante_id, $atividade_id, now(), now())");
-            return response()
-                ->json(['resposta' => $input]);
+            if ($presente_is_set == 0) {
+                $input = DB::update("UPDATE inscricao SET presente = 1, updated_at = now() WHERE participante_id = $participante_id and atividade_id = 
+                    $atividade_id");
+                return response()
+                    ->json(['resposta' => $input]);
+            }
         }
     }
 
@@ -256,6 +263,40 @@ class AtividadeController extends AbstractController
         return response()
             ->json(['ganhador' => $ganhador]);
     }
+
+    public function cancelarAtividade(Request $request)
+    {
+
+        if (\Auth::user()->tipo == 'coordenador') {
+            $atividade = DB::table('atividade')
+                ->join('inscricao', 'inscricao.atividade_id', '=', 'atividade.id')
+                ->select('atividade.id')
+                ->where('atividade.id', '=', $request->id)
+                ->get();
+            if (!is_null($atividade)) {
+                $inscritos = DB::table('inscricao')
+                    ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
+                    ->select(
+                        'inscricao.id',
+                        'inscricao.participante_id as participante_id',
+                        'participante.email as email'
+                    )
+                    ->where('inscricao.atividade_id', '=', $request->id)
+                    ->get();
+                DB::table('atividade')
+                    ->where('atividade.id', '=', $request->id)
+                    ->update(['maximo_participantes' => 0]);
+                foreach ($inscritos as $key => $value) {
+                    $update = DB::table('inscricao')
+                        ->where('inscricao.id', '=', $value->id)
+                        ->update(['status' => 'cancelado']);
+                    event(new CancelamentoEvent($value->participante_id, $value->email, $request->id));
+                }
+                return redirect('/home');
+            }
+        }
+    }
+
     public function gerarRelatorio(Request $request)
     {
         //dd($request->id);
@@ -264,32 +305,56 @@ class AtividadeController extends AbstractController
             ->join('participante', 'participante.id', '=', 'inscricao.participante_id')
             ->select(
                 'participante.nome as nomeAluno',
-                'inscricao.status as status'
+                'inscricao.status as status',
+                'participante.telefone1',
+                'participante.email'
             )
-            ->where('atividade.id', '=', $request->id)
+            ->where([
+                ['atividade.id', '=', $request->id]
+            ])
             ->orderBy('nomeAluno')
             ->get();
         //dd($atividadeLista);
-        $atividadeInfo = DB::table('atividade')
-            ->join('atividade_has_palestrante', 'atividade_has_palestrante.atividade_id', '=', 'atividade.id')
-            ->join('palestrante', 'palestrante.id', '=', 'atividade_has_palestrante.palestrante_id')
-            ->join('local', 'local.id', '=', 'atividade.local_id')
-            ->select(
-                'atividade.tipo as tipo',
-                'atividade.titulo as titulo',
-                DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as data'),
-                DB::raw('DATE_FORMAT(atividade.hora_inicio,"%H:%i") as horaInicio'),
-                DB::raw('DATE_FORMAT(atividade.hora_fim,"%H:%i") as horaFim'),
-                'local.descricao as local',
-                'palestrante.descricao as nomePalestrante'
-            )
-            ->where('atividade.id', '=', $request->id)
-            ->get();
-        // dd($atividadeInfo, $atividadeLista);
+        if (DB::table('atividade')->select('atividade.tipo')->where('atividade.id', '=', $request->id)->get()[0]->tipo == 'minicurso') {
+            $atividadeInfo = DB::table('atividade')
+                ->join('atividade_has_palestrante', 'atividade_has_palestrante.atividade_id', '=', 'atividade.id')
+                ->join('palestrante', 'palestrante.id', '=', 'atividade_has_palestrante.palestrante_id')
+                ->join('atividade_has_monitor', 'atividade_has_monitor.atividade_id', '=', 'atividade.id')
+                ->join('participante', 'participante.id', '=', 'atividade_has_monitor.monitor_id')
+                ->join('local', 'local.id', '=', 'atividade.local_id')
+                ->select(
+                    'atividade.tipo as tipo',
+                    'atividade.titulo as titulo',
+                    'participante.nome as monitor',
+                    DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as data'),
+                    DB::raw('DATE_FORMAT(atividade.hora_inicio,"%H:%i") as horaInicio'),
+                    DB::raw('DATE_FORMAT(atividade.hora_fim,"%H:%i") as horaFim'),
+                    'local.descricao as local',
+                    'palestrante.descricao as nomePalestrante'
+                )
+                ->where('atividade.id', '=', $request->id)
+                ->get();
+        } else {
+            $atividadeInfo = DB::table('atividade')
+                ->join('atividade_has_palestrante', 'atividade_has_palestrante.atividade_id', '=', 'atividade.id')
+                ->join('palestrante', 'palestrante.id', '=', 'atividade_has_palestrante.palestrante_id')
+                ->join('local', 'local.id', '=', 'atividade.local_id')
+                ->select(
+                    'atividade.tipo as tipo',
+                    'atividade.titulo as titulo',
+                    DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as data'),
+                    DB::raw('DATE_FORMAT(atividade.hora_inicio,"%H:%i") as horaInicio'),
+                    DB::raw('DATE_FORMAT(atividade.hora_fim,"%H:%i") as horaFim'),
+                    'local.descricao as local',
+                    'palestrante.descricao as nomePalestrante'
+                )
+                ->where('atividade.id', '=', $request->id)
+                ->get();
+        }
+        //dd($atividadeInfo);
         PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         $pdf = PDF::loadView('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'));
-        //$pdf->setOptions(['dpi' => 150]);
-        return $pdf->stream('listaPresenca.pdf');
+        return $pdf->stream('listaPresenca' . $request->id . '.pdf');
         return view('pdf_view.listasPresenca', compact('atividadeLista', 'atividadeInfo'));
     }
 }

@@ -31,10 +31,8 @@ class Confirmacoes extends Mailable
         $this->atividadeDados = DB::table('atividade')
             ->join('local', 'local.id', '=', 'atividade.local_id')
             ->select(
-                'atividade.titulo as titulo',
-                DB::raw('CONCAT(DATE_FORMAT(atividade.hora_inicio,"%H:%i"), " - ", DATE_FORMAT(atividade.hora_fim,"%H:%i")) AS horario'),
-                DB::raw('DATE_FORMAT(atividade.data_inicio,"%d/%m/%Y") as  data_do_curso'),
-                'local.descricao as local'
+                'atividade.identificador as identificador',
+                'atividade.titulo as titulo'
             )->where('atividade.id', '=', $atividadeID)
             ->get();
     }

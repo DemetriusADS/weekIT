@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ConfirmacaoEvent' => [
             'App\Listeners\ConfirmacaoListener',
         ],
+        'App\Events\CancelamentoEvent' => [
+            'App\Listeners\CancelamentoListener',
+        ],
     ];
 
     /**

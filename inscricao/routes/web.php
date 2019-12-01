@@ -44,7 +44,8 @@ foreach (\App\Resource::all() as $resource) {
 }
 Auth::routes();
 
-Route::get('/deletenp', 'InscricaoController@removerNaoPagas')->name('removerNp');
+Route::get('/atividade/cancelar/{id}', 'AtividadeController@cancelarAtividade')->name('cancelarAtividade');
+Route::post('/deletenp', 'InscricaoController@removerNaoPagas')->name('removerNp');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/eventochangeano/{id}', 'HomeController@alteraAnoSistema')->name('eventochangeano');
 Route::get('/cadastrar', 'Publico\ParticipanteController@create')->name('cadastrar');
@@ -81,3 +82,5 @@ Route::get('/participante/planilha', 'ExcelController@participantesPlanilha')->n
 Route::get('/updatedb', 'updateBanco@updateDB')->name('updateDB');
 Route::get('/participante/update/{id}', 'ParticipanteController@update');
 Route::get('/relatorio/atividades', 'RelatorioController@atividades')->name('relatorio.atividade');
+Route::get('/relatorio/setOrdem/{id?}', 'RelatorioController@setOrdem')->name('setOrdem.atividade');
+Route::get('/relatorio/setTipo/{id?}', 'RelatorioController@setAtividadeTipo')->name('setAtividadeTipo');
